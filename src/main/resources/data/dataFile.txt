@@ -1,0 +1,6 @@
+[
+   {"type": "Trainer", "name": "John Doe", ...},
+   {"type": "Trainee", "name": "Jane Smith", ...},
+   {"type": "Training", "title": "Java Programming", ...},
+   ...
+]
