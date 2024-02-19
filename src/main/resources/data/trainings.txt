@@ -1,0 +1,18 @@
+[
+    {
+        "traineeId": 0,
+        "trainerId": 0,
+        "trainingName": "",
+        "trainingType": "",
+        "trainingDate": "",
+        "trainingDuration": ""
+    },
+    {
+        "traineeId": 0,
+        "trainerId": 0,
+        "trainingName": "",
+        "trainingType": "",
+        "trainingDate": "",
+        "trainingDuration": ""
+    }
+]

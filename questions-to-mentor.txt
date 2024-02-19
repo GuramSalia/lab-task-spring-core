@@ -1,0 +1,16 @@
+Q1:
+when should I call generateUsername() ? I assume that it should be called within each setFirstName and setLastName, because we could create instances of classes that extend User with only the first or last name. Still in this case we should have a username.
+
+Q2:
+what is the connection between 'Trainer' , 'Training type' name and 'Training' ? is 'Training type' an Enumeration ? what is the main factor for declaring the training type in 'Training' ? is it 'Training' itself or is it 'Trainer'? my understanding is that Training has a 'training type' so does the "Trainer", who also has the "Training type" and the only restriction is that training cannot have a trainer who has a different training type, is it correct?
+
+Q3:
+... Path to the concrete file should be set using property placeholder and external property file. In other words, Every storage (java.util.Map) should be implemented as a separate spring bean ...
+what does following mean and especially what is meant with 'Every storage':
+In other words, Every storage (java.util.Map) should be implemented as a separate spring bean
+
+Q4:
+when I create entity, should I return newly created entities in order to set their properties ?
+
+Q5:
+What are the arguments for implementing select/create/delete ? If it is a webapp I could read it from request parameter of path variable. what does it mean that service classes should support create/update/delete/select  (other combinations) Trainee (or other) profile? For example all services have create. I can create a particular Profile and store it in storage, for example Training, but do I already have an instance of Trainer or Trainee or do I just have their ids?
