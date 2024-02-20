@@ -1,7 +1,9 @@
-package com.epam.labtaskspringcore.model;
+package com.epam.labtaskspringcore.utils;
 
+import com.epam.labtaskspringcore.model.User;
 import com.epam.labtaskspringcore.service.TraineeService;
 import com.epam.labtaskspringcore.service.TrainerService;
+import com.epam.labtaskspringcore.utils.UsernameGenerator;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +12,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class UsernameGeneratorImpl implements UsernameGenerator{
+public class UsernameGeneratorImpl implements UsernameGenerator {
 //    static Logger LOG = LoggerFactory.getLogger(UsernameGeneratorImpl.class);
     Logger LOG = LoggerFactory.getLogger(getClass());
 

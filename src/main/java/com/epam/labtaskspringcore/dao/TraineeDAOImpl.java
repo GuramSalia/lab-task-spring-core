@@ -2,8 +2,10 @@ package com.epam.labtaskspringcore.dao;
 
 import com.epam.labtaskspringcore.config.InMemoryStorage;
 import com.epam.labtaskspringcore.model.Trainee;
+import com.epam.labtaskspringcore.model.User;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,5 +21,8 @@ public class TraineeDAOImpl implements TraineeDAO {
 
     public void delete(int id) {trainees.remove(id);}
 
-    public Trainee select(int id) {return trainees.get(id);}
+    public Trainee getById(int id) {return trainees.get(id);}
+
+    @Override
+    public List<Trainee> getTrainees() {return new ArrayList<>(trainees.values());}
 }

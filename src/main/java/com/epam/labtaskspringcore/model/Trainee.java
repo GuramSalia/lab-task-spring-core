@@ -14,7 +14,7 @@ public class Trainee extends User {
 
     @Override
     public String toString() {
-        return "Trainer{" +
+        return "Trainee{" +
                 "traineeId=" + traineeId +
                 ", first-name='" + getFirstName() + '\'' +
                 ", last-name='" + getLastName() + '\'' +
