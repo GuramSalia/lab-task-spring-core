@@ -46,8 +46,6 @@ public class UsernameGeneratorImpl implements UsernameGenerator{
 
     @PostConstruct
     public void init() {
-        LOG.info("Created UsernameGeneratorImpl bean");
-        LOG.debug("Created UsernameGeneratorImpl bean");
-        LOG.error("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+        LOG.info("Postconstruct started ");
     }
 }

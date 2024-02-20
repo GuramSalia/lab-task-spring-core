@@ -5,12 +5,19 @@ import com.epam.labtaskspringcore.model.Trainee;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
+
 @Repository
-
 public class TraineeDAOImpl implements TraineeDAO {
-    private final InMemoryStorage storage;
+    private final Map<Integer, Trainee> trainees;
 
-    public TraineeDAOImpl(InMemoryStorage storage) {this.storage = storage;}
+    public TraineeDAOImpl(InMemoryStorage storage) {this.trainees = storage.getTrainees();}
 
-    public List<Trainee> getTrainees() {return storage.getItems(Trainee.class);}
+    public void create(Trainee trainee) {trainees.put(trainee.getTraineeId(), trainee);}
+
+    public void update(Trainee trainee) {trainees.put(trainee.getTraineeId(), trainee);}
+
+    public void delete(int id) {trainees.remove(id);}
+
+    public Trainee select(int id) {return trainees.get(id);}
 }

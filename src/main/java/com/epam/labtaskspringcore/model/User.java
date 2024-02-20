@@ -1,5 +1,7 @@
 package com.epam.labtaskspringcore.model;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.security.SecureRandom;
@@ -7,11 +9,18 @@ import java.security.SecureRandom;
 public abstract class User {
     private UsernameGenerator usernameGenerator;
 
+    @Getter
     private String firstName;
+    @Getter
     private String lastName;
+    @Getter
     private String username;
+    @Setter
+    @Getter
     private String password;
 
+    @Getter
+    @Setter
     private boolean isActive;
 
     public User() {
@@ -23,27 +32,14 @@ public abstract class User {
         this.usernameGenerator = usernameGenerator;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
     public void setFirstName(String firstName) {
         this.firstName = firstName;
         this.setUsername();
     }
 
-    public String getLastName() {
-        return lastName;
-
-    }
-
     public void setLastName(String lastName) {
         this.lastName = lastName;
         this.setUsername();
-    }
-
-    public String getUsername() {
-        return username;
     }
 
     public void setUsername() {
@@ -54,22 +50,6 @@ public abstract class User {
             throw new IllegalStateException(
                     "UsernameGenerator not set. Call setUsernameGenerator before generating username.");
         }
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public boolean isActive() {
-        return isActive;
-    }
-
-    public void setActive(boolean active) {
-        isActive = active;
     }
 
     private String generateRandomPassword() {

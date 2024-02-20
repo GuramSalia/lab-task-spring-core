@@ -2,23 +2,15 @@ package com.epam.labtaskspringcore.model;
 
 import java.util.Date;
 import java.util.Objects;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 public class Trainee extends User {
-    private long traineeId;
+    private int traineeId;
     private String Address;
     private Date dob;
-
-    public long getTraineeId() {return traineeId;}
-
-    public void setTraineeId(long traineeId) {this.traineeId = traineeId;}
-
-    public String getAddress() {return Address;}
-
-    public void setAddress(String address) {this.Address = address;}
-
-    public Date getDob() {return dob;}
-
-    public void setDob(Date dob) {this.dob = dob;}
 
     @Override
     public String toString() {

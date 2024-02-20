@@ -1,19 +1,16 @@
 package com.epam.labtaskspringcore.model;
 
 import java.util.Objects;
+import lombok.Getter;
+import lombok.Setter;
 
+
+@Setter
+@Getter
 public class Trainer extends User {
 
-    private long trainerId;
+    private int trainerId;
     private TrainingType specialization;
-
-    public long getTrainerId() {return trainerId;}
-
-    public void setTrainerId(long trainerId) {this.trainerId = trainerId;}
-
-    public TrainingType getSpecialization() {return specialization;}
-
-    public void setSpecialization(TrainingType specialization) {this.specialization = specialization;}
 
     @Override
     public String toString() {
