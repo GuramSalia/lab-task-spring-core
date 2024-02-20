@@ -5,5 +5,5 @@ import com.epam.labtaskspringcore.model.Training;
 
 public interface TrainingDAO {
     public void create(Training training);
-    public Training select(int id);
+    public Training getById(int id);
 }

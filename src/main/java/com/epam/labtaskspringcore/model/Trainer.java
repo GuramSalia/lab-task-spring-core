@@ -1,9 +1,9 @@
 package com.epam.labtaskspringcore.model;
 
 import java.util.Objects;
+
 import lombok.Getter;
 import lombok.Setter;
-
 
 @Setter
 @Getter
@@ -15,9 +15,12 @@ public class Trainer extends User {
     @Override
     public String toString() {
         return "Trainer{" +
-                "trainerId=" + trainerId +
-                ", first-name='" + getFirstName() + '\'' +
-                ", last-name='" + getLastName() + '\'' +
+                "\n  id=" + trainerId +
+                ", \n  name='" + getFirstName() + ' ' + getLastName() + '\'' +
+                ", \n  username='" + getUsername() + '\'' +
+                ", \n  password='" + getPassword() + '\'' +
+                ", \n  spec.='" + getSpecialization() + '\'' +
+                ", \n  isActive='" + isActive() + '\'' +
                 '}';
     }
 

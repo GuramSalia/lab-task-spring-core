@@ -17,5 +17,5 @@ public class TrainingDAOImpl implements TrainingDAO {
     public void create(Training training) {trainings.put(training.getTrainingId(), training);}
 
     @Override
-    public Training select(int id) {return trainings.get(id);}
+    public Training getById(int id) {return trainings.get(id);}
 }

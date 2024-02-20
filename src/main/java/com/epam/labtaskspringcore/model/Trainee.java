@@ -9,15 +9,20 @@ import lombok.Setter;
 @Getter
 public class Trainee extends User {
     private int traineeId;
-    private String Address;
+    private String address;
     private Date dob;
 
     @Override
     public String toString() {
-        return "Trainee{" +
-                "traineeId=" + traineeId +
-                ", first-name='" + getFirstName() + '\'' +
-                ", last-name='" + getLastName() + '\'' +
+        String isActiveString = isActive() ? "true" : "false";
+        return "Customer{" +
+                "\n  id=" + traineeId +
+                ", \n  name='" + getFirstName() + '\'' + getLastName() + '\'' +
+                ", \n  username='" + getUsername() + '\'' +
+                ", \n  password='" + getPassword() + '\'' +
+                ", \n  Address='" + getAddress() +'\'' +
+                ", \n  dob='" + getDob() +'\'' +
+                ", \n  isActive='" + isActiveString +'\'' +
                 '}';
     }
 

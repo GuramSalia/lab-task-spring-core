@@ -24,13 +24,15 @@ public class TrainerService {
     }
 
     // create/update/select Trainer profile
-    public void create(Trainer trainer) {
+    public Trainer create(Trainer trainer) {
         trainer.setPassword(RandomPasswordGenerator.generateRandomPassword());
         trainer.setUsername(usernameGenerator.generateUsername(trainer));
         trainerDAO.create(trainer);
+        return trainerDAO.getById(trainer.getTrainerId());
+
     }
 
-    public void update(Trainer trainer) {
+    public Trainer update(Trainer trainer) {
         // update username if first or last name changed?
         Trainer old = trainerDAO.getById(trainer.getTrainerId());
         if (
@@ -40,6 +42,7 @@ public class TrainerService {
             trainer.setUsername(usernameGenerator.generateUsername(trainer));
         }
         trainerDAO.update(trainer);
+        return trainerDAO.getById(trainer.getTrainerId());
     }
 
     public Trainer getById(int id) {return trainerDAO.getById(id);}

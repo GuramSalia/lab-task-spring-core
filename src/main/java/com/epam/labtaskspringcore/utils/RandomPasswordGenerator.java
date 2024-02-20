@@ -1,5 +1,7 @@
 package com.epam.labtaskspringcore.utils;
 
+import org.springframework.stereotype.Component;
+
 import java.security.SecureRandom;
 
 @Component
