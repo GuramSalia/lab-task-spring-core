@@ -20,7 +20,7 @@ import java.util.List;
 @Getter
 @Setter
 public class UsernameGeneratorImpl implements UsernameGenerator {
-//    static Logger LOG = LoggerFactory.getLogger(UsernameGeneratorImpl.class);
+    //    static Logger LOG = LoggerFactory.getLogger(UsernameGeneratorImpl.class);
     Logger LOG = LoggerFactory.getLogger(getClass());
 
     private final TrainerDAO trainerDAO;
@@ -31,23 +31,23 @@ public class UsernameGeneratorImpl implements UsernameGenerator {
         this.traineeDAO = traineeDAO;
     }
 
-    public  String generateUsername(User user) {
+    public String generateUsername(User user) {
 
         String base = user.getFirstName() + "." + user.getLastName();
         int counter = 1;
         StringBuilder username = new StringBuilder().append(base);
         while (
                 !isUnique(username.toString(), trainerDAO.getTrainers()) ||
-                !isUnique(username.toString(),traineeDAO.getTrainees())
+                        !isUnique(username.toString(), traineeDAO.getTrainees())
         ) {
             username = new StringBuilder().append(base).append(counter);
             counter++;
         }
-        LOG.info("generateUsername: " + username.toString());
+        //        LOG.info("generateUsername: " + username.toString());
         return username.toString();
     }
 
-    private  <T extends User> boolean isUnique(String username, List<T> users) {
+    private <T extends User> boolean isUnique(String username, List<T> users) {
         boolean result = true;
         for (T user : users) {
             if (user.getUsername().equals(username)) {
@@ -56,10 +56,5 @@ public class UsernameGeneratorImpl implements UsernameGenerator {
             }
         }
         return result;
-    }
-
-    @PostConstruct
-    public void init() {
-        LOG.info("Postconstruct started ");
     }
 }

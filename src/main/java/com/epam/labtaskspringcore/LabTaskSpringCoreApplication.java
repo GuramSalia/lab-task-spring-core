@@ -41,11 +41,14 @@ public class LabTaskSpringCoreApplication {
         System.out.println(trainerService.create(trainer3));
         System.out.println("\n\t end of trainer 3 \n");
 
-
-
-
-
-
-
+        System.out.println("\n \ttrainer 4 \n");
+        Trainer trainer4 = new Trainer();
+        trainer4.setTrainerId(4);
+        trainer4.setFirstName("John");
+        trainer4.setLastName("Doe");
+        trainer4.setActive(true);
+        trainer4.setSpecialization(TrainingType.YOGA);
+        System.out.println(trainerService.create(trainer4));
+        System.out.println("\n\t end of trainer 4 \n");
     }
 }
