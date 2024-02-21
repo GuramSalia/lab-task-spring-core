@@ -15,4 +15,4 @@ when I create entity, should I return newly created entities in order to set the
 Q5:
 What are the arguments for implementing select/create/delete ? If it is a webapp I could read it from request parameter of path variable. what does it mean that service classes should support create/update/delete/select  (other combinations) Trainee (or other) profile? For example all services have create. I can create a particular Profile and store it in storage, for example Training, but do I already have an instance of Trainer or Trainee or do I just have their ids?
 
-# Don't forget to check if Trainer.specialization and Training.trainingType are equal !
+# move from Date to LocalDate in model and memory.

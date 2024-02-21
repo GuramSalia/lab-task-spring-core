@@ -3,23 +3,13 @@ package com.epam.labtaskspringcore.config;
 import com.epam.labtaskspringcore.model.Trainee;
 import com.epam.labtaskspringcore.model.Trainer;
 import com.epam.labtaskspringcore.model.Training;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
-import javax.sound.midi.Soundbank;
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,11 +17,12 @@ import java.util.concurrent.ConcurrentHashMap;
 //Create a Storage Bean: Implement a separate Spring bean responsible for storing the entities in a java map.
 // maybe like DAO I need to create a separate interface InMemoryStorage which this class InMemoryStorageImpl implements?
 
+@Slf4j
 @Setter
 @Getter
 @Component
 public class InMemoryStorage {
-    private final Logger LOG = LoggerFactory.getLogger(InMemoryStorage.class);
+//    private final Logger LOG = LoggerFactory.getLogger(InMemoryStorage.class);
 
     //    @Value("${file.path.initialData}")
     //    private Resource initialDataResource;
@@ -41,6 +32,7 @@ public class InMemoryStorage {
     private Map<Integer, Training> trainings = new ConcurrentHashMap<>();
 
     public void clearStorage(Map<Integer, Objects> storage) {
+        log.info("Clearing storage");
         storage.clear();
     }
 
