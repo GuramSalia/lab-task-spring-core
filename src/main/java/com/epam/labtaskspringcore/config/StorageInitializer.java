@@ -32,6 +32,11 @@ public class StorageInitializer {
 
     @PostConstruct
     public void initialize() {
+        log.error("---------------  TEST InMemory");
+        log.warn("---------------  TEST InMemory");
+        log.info("-------------- TEST InMemory");
+        log.debug("-------------- TEST InMemory");
+        log.trace("---------------  TEST InMemory");
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
