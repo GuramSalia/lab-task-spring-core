@@ -1,5 +1,6 @@
 package com.epam.labtaskspringcore.model;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 import lombok.Getter;
@@ -15,13 +16,22 @@ public class Trainee extends User {
     @Override
     public String toString() {
         String isActiveString = isActive() ? "true" : "false";
+        Calendar calendar = Calendar.getInstance();
+        String dobString = "null";
+        if (dob != null) {
+            calendar.setTime(dob);
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH) + 1;
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+            dobString = year + "-" + month + "-" + day;
+        }
         return "Customer{" +
                 "\n  id=" + traineeId +
                 ", \n  name='" + getFirstName() + '\'' + getLastName() + '\'' +
                 ", \n  username='" + getUsername() + '\'' +
                 ", \n  password='" + getPassword() + '\'' +
                 ", \n  Address='" + getAddress() +'\'' +
-                ", \n  dob='" + getDob() +'\'' +
+                ", \n  dob=" + dobString +
                 ", \n  isActive='" + isActiveString +'\'' +
                 '}';
     }

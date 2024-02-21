@@ -50,7 +50,7 @@
       "trainerId": 1,
       "name": "Cardio Workout",
       "type": "CARDIO",
-      "date": "2024-02-21T08:00:00",
+      "date": "2024-02-21",
       "durationInMinutes": 60
     },
     {
@@ -59,7 +59,7 @@
       "trainerId": 2,
       "name": "Strength Training",
       "type": "STRENGTH",
-      "date": "2024-02-22T14:00:00",
+      "date": "2024-02-22",
       "durationInMinutes": 45
     }
   ]
