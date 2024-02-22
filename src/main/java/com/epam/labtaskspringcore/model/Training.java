@@ -1,17 +1,11 @@
 package com.epam.labtaskspringcore.model;
 
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.format.datetime.DateFormatter;
 
 @Setter
 @Getter
@@ -22,7 +16,7 @@ public class Training {
     private String name;
     private TrainingType type;
     //LocalDate still not working for reading from json 
-//    @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
+    //@JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
     private Date date;
     private int durationInMinutes;
 

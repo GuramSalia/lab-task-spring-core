@@ -15,6 +15,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
@@ -33,16 +34,14 @@ public class StorageInitializer {
 
     @PostConstruct
     public void initialize() {
-        log.error("---------------  TEST InMemory");
-        log.warn("---------------  TEST InMemory");
-        log.info("-------------- TEST InMemory");
-        log.debug("-------------- TEST InMemory");
-        log.trace("---------------  TEST InMemory");
+
+        log.info(">>>> Storage Initialization");
+
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-        try {
-            JsonNode jsonNode = objectMapper.readTree(initialDataResource.getInputStream());
+        try (InputStream inputStream = initialDataResource.getInputStream()) {
+            JsonNode jsonNode = objectMapper.readTree(inputStream);
             initializeTrainers(jsonNode.get("Trainer"));
             initializeTrainees(jsonNode.get("Trainee"));
             initializeTrainings(jsonNode.get("Training"));
@@ -82,13 +81,12 @@ public class StorageInitializer {
 
     private void initializeTrainings(JsonNode trainingNode) throws ParseException, JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
-//        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-//        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        //        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        //        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        //        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
-//        changing to LocalDate instead of localdatetime
+        //        changing to LocalDate instead of localdatetime
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
 
         objectMapper.setDateFormat(dateFormat);
         for (JsonNode node : trainingNode) {

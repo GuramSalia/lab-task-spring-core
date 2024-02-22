@@ -3,25 +3,18 @@ package com.epam.labtaskspringcore.utils;
 import com.epam.labtaskspringcore.dao.TraineeDAO;
 import com.epam.labtaskspringcore.dao.TrainerDAO;
 import com.epam.labtaskspringcore.model.User;
-import com.epam.labtaskspringcore.service.TraineeService;
-import com.epam.labtaskspringcore.service.TrainerService;
-import com.epam.labtaskspringcore.utils.UsernameGenerator;
-import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.Setter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Component
 @Getter
 @Setter
 public class UsernameGeneratorImpl implements UsernameGenerator {
-    //    static Logger LOG = LoggerFactory.getLogger(UsernameGeneratorImpl.class);
-    Logger LOG = LoggerFactory.getLogger(getClass());
 
     private final TrainerDAO trainerDAO;
     private final TraineeDAO traineeDAO;
@@ -43,7 +36,7 @@ public class UsernameGeneratorImpl implements UsernameGenerator {
             username = new StringBuilder().append(base).append(counter);
             counter++;
         }
-        //        LOG.info("generateUsername: " + username.toString());
+        log.info(">>>> Generating username");
         return username.toString();
     }
 

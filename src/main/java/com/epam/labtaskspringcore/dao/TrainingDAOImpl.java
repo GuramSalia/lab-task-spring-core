@@ -1,7 +1,6 @@
 package com.epam.labtaskspringcore.dao;
 
 import com.epam.labtaskspringcore.config.InMemoryStorage;
-import com.epam.labtaskspringcore.model.Trainer;
 import com.epam.labtaskspringcore.model.Training;
 import org.springframework.stereotype.Repository;
 

@@ -1,16 +1,19 @@
 package com.epam.labtaskspringcore.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
-import lombok.Getter;
-import lombok.Setter;
 
 @Setter
 @Getter
 public class Trainee extends User {
     private int traineeId;
     private String address;
+    //LocalDate still not working for reading from json
+    //@JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
     private Date dob;
 
     @Override
@@ -27,12 +30,12 @@ public class Trainee extends User {
         }
         return "Customer{" +
                 "\n  id=" + traineeId +
-                ", \n  name='" + getFirstName() + '\'' + getLastName() + '\'' +
+                ", \n  name='" + getFirstName() + ' ' + getLastName() + '\'' +
                 ", \n  username='" + getUsername() + '\'' +
                 ", \n  password='" + getPassword() + '\'' +
-                ", \n  Address='" + getAddress() +'\'' +
+                ", \n  Address='" + getAddress() + '\'' +
                 ", \n  dob=" + dobString +
-                ", \n  isActive='" + isActiveString +'\'' +
+                ", \n  isActive='" + isActiveString + '\'' +
                 '}';
     }
 

@@ -7,12 +7,14 @@ import com.epam.labtaskspringcore.model.Trainer;
 import com.epam.labtaskspringcore.model.User;
 import com.epam.labtaskspringcore.utils.RandomPasswordGenerator;
 import com.epam.labtaskspringcore.utils.UsernameGenerator;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
 
+@Slf4j
 @Service
 public class TrainerService {
     private final TrainerDAO trainerDAO;
@@ -28,6 +30,7 @@ public class TrainerService {
         trainer.setPassword(RandomPasswordGenerator.generateRandomPassword());
         trainer.setUsername(usernameGenerator.generateUsername(trainer));
         trainerDAO.create(trainer);
+        log.info(">>>> Creating trainer with username: " + trainer.getUsername());
         return trainerDAO.getById(trainer.getTrainerId());
 
     }
@@ -42,10 +45,15 @@ public class TrainerService {
             trainer.setUsername(usernameGenerator.generateUsername(trainer));
         }
         trainerDAO.update(trainer);
+        log.info(">>>> Updating trainer with username: " + trainer.getUsername());
         return trainerDAO.getById(trainer.getTrainerId());
     }
 
-    public Trainer getById(int id) {return trainerDAO.getById(id);}
+    public Trainer getById(int id) {
+        log.info(">>>> Getting trainer with id: " + id);
+        return trainerDAO.getById(id);}
 
-    public List<User> getTrainers() {return trainerDAO.getTrainers();}
+    public List<User> getTrainers() {
+        log.info(">>>> Getting trainers");
+        return trainerDAO.getTrainers();}
 }
