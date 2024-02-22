@@ -2,7 +2,7 @@
   "Trainer": [
 
     {
-      "trainerId": 1,
+      "id": 1,
       "specialization": "CARDIO",
       "firstName": "Tim",
       "lastName": "Smith",
@@ -11,7 +11,7 @@
       "active": true
     },
     {
-      "trainerId": 2,
+      "id": 2,
       "specialization": "STRENGTH",
       "firstName": "Sam",
       "lastName": "Jones",
@@ -22,7 +22,7 @@
   ],
   "Trainee": [
     {
-      "traineeId": 1,
+      "id": 1,
       "firstName": "John",
       "lastName": "Doe",
       "username": "John.Doe",
@@ -32,7 +32,7 @@
       "active": true
     },
     {
-      "traineeId": 2,
+      "id": 2,
       "firstName": "Jane",
       "lastName": "Smith",
       "username": "Jane.Smith",
@@ -45,7 +45,7 @@
   ],
   "Training": [
     {
-      "trainingId": 1,
+      "id": 1,
       "traineeId": 1,
       "trainerId": 1,
       "name": "Cardio Workout",
@@ -54,8 +54,7 @@
       "durationInMinutes": 60
     },
     {
-      "trainingId": 2,
-      "traineeId": 2,
+      "id": 2,
       "trainerId": 2,
       "name": "Strength Training",
       "type": "STRENGTH",

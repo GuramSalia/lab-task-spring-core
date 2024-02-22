@@ -12,8 +12,6 @@ import com.epam.labtaskspringcore.service.TrainingService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.util.Date;
-
 @SpringBootApplication
 public class LabTaskSpringCoreApplication {
 
@@ -37,7 +35,7 @@ public class LabTaskSpringCoreApplication {
 
         System.out.println("\n \ttrainer 3 ");
         Trainer trainer3 = new Trainer();
-        trainer3.setTrainerId(3);
+        trainer3.setId(3);
         trainer3.setFirstName("John");
         trainer3.setLastName("Doe");
         trainer3.setActive(true);
@@ -47,7 +45,7 @@ public class LabTaskSpringCoreApplication {
 
         System.out.println("\n \ttrainer 4 ");
         Trainer trainer4 = new Trainer();
-        trainer4.setTrainerId(4);
+        trainer4.setId(4);
         trainer4.setFirstName("John");
         trainer4.setLastName("Doe");
         trainer4.setActive(true);
@@ -57,9 +55,9 @@ public class LabTaskSpringCoreApplication {
 
         System.out.println("\n \ttraining 3 ");
         Training training3 = new Training();
-        training3.setTrainingId(3);
-        training3.setTrainerId(3);
+        training3.setId(3);
         training3.setTraineeId(2);
+        training3.setTrainerId(3);
         training3.setName("personal training");
         training3.setType(TrainingType.PERSONAL);
         training3.setDurationInMinutes(30);
@@ -69,9 +67,9 @@ public class LabTaskSpringCoreApplication {
 
         System.out.println("\n \ttraining 4 ");
         Training training4 = new Training();
-        training4.setTrainingId(4);
+        training4.setId(4);
+        training4.setTraineeId(4);
         training4.setTrainerId(3);
-        training4.setTraineeId(2);
         training4.setName("Yoga training");
         training4.setType(TrainingType.YOGA);
         training4.setDurationInMinutes(30);

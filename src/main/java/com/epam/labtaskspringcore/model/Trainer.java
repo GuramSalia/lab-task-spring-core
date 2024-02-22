@@ -9,13 +9,13 @@ import java.util.Objects;
 @Getter
 public class Trainer extends User {
 
-    private int trainerId;
+    private int id;
     private TrainingType specialization;
 
     @Override
     public String toString() {
         return "Trainer{" +
-                "\n  id=" + trainerId +
+                "\n  id=" + id +
                 ", \n  name='" + getFirstName() + ' ' + getLastName() + '\'' +
                 ", \n  username='" + getUsername() + '\'' +
                 ", \n  password='" + getPassword() + '\'' +
@@ -29,11 +29,11 @@ public class Trainer extends User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Trainer trainer = (Trainer) o;
-        return getTrainerId() == trainer.getTrainerId();
+        return getId() == trainer.getId();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getTrainerId(), getFirstName(), getLastName());
+        return Objects.hash(getId(), getFirstName(), getLastName());
     }
 }

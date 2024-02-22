@@ -10,9 +10,9 @@ import java.util.Objects;
 @Setter
 @Getter
 public class Training {
-    private int trainingId;
-    private int traineeId;
+    private int id;
     private int trainerId;
+    private int traineeId;
     private String name;
     private TrainingType type;
     //LocalDate still not working for reading from json 
@@ -25,7 +25,7 @@ public class Training {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Training training = (Training) o;
-        return getTrainingId() == training.getTrainingId() && getTraineeId() == training.getTraineeId() && getTrainerId() == training.getTrainerId() && getDurationInMinutes() == training.getDurationInMinutes() && Objects.equals(
+        return getId() == training.getId() && getId() == training.getId() && getTrainerId() == training.getTrainerId() && getDurationInMinutes() == training.getDurationInMinutes() && Objects.equals(
                 getName(),
                 training.getName()) && getType() == training.getType() && Objects.equals(getDate(),
                                                                                          training.getDate());
@@ -33,8 +33,8 @@ public class Training {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getTrainingId(),
-                            getTraineeId(),
+        return Objects.hash(getId(),
+                            getId(),
                             getTrainerId(),
                             getName(),
                             getType(),
@@ -55,8 +55,8 @@ public class Training {
         }
 
         return "Training{" +
-                "\n  id=" + trainingId +
-                ", \n  traineeId=" + traineeId +
+                "\n  id=" + id +
+                ", \n  traineeId=" + id +
                 ", \n  trainerId=" + trainerId +
                 ", \n  name='" + name + '\'' +
                 ", \n  type=" + type +

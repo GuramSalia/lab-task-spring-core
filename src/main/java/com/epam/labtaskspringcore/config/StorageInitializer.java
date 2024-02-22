@@ -7,7 +7,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -58,7 +57,7 @@ public class StorageInitializer {
         for (JsonNode node : traineeNode) {
             try {
                 Trainee trainee = objectMapper.treeToValue(node, Trainee.class);
-                storage.getTrainees().put(trainee.getTraineeId(), trainee);
+                storage.getTrainees().put(trainee.getId(), trainee);
             } catch (JsonProcessingException e) {
                 log.error("Error processing Trainee JSON node: {}", node.toString(), e);
             }
@@ -72,7 +71,7 @@ public class StorageInitializer {
         for (JsonNode node : trainerNode) {
             try {
                 Trainer trainer = objectMapper.treeToValue(node, Trainer.class);
-                storage.getTrainers().put(trainer.getTrainerId(), trainer);
+                storage.getTrainers().put(trainer.getId(), trainer);
             } catch (JsonProcessingException e) {
                 log.error("Error processing Trainer JSON node: {}", node.toString(), e);
             }
@@ -92,7 +91,7 @@ public class StorageInitializer {
         for (JsonNode node : trainingNode) {
             try {
                 Training training = objectMapper.treeToValue(node, Training.class);
-                storage.getTrainings().put(training.getTrainingId(), training);
+                storage.getTrainings().put(training.getId(), training);
             } catch (JsonProcessingException e) {
                 log.error("Error processing Trainer JSON node: {}", node.toString(), e);
             }

@@ -13,7 +13,7 @@ public class TrainingDAOImpl implements TrainingDAO {
     public TrainingDAOImpl(InMemoryStorage storage) {this.trainings = storage.getTrainings();}
 
     @Override
-    public void create(Training training) {trainings.put(training.getTrainingId(), training);}
+    public void create(Training training) {trainings.put(training.getId(), training);}
 
     @Override
     public Training getById(int id) {return trainings.get(id);}

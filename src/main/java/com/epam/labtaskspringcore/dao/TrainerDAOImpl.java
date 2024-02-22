@@ -16,10 +16,10 @@ public class TrainerDAOImpl implements TrainerDAO {
     public TrainerDAOImpl(InMemoryStorage storage) {this.trainers = storage.getTrainers();}
 
     @Override
-    public void create(Trainer trainer) {trainers.put(trainer.getTrainerId(), trainer);}
+    public void create(Trainer trainer) {trainers.put(trainer.getId(), trainer);}
 
     @Override
-    public void update(Trainer trainer) {trainers.put(trainer.getTrainerId(), trainer);}
+    public void update(Trainer trainer) {trainers.put(trainer.getId(), trainer);}
 
     @Override
     public Trainer getById(int id) {return trainers.get(id);}

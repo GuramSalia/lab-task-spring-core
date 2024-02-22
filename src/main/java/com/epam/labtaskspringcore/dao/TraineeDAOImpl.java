@@ -14,9 +14,9 @@ public class TraineeDAOImpl implements TraineeDAO {
 
     public TraineeDAOImpl(InMemoryStorage storage) {this.trainees = storage.getTrainees();}
 
-    public void create(Trainee trainee) {trainees.put(trainee.getTraineeId(), trainee);}
+    public void create(Trainee trainee) {trainees.put(trainee.getId(), trainee);}
 
-    public void update(Trainee trainee) {trainees.put(trainee.getTraineeId(), trainee);}
+    public void update(Trainee trainee) {trainees.put(trainee.getId(), trainee);}
 
     public void delete(int id) {trainees.remove(id);}
 

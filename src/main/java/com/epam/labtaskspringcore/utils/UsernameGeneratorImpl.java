@@ -30,8 +30,8 @@ public class UsernameGeneratorImpl implements UsernameGenerator {
         int counter = 1;
         StringBuilder username = new StringBuilder().append(base);
         while (
-                !isUnique(username.toString(), trainerDAO.getTrainers()) ||
-                        !isUnique(username.toString(), traineeDAO.getTrainees())
+                !isUnique(user, username.toString(), trainerDAO.getTrainers()) ||
+                        !isUnique(user, username.toString(), traineeDAO.getTrainees())
         ) {
             username = new StringBuilder().append(base).append(counter);
             counter++;
@@ -40,14 +40,27 @@ public class UsernameGeneratorImpl implements UsernameGenerator {
         return username.toString();
     }
 
-    private <T extends User> boolean isUnique(String username, List<T> users) {
+
+    private <T extends User, V extends User> boolean isUnique(V targetUser, String username, List<T> users) {
         boolean result = true;
         for (T user : users) {
-            if (user.getUsername().equals(username)) {
+            if (user.getUsername().equals(username) && !user.equals(targetUser)) {
                 result = false;
                 break;
             }
         }
         return result;
     }
+
+
+//    private <T extends User> boolean isUnique(String username, List<T> users) {
+//        boolean result = true;
+//        for (T user : users) {
+//            if (user.getUsername().equals(username)) {
+//                result = false;
+//                break;
+//            }
+//        }
+//        return result;
+//    }
 }

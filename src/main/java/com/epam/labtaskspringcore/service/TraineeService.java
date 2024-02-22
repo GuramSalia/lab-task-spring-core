@@ -29,12 +29,12 @@ public class TraineeService {
         trainee.setPassword(RandomPasswordGenerator.generateRandomPassword());
         traineeDAO.create(trainee);
         log.info(">>>> Creating trainee with username: " + trainee.getUsername());
-        return traineeDAO.getById(trainee.getTraineeId());
+        return traineeDAO.getById(trainee.getId());
     }
 
     public Trainee update(Trainee trainee) {
         // update username if first or last name changed
-        Trainee old = traineeDAO.getById(trainee.getTraineeId());
+        Trainee old = traineeDAO.getById(trainee.getId());
 
         if (
                 !Objects.equals(old.getFirstName(), trainee.getFirstName())
@@ -48,7 +48,7 @@ public class TraineeService {
         trainee.setUsername(usernameGenerator.generateUsername(trainee));
         traineeDAO.update(trainee);
         log.info(">>>> Updating trainee with username: " + trainee.getUsername());
-        return traineeDAO.getById(trainee.getTraineeId());
+        return traineeDAO.getById(trainee.getId());
     }
 
     public void delete(int traineeId) {

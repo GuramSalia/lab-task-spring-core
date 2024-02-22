@@ -1,14 +1,11 @@
 package com.epam.labtaskspringcore.service;
 
 import com.epam.labtaskspringcore.dao.TrainerDAO;
-import com.epam.labtaskspringcore.dao.TrainerDAOImpl;
-import com.epam.labtaskspringcore.model.Trainee;
 import com.epam.labtaskspringcore.model.Trainer;
 import com.epam.labtaskspringcore.model.User;
 import com.epam.labtaskspringcore.utils.RandomPasswordGenerator;
 import com.epam.labtaskspringcore.utils.UsernameGenerator;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,13 +28,13 @@ public class TrainerService {
         trainer.setUsername(usernameGenerator.generateUsername(trainer));
         trainerDAO.create(trainer);
         log.info(">>>> Creating trainer with username: " + trainer.getUsername());
-        return trainerDAO.getById(trainer.getTrainerId());
+        return trainerDAO.getById(trainer.getId());
 
     }
 
     public Trainer update(Trainer trainer) {
         // update username if first or last name changed?
-        Trainer old = trainerDAO.getById(trainer.getTrainerId());
+        Trainer old = trainerDAO.getById(trainer.getId());
         if (
                 !Objects.equals(old.getFirstName(), trainer.getFirstName())
                         || !Objects.equals(old.getLastName(), trainer.getLastName())
@@ -46,7 +43,7 @@ public class TrainerService {
         }
         trainerDAO.update(trainer);
         log.info(">>>> Updating trainer with username: " + trainer.getUsername());
-        return trainerDAO.getById(trainer.getTrainerId());
+        return trainerDAO.getById(trainer.getId());
     }
 
     public Trainer getById(int id) {

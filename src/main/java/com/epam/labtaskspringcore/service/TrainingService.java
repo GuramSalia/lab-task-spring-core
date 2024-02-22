@@ -30,7 +30,7 @@ public class TrainingService {
         } else {
             trainingDAO.create(training);
             log.info(">>>> Creating training: " + training.getName());
-            return trainingDAO.getById(training.getTrainingId());
+            return trainingDAO.getById(training.getId());
         }
     }
 

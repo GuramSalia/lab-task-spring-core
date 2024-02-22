@@ -10,7 +10,7 @@ import java.util.Objects;
 @Setter
 @Getter
 public class Trainee extends User {
-    private int traineeId;
+    private int id;
     private String address;
     //LocalDate still not working for reading from json
     //@JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
@@ -29,7 +29,7 @@ public class Trainee extends User {
             dobString = year + "-" + month + "-" + day;
         }
         return "Customer{" +
-                "\n  id=" + traineeId +
+                "\n  id=" + id +
                 ", \n  name='" + getFirstName() + ' ' + getLastName() + '\'' +
                 ", \n  username='" + getUsername() + '\'' +
                 ", \n  password='" + getPassword() + '\'' +
@@ -44,11 +44,11 @@ public class Trainee extends User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Trainee trainee = (Trainee) o;
-        return getTraineeId() == trainee.getTraineeId();
+        return getId() == trainee.getId();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getTraineeId(), getFirstName(), getLastName());
+        return Objects.hash(getId(), getFirstName(), getLastName());
     }
 }
