@@ -21,7 +21,8 @@ public class Training {
     private int trainerId;
     private String name;
     private TrainingType type;
-//    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    //LocalDate still not working for reading from json 
+//    @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
     private Date date;
     private int durationInMinutes;
 
