@@ -2,9 +2,12 @@ package com.epam.labtaskspringcore.dao;
 
 import com.epam.labtaskspringcore.config.InMemoryStorage;
 import com.epam.labtaskspringcore.model.Training;
+import com.epam.labtaskspringcore.model.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -30,4 +33,7 @@ public class TrainingDAOImpl implements TrainingDAO {
     public Optional<Training> getById(int id) {
         return Optional.ofNullable(trainings.get(id));
     }
+
+    @Override
+    public List<Training> getTrainings() {return new ArrayList<>(trainings.values());}
 }

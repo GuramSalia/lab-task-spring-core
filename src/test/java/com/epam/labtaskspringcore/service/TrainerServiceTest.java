@@ -17,7 +17,6 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 class TrainerServiceTest {
-
     InMemoryStorage storage;
     TraineeDAO traineeDAO;
     TrainerDAO trainerDAO;
