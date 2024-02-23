@@ -83,7 +83,16 @@ public class LabTaskSpringCoreApplication {
         training3.setName("personal training");
         training3.setType(TrainingType.PERSONAL);
         training3.setDurationInMinutes(30);
-        System.out.println(trainingService.create(training3));
+        if (trainingService.create(training3).isEmpty()) {
+            log.error("could not create training");
+        } else {
+            Optional<Training> training3Optional = trainingService.getById(3);
+            if (training3Optional.isEmpty()) {
+                log.error("could not get training3");
+            } else {
+                System.out.println(training3Optional.get());
+            }
+        }
         System.out.println("\tend of training 3 \n");
 
         System.out.println("\n \ttraining 4 ");
@@ -94,7 +103,16 @@ public class LabTaskSpringCoreApplication {
         training4.setName("Yoga training");
         training4.setType(TrainingType.YOGA);
         training4.setDurationInMinutes(30);
-        System.out.println(trainingService.create(training4));
+        if (trainingService.create(training4).isEmpty()) {
+            log.error("could not create training");
+        } else {
+            Optional<Training> training4Optional = trainingService.getById(4);
+            if (training4Optional.isEmpty()) {
+                log.error("could not get training3");
+            } else {
+                System.out.println(training4Optional.get());
+            }
+        }
         System.out.println("\tend of training 4 \n");
 
         // updated trainee with id=2

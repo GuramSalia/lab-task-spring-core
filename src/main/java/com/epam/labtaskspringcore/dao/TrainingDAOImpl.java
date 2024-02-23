@@ -2,10 +2,13 @@ package com.epam.labtaskspringcore.dao;
 
 import com.epam.labtaskspringcore.config.InMemoryStorage;
 import com.epam.labtaskspringcore.model.Training;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.util.Map;
+import java.util.Optional;
 
+@Slf4j
 @Repository
 public class TrainingDAOImpl implements TrainingDAO {
     private final Map<Integer, Training> trainings;
@@ -13,8 +16,18 @@ public class TrainingDAOImpl implements TrainingDAO {
     public TrainingDAOImpl(InMemoryStorage storage) {this.trainings = storage.getTrainings();}
 
     @Override
-    public void create(Training training) {trainings.put(training.getId(), training);}
+    public Optional<Training> create(Training training) {
+        int id = training.getId();
+        if (trainings.containsKey(id)) {
+            log.error("Training with id {} already exists", id);
+            return Optional.empty();
+        }
+        trainings.put(id, training);
+        return Optional.of(trainings.get(id));
+    }
 
     @Override
-    public Training getById(int id) {return trainings.get(id);}
+    public Optional<Training> getById(int id) {
+        return Optional.ofNullable(trainings.get(id));
+    }
 }

@@ -25,10 +25,7 @@ public class Training {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Training training = (Training) o;
-        return getId() == training.getId() && getId() == training.getId() && getTrainerId() == training.getTrainerId() && getDurationInMinutes() == training.getDurationInMinutes() && Objects.equals(
-                getName(),
-                training.getName()) && getType() == training.getType() && Objects.equals(getDate(),
-                                                                                         training.getDate());
+        return getId() == training.getId() ;
     }
 
     @Override
