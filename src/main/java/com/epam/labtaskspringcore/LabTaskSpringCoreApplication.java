@@ -44,7 +44,16 @@ public class LabTaskSpringCoreApplication {
         trainer3.setLastName("Doe");
         trainer3.setActive(true);
         trainer3.setSpecialization(TrainingType.YOGA);
-        System.out.println(trainerService.create(trainer3));
+        if (trainerService.create(trainer3).isEmpty()) {
+            log.error("could not create trainer");
+        } else {
+            Optional<Trainer> trainer3Optional = trainerService.getById(3);
+            if (trainer3Optional.isEmpty()) {
+                log.error("could not get trainer3");
+            } else {
+                System.out.println(trainer3Optional.get());
+            }
+        }
         System.out.println("\t end of trainer 3 \n");
 
         System.out.println("\n \ttrainer 4 ");
@@ -54,7 +63,16 @@ public class LabTaskSpringCoreApplication {
         trainer4.setLastName("Doe");
         trainer4.setActive(true);
         trainer4.setSpecialization(TrainingType.YOGA);
-        System.out.println(trainerService.create(trainer4));
+        if (trainerService.create(trainer4).isEmpty()) {
+            log.error("could not create trainer");
+        } else {
+            Optional<Trainer> trainer4Optional = trainerService.getById(3);
+            if (trainer4Optional.isEmpty()) {
+                log.error("could not get trainer3");
+            } else {
+                System.out.println(trainer4Optional.get());
+            }
+        }
         System.out.println("\t end of trainer 4 \n");
 
         System.out.println("\n \ttraining 3 ");
@@ -68,7 +86,6 @@ public class LabTaskSpringCoreApplication {
         System.out.println(trainingService.create(training3));
         System.out.println("\tend of training 3 \n");
 
-
         System.out.println("\n \ttraining 4 ");
         Training training4 = new Training();
         training4.setId(4);
@@ -80,13 +97,19 @@ public class LabTaskSpringCoreApplication {
         System.out.println(trainingService.create(training4));
         System.out.println("\tend of training 4 \n");
 
-
         // updated trainee with id=2
         System.out.println("\n \ttrainee id=2");
-        Trainee trainee2 = traineeService.getById(2).orElse(null);
-        trainee2.setLastName("Schmidt");
-        System.out.println(traineeService.update(trainee2));
+        if (traineeService.getById(2).isEmpty()) {
+            log.error("No training with id=2 exists");
+        } else {
+            Trainee trainee2 = traineeService.getById(2).get();
+            trainee2.setLastName("Schmidt");
+            if (traineeService.update(trainee2).isEmpty()) {
+                log.error("could not update trainee2");
+            } else {
+                System.out.println(traineeService.getById(2).get());
+            }
+        }
         System.out.println("\tend of trainee id=2 \n");
-
     }
 }

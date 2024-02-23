@@ -18,26 +18,26 @@ public class TraineeDAOImpl implements TraineeDAO {
     public TraineeDAOImpl(InMemoryStorage storage) {this.trainees = storage.getTrainees();}
 
     public Optional<Trainee> create(Trainee trainee) {
-        if(trainees.containsKey(trainee.getId())){
-            log.error("Trainee with id {} already exists", trainee.getId());
-            return null;
+        int id = trainee.getId();
+        if (trainees.containsKey(id)) {
+            log.error("Trainee with id {} already exists", id);
+            return Optional.empty();
         } else {
-            trainees.put(trainee.getId(), trainee);
-            return Optional.of(trainees.get(trainee.getId()));
+            trainees.put(id, trainee);
+            return Optional.of(trainees.get(id));
         }
-//        trainees.put(trainee.getId(), trainee);
+        //        trainees.put(trainee.getId(), trainee);
     }
 
     public Optional<Trainee> update(Trainee trainee) {
-        if(trainees.containsKey(trainee.getId())) {
-            trainees.put(trainee.getId(), trainee);
-            return Optional.of(trainees.get(trainee.getId()));
+        int id = trainee.getId();
+        if (trainees.containsKey(id)) {
+            trainees.put(id, trainee);
+            return Optional.of(trainees.get(id));
         } else {
-            log.error("Trainee with id {} does not exist", trainee.getId());
-            return null;
+            log.error("Trainee with id {} does not exist", id);
+            return Optional.empty();
         }
-
-//        trainees.put(trainee.getId(), trainee);
     }
 
     public boolean delete(int id) {
@@ -46,7 +46,7 @@ public class TraineeDAOImpl implements TraineeDAO {
         return trainees.containsKey(id);
     }
 
-    public Optional<Trainee>  getById(int id) {return Optional.ofNullable(trainees.get(id));}
+    public Optional<Trainee> getById(int id) {return Optional.ofNullable(trainees.get(id));}
 
     @Override
     public List<Trainee> getTrainees() {return new ArrayList<>(trainees.values());}

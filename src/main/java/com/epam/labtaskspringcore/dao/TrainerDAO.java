@@ -5,10 +5,11 @@ import com.epam.labtaskspringcore.model.Trainer;
 import com.epam.labtaskspringcore.model.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TrainerDAO {
-    public void create(Trainer trainer);
-    public void update(Trainer trainer);
-    public Trainer getById(int id);
+    public Optional<Trainer> create(Trainer trainer);
+    public Optional<Trainer> update(Trainer trainer);
+    public Optional<Trainer> getById(int id);
     List<User> getTrainers();
 }

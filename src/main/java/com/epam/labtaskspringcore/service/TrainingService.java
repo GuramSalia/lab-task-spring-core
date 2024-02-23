@@ -20,7 +20,8 @@ public class TrainingService {
 
     public Training create(Training training) {
         TrainingType trainingTypeOfTraining = training.getType();
-        TrainingType trainingTypeOfTrainer = trainerDAO.getById(training.getTrainerId()).getSpecialization();
+        // .get() without isPresent() check
+        TrainingType trainingTypeOfTrainer = trainerDAO.getById(training.getTrainerId()).get().getSpecialization();
 
         if (!trainingTypeOfTraining.equals(trainingTypeOfTrainer)) {
             log.warn(">>>> cannot create training, because the trainer has a different specialization");
