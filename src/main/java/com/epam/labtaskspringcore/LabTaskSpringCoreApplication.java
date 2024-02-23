@@ -9,9 +9,11 @@ import com.epam.labtaskspringcore.model.TrainingType;
 import com.epam.labtaskspringcore.service.TraineeService;
 import com.epam.labtaskspringcore.service.TrainerService;
 import com.epam.labtaskspringcore.service.TrainingService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+@Slf4j
 @SpringBootApplication
 public class LabTaskSpringCoreApplication {
 
@@ -21,13 +23,13 @@ public class LabTaskSpringCoreApplication {
 
         InMemoryStorage inMemoryStorage = ApplicationContextProvider.getContext().getBean(InMemoryStorage.class);
 
-        System.out.println("\n\t ==============  START  ==============\n");
+        log.info("\n\n>>>> START  ==============\n");
         inMemoryStorage.getTrainees().values().stream().forEach(System.out::println);
-        System.out.println("\n .... ... \n");
+        log.info("^^^^ TRAINEES\n");
         inMemoryStorage.getTrainers().values().stream().forEach(System.out::println);
-        System.out.println("\n .... ... \n");
+        log.info("^^^^ TRAINERS\n");
         inMemoryStorage.getTrainings().values().stream().forEach(System.out::println);
-        System.out.println("\n .... ... \n");
+        log.info("^^^^ TRAININGS\n");
 
         TrainerService trainerService = ApplicationContextProvider.getContext().getBean(TrainerService.class);
         TraineeService traineeService = ApplicationContextProvider.getContext().getBean(TraineeService.class);

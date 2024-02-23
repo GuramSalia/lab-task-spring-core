@@ -28,12 +28,6 @@ class UsernameGeneratorImplTest {
     Trainer trainer2;
     Trainer trainer3;
 
-    @BeforeAll
-    static void setUp() {
-
-        log.error(">>>> test setup");
-    }
-
     @BeforeEach
     void setUpBeforeEach() {
         storage = new InMemoryStorage();
