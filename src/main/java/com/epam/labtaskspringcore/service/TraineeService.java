@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -24,43 +25,38 @@ public class TraineeService {
     }
 
     // create/update/delete/select Trainee profile
-    public Trainee create(Trainee trainee) {
+    public Optional<Trainee> create(Trainee trainee) {
         trainee.setUsername(usernameGenerator.generateUsername(trainee));
         trainee.setPassword(RandomPasswordGenerator.generateRandomPassword());
-        traineeDAO.create(trainee);
         log.info(">>>> Creating trainee with username: " + trainee.getUsername());
-        return traineeDAO.getById(trainee.getId());
+        //        traineeDAO.create(trainee);
+        //        return traineeDAO.getById(trainee.getId());
+        return traineeDAO.create(trainee);
     }
 
-    public Trainee update(Trainee trainee) {
-        // update username if first or last name changed
-        Trainee old = traineeDAO.getById(trainee.getId());
+    public Optional<Trainee> update(Trainee trainee) {
+        // update username if first or last name changed. We can do it when I can look it up in DB. now it is not
+        // possible because I have one reference and there separate data which could be different. But then the
+        // question remains, if it is more expensive to look-up old names in DB or just call the method to update
+        // username
 
-        if (
-                !Objects.equals(old.getFirstName(), trainee.getFirstName())
-                        || !Objects.equals(old.getLastName(), trainee.getLastName())
-
-        ) {
-            trainee.setUsername(usernameGenerator.generateUsername(trainee));
-            log.info(">>>> updating username: " + trainee.getUsername());
-            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>");
-        }
         trainee.setUsername(usernameGenerator.generateUsername(trainee));
-        traineeDAO.update(trainee);
-        log.info(">>>> Updating trainee with username: " + trainee.getUsername());
-        return traineeDAO.getById(trainee.getId());
+
+        return traineeDAO.update(trainee);
     }
 
-    public void delete(int traineeId) {
-        log.info(">>>> Deleting trainee with id: " + traineeId);
-        traineeDAO.delete(traineeId);
+    public boolean delete(int traineeId) {
+//        log.info(">>>> Deleting trainee with id: " + traineeId);
+        return traineeDAO.delete(traineeId);
     }
 
-    public Trainee getById(int id) {
+    public Optional<Trainee>  getById(int id) {
         log.info(">>>> Getting trainee with id: " + id);
-        return traineeDAO.getById(id);}
+        return traineeDAO.getById(id);
+    }
 
     public List<Trainee> getTrainees() {
         log.info(">>>> Getting trainees");
-        return traineeDAO.getTrainees();}
+        return traineeDAO.getTrainees();
+    }
 }

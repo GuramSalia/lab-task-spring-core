@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.util.Optional;
+
 @Slf4j
 @SpringBootApplication
 public class LabTaskSpringCoreApplication {
@@ -81,7 +83,7 @@ public class LabTaskSpringCoreApplication {
 
         // updated trainee with id=2
         System.out.println("\n \ttrainee id=2");
-        Trainee trainee2 = traineeService.getById(2);
+        Trainee trainee2 = traineeService.getById(2).orElse(null);
         trainee2.setLastName("Schmidt");
         System.out.println(traineeService.update(trainee2));
         System.out.println("\tend of trainee id=2 \n");
