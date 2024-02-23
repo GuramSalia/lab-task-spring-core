@@ -66,6 +66,11 @@ class UsernameGeneratorImplTest {
         trainer3.setId(3);
     }
 
+    @AfterEach
+    void tearDownAfterEach() {
+        storage.clearStorage();
+    }
+
     @Nested
     @DisplayName("for trainee")
     class TestUsernameGeneratorForTrainee {

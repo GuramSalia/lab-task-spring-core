@@ -25,11 +25,6 @@ public class TrainingService {
         //Assume I can create training without indicating trainerId or trainingType.
 
         TrainingType trainingTypeOfTraining = training.getType();
-
-        // .get() without isPresent() check
-
-        //        TrainingType trainingTypeOfTrainer = trainerDAO.getById(training.getTrainerId()).get()
-        //        .getSpecialization();
         TrainingType trainingTypeOfTrainer;
         Optional<Trainer> optionalTrainer = trainerDAO.getById(training.getTrainerId());
         if (optionalTrainer.isEmpty()) {
@@ -58,7 +53,7 @@ public class TrainingService {
         }
     }
 
-    public Optional<Training>  getById(int id) {
+    public Optional<Training> getById(int id) {
         log.info(">>>> Getting training with id: " + id);
         return trainingDAO.getById(id);
     }

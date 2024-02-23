@@ -28,4 +28,11 @@ public class InMemoryStorage {
         log.info("Clearing storage");
         storage.clear();
     }
+
+    public void clearStorage() {
+        log.info("Clearing storage");
+        trainees.clear();
+        trainers.clear();
+        trainings.clear();
+    }
 }

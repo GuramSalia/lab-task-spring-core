@@ -28,10 +28,7 @@ public class TrainerService {
     public Optional<Trainer> create(Trainer trainer) {
         trainer.setPassword(RandomPasswordGenerator.generateRandomPassword());
         trainer.setUsername(usernameGenerator.generateUsername(trainer));
-//        trainerDAO.create(trainer);
-//        log.info(">>>> Creating trainer with username: " + trainer.getUsername());
         return trainerDAO.create(trainer);
-
     }
 
     public Optional<Trainer> update(Trainer trainer) {
@@ -45,9 +42,11 @@ public class TrainerService {
 
     public Optional<Trainer> getById(int id) {
         log.info(">>>> Getting trainer with id: " + id);
-        return trainerDAO.getById(id);}
+        return trainerDAO.getById(id);
+    }
 
     public List<User> getTrainers() {
         log.info(">>>> Getting trainers");
-        return trainerDAO.getTrainers();}
+        return trainerDAO.getTrainers();
+    }
 }

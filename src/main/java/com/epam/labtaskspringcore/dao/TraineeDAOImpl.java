@@ -26,7 +26,6 @@ public class TraineeDAOImpl implements TraineeDAO {
             trainees.put(id, trainee);
             return Optional.of(trainees.get(id));
         }
-        //        trainees.put(trainee.getId(), trainee);
     }
 
     public Optional<Trainee> update(Trainee trainee) {
@@ -43,7 +42,7 @@ public class TraineeDAOImpl implements TraineeDAO {
     public boolean delete(int id) {
         trainees.remove(id);
         // when connected to DB need to check if deletion was successful in DB.
-        return trainees.containsKey(id);
+        return !trainees.containsKey(id);
     }
 
     public Optional<Trainee> getById(int id) {return Optional.ofNullable(trainees.get(id));}

@@ -29,8 +29,6 @@ public class TraineeService {
         trainee.setUsername(usernameGenerator.generateUsername(trainee));
         trainee.setPassword(RandomPasswordGenerator.generateRandomPassword());
         log.info(">>>> Creating trainee with username: " + trainee.getUsername());
-        //        traineeDAO.create(trainee);
-        //        return traineeDAO.getById(trainee.getId());
         return traineeDAO.create(trainee);
     }
 
@@ -46,7 +44,7 @@ public class TraineeService {
     }
 
     public boolean delete(int traineeId) {
-//        log.info(">>>> Deleting trainee with id: " + traineeId);
+        log.info(">>>> Deleting trainee with id: " + traineeId);
         return traineeDAO.delete(traineeId);
     }
 
