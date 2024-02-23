@@ -23,43 +23,6 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 class TraineeServiceTest {
-    //
-    //    @Mock
-    //    private TraineeDAO traineeDAO;
-    //
-    //    @Mock
-    //    private UsernameGenerator usernameGenerator;
-    //
-    //    @InjectMocks
-    //    private TraineeService traineeService;
-    //
-    //    @BeforeEach
-    //    void setUp() {
-    //        MockitoAnnotations.openMocks(this);
-    //    }
-    //
-    //    @Test
-    //    void testCreateTrainee() {
-    ////        // Arrange
-    //        Trainee trainee = new Trainee();
-    //        trainee.setFirstName("John");
-    //        trainee.setLastName("Doe");
-    //
-    //        when(usernameGenerator.generateUsername(trainee)).thenReturn("John.Doe1");
-    //        when(traineeDAO.create(trainee)).thenReturn(Optional.of(trainee));
-    //
-    //        // Act
-    //        Optional<Trainee> result = traineeService.create(trainee);
-    //
-    //        // Assert
-    //        assertNotNull(result, "Result should not be null");
-    //        assertEquals(trainee, result.orElse(null), "Created trainee should be returned");
-    //        assertEquals("John.Doe1", trainee.getUsername(), "Username should be properly generated");
-    //
-    //        // Verify that the methods were called
-    //        verify(usernameGenerator, times(1)).generateUsername(trainee);
-    //        verify(traineeDAO, times(1)).create(trainee);
-    //    }
 
     InMemoryStorage storage;
     TraineeDAO traineeDAO;
@@ -100,7 +63,7 @@ class TraineeServiceTest {
     }
 
     @Test
-    void testCreateTraineeService() {
+    void testCreateInTraineeService() {
         trainee2.setFirstName("Sam");
         trainee2.setLastName("Smith");
         traineeService.create(trainee2);
@@ -115,7 +78,7 @@ class TraineeServiceTest {
     }
 
     @Test
-    void testUpdateTraineeService() {
+    void testUpdateInTraineeService() {
         trainee2.setFirstName("Sammy");
         trainee2.setLastName("Smith");
         traineeService.create(trainee2);
@@ -132,7 +95,7 @@ class TraineeServiceTest {
     }
 
     @Test
-    void testDeleteTraineeService() {
+    void testDeleteInTraineeService() {
         trainee2.setFirstName("sam");
         trainee2.setLastName("Smith");
         traineeService.create(trainee2);
@@ -146,7 +109,7 @@ class TraineeServiceTest {
     }
 
     @Test
-    void testGetByIdService() {
+    void testGetByIdInTraineeService() {
         trainee2.setFirstName("Sam");
         trainee2.setLastName("Smith");
         traineeService.create(trainee2);
@@ -158,7 +121,7 @@ class TraineeServiceTest {
     }
 
     @Test
-    void testGetTraineesService() {
+    void testGetInTraineesService() {
         trainee2.setFirstName("Sam");
         trainee2.setLastName("Smith");
         traineeService.create(trainee2);

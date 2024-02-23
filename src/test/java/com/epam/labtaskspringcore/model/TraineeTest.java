@@ -4,8 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("when having Trainee instance")
 class TraineeTest {
@@ -27,7 +26,7 @@ class TraineeTest {
     class TestSettersAndGetters {
 
         @Test
-        void getFirstName() {
+        void testSettersFirstName() {
             trainee1.setFirstName("John");
             trainee2.setFirstName("George");
             trainee3.setFirstName("Sam");
@@ -41,7 +40,7 @@ class TraineeTest {
         }
 
         @Test
-        void getLastName() {
+        void testSettersLastName() {
             trainee1.setLastName("Doe");
             trainee2.setLastName("Fisher");
             trainee3.setLastName("Smith");
@@ -55,7 +54,7 @@ class TraineeTest {
         }
 
         @Test
-        void getUsername() {
+        void testSettersUsername() {
             trainee1.setUsername("John.Doe");
             trainee2.setUsername("George.Fisher");
             trainee3.setUsername("Sam.Smith");
@@ -69,7 +68,7 @@ class TraineeTest {
         }
 
         @Test
-        void getPassword() {
+        void testSettersPassword() {
             trainee1.setPassword("1234567890");
             trainee2.setPassword("abcdefghij");
             trainee3.setPassword("klmnopqrst");
@@ -83,21 +82,21 @@ class TraineeTest {
         }
 
         @Test
-        void isActive() {
+        void testSettersActive() {
             trainee1.setActive(true);
             trainee2.setActive(false);
             trainee3.setActive(true);
             trainee4.setActive(false);
             assertAll(
-                    () -> assertEquals(true, trainee1.isActive()),
-                    () -> assertEquals(false, trainee2.isActive()),
-                    () -> assertEquals(true, trainee3.isActive()),
-                    () -> assertEquals(false, trainee4.isActive())
+                    () -> assertTrue(trainee1.isActive()),
+                    () -> assertFalse(trainee2.isActive()),
+                    () -> assertTrue(trainee3.isActive()),
+                    () -> assertFalse(trainee4.isActive())
                      );
         }
 
         @Test
-        void getId() {
+        void testSettersId() {
             trainee1.setId(1);
             trainee2.setId(2);
             trainee3.setId(3);
@@ -112,7 +111,7 @@ class TraineeTest {
         }
 
         @Test
-        void getAddress() {
+        void testSettersAddress() {
             trainee1.setAddress("address 1");
             trainee2.setAddress("address 2");
             trainee3.setAddress("address 3");

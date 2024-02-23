@@ -54,7 +54,7 @@ class TraineeDAOImplTest {
 
 
     @Test
-    void testCreateTraineeDAO() {
+    void testCreateInTraineeDAO() {
         trainee2.setId(1);
         assertEquals(traineeDAO.create(trainee2), Optional.empty());
         trainee2.setId(2);
@@ -62,7 +62,7 @@ class TraineeDAOImplTest {
     }
 
     @Test
-    void testUpdateTraineeDAO() {
+    void testUpdateInTraineeDAO() {
         trainee2.setId(5);
         assertEquals(traineeDAO.update(trainee2), Optional.empty());
         traineeDAO.create(trainee2);
@@ -71,17 +71,17 @@ class TraineeDAOImplTest {
     }
 
     @Test
-    void testDeleteTraineeDAO() {
+    void testDeleteInTraineeDAO() {
         assertTrue(traineeDAO.delete(1));
     }
 
     @Test
-    void testGetByIdDAO() {
+    void testGetByIdInTraineeDAO() {
         assertEquals(traineeDAO.getById(1), Optional.of(trainee1));
     }
 
     @Test
-    void testGetTraineesDAO() {
+    void testGetInTraineesDAO() {
         traineeDAO.create(trainee1);
         traineeDAO.create(trainee2);
         traineeDAO.create(trainee3);
