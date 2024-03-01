@@ -1,6 +1,5 @@
 package com.epam.labtaskspringcore.dao;
 
-import com.epam.labtaskspringcore.model.Trainee;
 import com.epam.labtaskspringcore.model.Trainer;
 import com.epam.labtaskspringcore.model.User;
 

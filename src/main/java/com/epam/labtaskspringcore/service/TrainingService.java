@@ -13,8 +13,8 @@ import java.util.Optional;
 @Slf4j
 @Service
 public class TrainingService {
-    private TrainingDAO trainingDAO;
-    private TrainerDAO trainerDAO;
+    private final TrainingDAO trainingDAO;
+    private final TrainerDAO trainerDAO;
 
     public TrainingService(TrainingDAO trainingDAO, TrainerDAO trainerDAO) {
         this.trainingDAO = trainingDAO;
@@ -22,8 +22,6 @@ public class TrainingService {
     }
 
     public Optional<Training> create(Training training) {
-
-        // Training.trainingType and Trainer.specialization should be matching
         TrainingType trainingType = training.getType();
         TrainingType trainerSpecialization;
         Optional<Trainer> optionalTrainer = trainerDAO.getById(training.getTrainerId());

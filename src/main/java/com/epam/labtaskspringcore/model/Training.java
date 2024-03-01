@@ -15,8 +15,6 @@ public class Training {
     private int traineeId;
     private String name;
     private TrainingType type;
-    //LocalDate still not working for reading from json 
-    //@JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
     private Date date;
     private int durationInMinutes;
 
@@ -25,18 +23,12 @@ public class Training {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Training training = (Training) o;
-        return getId() == training.getId() ;
+        return getId() == training.getId();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(),
-                            getId(),
-                            getTrainerId(),
-                            getName(),
-                            getType(),
-                            getDate(),
-                            getDurationInMinutes());
+        return Objects.hash(getId(), getId(), getTrainerId(), getName(), getType(), getDate(), getDurationInMinutes());
     }
 
     @Override
@@ -51,14 +43,6 @@ public class Training {
             dateString = year + "-" + month + "-" + day;
         }
 
-        return "Training{" +
-                "\n  id=" + id +
-                ", \n  traineeId=" + id +
-                ", \n  trainerId=" + trainerId +
-                ", \n  name='" + name + '\'' +
-                ", \n  type=" + type +
-                ", \n  date=" + dateString +
-                ", \n  durationInMinutes=" + durationInMinutes +
-                '}';
+        return "Training{" + "\n  id=" + id + ", \n  traineeId=" + id + ", \n  trainerId=" + trainerId + ", \n  name='" + name + '\'' + ", \n  type=" + type + ", \n  date=" + dateString + ", \n  durationInMinutes=" + durationInMinutes + '}';
     }
 }

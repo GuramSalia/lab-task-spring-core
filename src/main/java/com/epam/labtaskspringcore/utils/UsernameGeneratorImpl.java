@@ -43,33 +43,4 @@ public class UsernameGeneratorImpl implements UsernameGenerator {
     private <T extends User> boolean isUnique(User targetUser, String username, List<T> users) {
         return users.stream().noneMatch(user -> user.getUsername().equals(username) && !user.equals(targetUser));
     }
-
-    //    public String generateUsername(User user) {
-    //
-    //        String base = user.getFirstName() + "." + user.getLastName();
-    //        int counter = 1;
-    //        StringBuilder username = new StringBuilder().append(base);
-    //
-    //        while (
-    //                !isUnique(user, username.toString(), trainerDAO.getTrainers()) ||
-    //                        !isUnique(user, username.toString(), traineeDAO.getTrainees())
-    //        ) {
-    //            username = new StringBuilder().append(base).append(counter);
-    //            counter++;
-    //        }
-    //        log.info(">>>> Generating username");
-    //        return username.toString();
-    //    }
-    //
-    //
-    //    private <T extends User, V extends User> boolean isUnique(V targetUser, String username, List<T> users) {
-    //        boolean result = true;
-    //        for (T user : users) {
-    //            if (user.getUsername().equals(username) && !user.equals(targetUser)) {
-    //                result = false;
-    //                break;
-    //            }
-    //        }
-    //        return result;
-    //    }
 }
