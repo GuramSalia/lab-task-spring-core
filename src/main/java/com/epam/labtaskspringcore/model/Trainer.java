@@ -18,7 +18,6 @@ public class Trainer extends User {
                 "\n  id=" + id +
                 ", \n  name='" + getFirstName() + ' ' + getLastName() + '\'' +
                 ", \n  username='" + getUsername() + '\'' +
-                ", \n  password='" + getPassword() + '\'' +
                 ", \n  spec.='" + getSpecialization() + '\'' +
                 ", \n  isActive='" + isActive() + '\'' +
                 '}';
