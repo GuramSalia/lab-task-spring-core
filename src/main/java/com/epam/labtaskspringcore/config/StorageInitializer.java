@@ -1,9 +1,9 @@
 package com.epam.labtaskspringcore.config;
 
+import com.epam.labtaskspringcore.model.JsonDataContainer;
 import com.epam.labtaskspringcore.model.Trainee;
 import com.epam.labtaskspringcore.model.Trainer;
 import com.epam.labtaskspringcore.model.Training;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
@@ -14,22 +14,12 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Component
 public class StorageInitializer {
-
-    static class Root {
-        @JsonProperty("Trainer")
-        public ArrayList<Trainer> trainer;
-        @JsonProperty("Trainee")
-        public ArrayList<Trainee> trainee;
-        @JsonProperty("Training")
-        public ArrayList<Training> training;
-    }
 
     @Value("${file.path.initialData}")
     private Resource initialDataResource;
@@ -49,7 +39,7 @@ public class StorageInitializer {
         om.setDateFormat(dateFormat);
 
         try (InputStream inputStream = initialDataResource.getInputStream()) {
-            Root root = om.readValue(inputStream, Root.class);
+            JsonDataContainer root = om.readValue(inputStream, JsonDataContainer.class);
 
             // Assuming you have appropriate getters in your InMemoryStorage class
             storage.setTrainers(root.trainer.stream().collect(Collectors.toMap(Trainer::getId, Function.identity())));
