@@ -18,7 +18,6 @@ import java.util.Optional;
 @Slf4j
 @SpringBootApplication
 public class LabTaskSpringCoreApplication {
-
     public static void main(String[] args) {
 
         SpringApplication.run(LabTaskSpringCoreApplication.class, args);
@@ -26,18 +25,18 @@ public class LabTaskSpringCoreApplication {
         InMemoryStorage inMemoryStorage = ApplicationContextProvider.getContext().getBean(InMemoryStorage.class);
 
         log.info("\n\n>>>> START  ==============\n");
-        inMemoryStorage.getTrainees().values().stream().forEach(System.out::println);
+        inMemoryStorage.getTrainees().values().stream().forEach(x -> log.info(x.toString()));
         log.info("^^^^ TRAINEES\n");
-        inMemoryStorage.getTrainers().values().stream().forEach(System.out::println);
+        inMemoryStorage.getTrainers().values().stream().forEach(x -> log.info(x.toString()));
         log.info("^^^^ TRAINERS\n");
-        inMemoryStorage.getTrainings().values().stream().forEach(System.out::println);
+        inMemoryStorage.getTrainings().values().stream().forEach(x -> log.info(x.toString()));
         log.info("^^^^ TRAININGS\n");
 
         TrainerService trainerService = ApplicationContextProvider.getContext().getBean(TrainerService.class);
         TraineeService traineeService = ApplicationContextProvider.getContext().getBean(TraineeService.class);
         TrainingService trainingService = ApplicationContextProvider.getContext().getBean(TrainingService.class);
 
-        System.out.println("\n \ttrainer 3 ");
+        log.info("\n \ttrainer 3 ");
         Trainer trainer3 = new Trainer();
         trainer3.setId(3);
         trainer3.setFirstName("John");
@@ -51,12 +50,12 @@ public class LabTaskSpringCoreApplication {
             if (trainer3Optional.isEmpty()) {
                 log.error("could not get trainer3");
             } else {
-                System.out.println(trainer3Optional.get());
+                log.info(trainer3Optional.get().toString());
             }
         }
-        System.out.println("\t end of trainer 3 \n");
+        log.info("\t end of trainer 3 \n");
 
-        System.out.println("\n \ttrainer 4 ");
+        log.info("\n \ttrainer 4 ");
         Trainer trainer4 = new Trainer();
         trainer4.setId(4);
         trainer4.setFirstName("John");
@@ -70,12 +69,12 @@ public class LabTaskSpringCoreApplication {
             if (trainer4Optional.isEmpty()) {
                 log.error("could not get trainer3");
             } else {
-                System.out.println(trainer4Optional.get());
+                log.info(trainer4Optional.get().toString());
             }
         }
-        System.out.println("\t end of trainer 4 \n");
+        log.info("\t end of trainer 4 \n");
 
-        System.out.println("\n \ttraining 3 ");
+        log.info("\n \ttraining 3 ");
         Training training3 = new Training();
         training3.setId(3);
         training3.setTraineeId(2);
@@ -90,12 +89,12 @@ public class LabTaskSpringCoreApplication {
             if (training3Optional.isEmpty()) {
                 log.error("could not get training3");
             } else {
-                System.out.println(training3Optional.get());
+                log.info(training3Optional.get().toString());
             }
         }
-        System.out.println("\tend of training 3 \n");
+        log.info("\tend of training 3 \n");
 
-        System.out.println("\n \ttraining 4 ");
+        log.info("\n \ttraining 4 ");
         Training training4 = new Training();
         training4.setId(4);
         training4.setTraineeId(4);
@@ -110,13 +109,13 @@ public class LabTaskSpringCoreApplication {
             if (training4Optional.isEmpty()) {
                 log.error("could not get training3");
             } else {
-                System.out.println(training4Optional.get());
+                log.info(training4Optional.get().toString());
             }
         }
-        System.out.println("\tend of training 4 \n");
+        log.info("\tend of training 4 \n");
 
         // updated trainee with id=2
-        System.out.println("\n \ttrainee id=2");
+        log.info("\n trainee id=2");
         if (traineeService.getById(2).isEmpty()) {
             log.error("No training with id=2 exists");
         } else {
@@ -125,9 +124,9 @@ public class LabTaskSpringCoreApplication {
             if (traineeService.update(trainee2).isEmpty()) {
                 log.error("could not update trainee2");
             } else {
-                System.out.println(traineeService.getById(2).get());
+                log.info(traineeService.getById(2).get().toString());
             }
         }
-        System.out.println("\tend of trainee id=2 \n");
+        log.info("\tend of trainee id=2 \n");
     }
 }
