@@ -9,6 +9,7 @@ import com.epam.labtaskspringcore.model.TrainingType;
 import com.epam.labtaskspringcore.service.TraineeService;
 import com.epam.labtaskspringcore.service.TrainerService;
 import com.epam.labtaskspringcore.service.TrainingService;
+import com.epam.labtaskspringcore.utils.BeanProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,19 +23,19 @@ public class LabTaskSpringCoreApplication {
 
         SpringApplication.run(LabTaskSpringCoreApplication.class, args);
 
-        InMemoryStorage inMemoryStorage = ApplicationContextProvider.getContext().getBean(InMemoryStorage.class);
+        InMemoryStorage inMemoryStorage = BeanProvider.getInMemoryStorage();
+        TrainerService trainerService = BeanProvider.getTrainerService();
+        TraineeService traineeService = BeanProvider.getTraineeService();
+        TrainingService trainingService = BeanProvider.getTrainingService();
 
-        log.info("\n\n>>>> START  ==============\n");
+        log.info("\n\tSTART\n");
+        log.info("list of TRAINEES:");
         inMemoryStorage.getTrainees().values().stream().forEach(x -> log.info(x.toString()));
-        log.info("^^^^ TRAINEES\n");
+        log.info("list of TRAINERS:");
         inMemoryStorage.getTrainers().values().stream().forEach(x -> log.info(x.toString()));
-        log.info("^^^^ TRAINERS\n");
+        log.info("list of TRAININGS:");
         inMemoryStorage.getTrainings().values().stream().forEach(x -> log.info(x.toString()));
-        log.info("^^^^ TRAININGS\n");
 
-        TrainerService trainerService = ApplicationContextProvider.getContext().getBean(TrainerService.class);
-        TraineeService traineeService = ApplicationContextProvider.getContext().getBean(TraineeService.class);
-        TrainingService trainingService = ApplicationContextProvider.getContext().getBean(TrainingService.class);
 
         log.info("\n \ttrainer 3 ");
         Trainer trainer3 = new Trainer();
