@@ -32,19 +32,8 @@ public class TrainingService {
         } else {
             trainerSpecialization = optionalTrainer.get().getSpecialization();
         }
-        // matching Training.trainingType and Trainer.specialization
-        boolean matchingTypes = false;
 
-        // Training.trainingType and Trainer.specialization
-        boolean bothTypesPresent = trainingType != null && trainerSpecialization != null;
-        boolean bothTypesNull = trainingType == null && trainerSpecialization == null;
-        if (bothTypesPresent) {
-            matchingTypes = trainingType.equals(trainerSpecialization);
-        } else if (bothTypesNull) {
-            matchingTypes = true;
-        }
-
-        if (!matchingTypes) {
+        if (!areTrainingTypesMatching(trainingType, trainerSpecialization)) {
             log.error("cannot create training, because the trainer has a different specialization");
             return Optional.empty();
         } else {
@@ -57,5 +46,15 @@ public class TrainingService {
     public Optional<Training> getById(int id) {
         log.info(">>>> Getting training with id: " + id);
         return trainingDAO.getById(id);
+    }
+
+    private boolean areTrainingTypesMatching(TrainingType type1, TrainingType type2) {
+        boolean matching = false;
+        if (type1 != null && type2 != null) {
+            matching = type1.equals(type2);
+        } else if (type1 == null && type2 == null) {
+            matching = true;
+        }
+        return matching;
     }
 }
