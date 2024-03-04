@@ -12,8 +12,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
-// maybe like DAO I need to create a separate interface InMemoryStorage which this class InMemoryStorageImpl implements?
-
 @Slf4j
 @Setter
 @Getter

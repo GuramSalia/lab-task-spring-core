@@ -1,11 +1,9 @@
 package com.epam.labtaskspringcore.config;
 
+import com.epam.labtaskspringcore.model.JsonDataContainer;
 import com.epam.labtaskspringcore.model.Trainee;
 import com.epam.labtaskspringcore.model.Trainer;
 import com.epam.labtaskspringcore.model.Training;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
@@ -15,8 +13,9 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -33,68 +32,22 @@ public class StorageInitializer {
 
     @PostConstruct
     public void initialize() {
-
         log.info(">>>> Storage Initialization");
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        ObjectMapper om = new ObjectMapper();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        om.setDateFormat(dateFormat);
 
         try (InputStream inputStream = initialDataResource.getInputStream()) {
-            JsonNode jsonNode = objectMapper.readTree(inputStream);
-            initializeTrainers(jsonNode.get("Trainer"));
-            initializeTrainees(jsonNode.get("Trainee"));
-            initializeTrainings(jsonNode.get("Training"));
-        } catch (IOException | ParseException e) {
+            JsonDataContainer root = om.readValue(inputStream, JsonDataContainer.class);
+
+            // Assuming you have appropriate getters in your InMemoryStorage class
+            storage.setTrainers(root.trainer.stream().collect(Collectors.toMap(Trainer::getId, Function.identity())));
+            storage.setTrainees(root.trainee.stream().collect(Collectors.toMap(Trainee::getId, Function.identity())));
+            storage.setTrainings(root.training.stream()
+                                              .collect(Collectors.toMap(Training::getId, Function.identity())));
+        } catch (IOException e) {
             log.error("Error initializing InMemoryStorage", e);
-        }
-    }
-
-    private void initializeTrainees(JsonNode traineeNode) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        objectMapper.setDateFormat(dateFormat);
-        for (JsonNode node : traineeNode) {
-            try {
-                Trainee trainee = objectMapper.treeToValue(node, Trainee.class);
-                storage.getTrainees().put(trainee.getId(), trainee);
-            } catch (JsonProcessingException e) {
-                log.error("Error processing Trainee JSON node: {}", node.toString(), e);
-            }
-        }
-    }
-
-    private void initializeTrainers(JsonNode trainerNode) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-        for (JsonNode node : trainerNode) {
-            try {
-                Trainer trainer = objectMapper.treeToValue(node, Trainer.class);
-                storage.getTrainers().put(trainer.getId(), trainer);
-            } catch (JsonProcessingException e) {
-                log.error("Error processing Trainer JSON node: {}", node.toString(), e);
-            }
-        }
-    }
-
-    private void initializeTrainings(JsonNode trainingNode) throws ParseException, JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        //        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        //        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        //        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-
-        //        changing to LocalDate instead of localdatetime
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
-        objectMapper.setDateFormat(dateFormat);
-        for (JsonNode node : trainingNode) {
-            try {
-                Training training = objectMapper.treeToValue(node, Training.class);
-                storage.getTrainings().put(training.getId(), training);
-            } catch (JsonProcessingException e) {
-                log.error("Error processing Trainer JSON node: {}", node.toString(), e);
-            }
         }
     }
 }

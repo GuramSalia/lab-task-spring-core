@@ -12,8 +12,6 @@ import java.util.Objects;
 public class Trainee extends User {
     private int id;
     private String address;
-    //LocalDate still not working for reading from json
-    //@JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
     private Date dob;
 
     @Override
@@ -28,15 +26,7 @@ public class Trainee extends User {
             int day = calendar.get(Calendar.DAY_OF_MONTH);
             dobString = year + "-" + month + "-" + day;
         }
-        return "Customer{" +
-                "\n  id=" + id +
-                ", \n  name='" + getFirstName() + ' ' + getLastName() + '\'' +
-                ", \n  username='" + getUsername() + '\'' +
-                ", \n  password='" + getPassword() + '\'' +
-                ", \n  Address='" + getAddress() + '\'' +
-                ", \n  dob=" + dobString +
-                ", \n  isActive='" + isActiveString + '\'' +
-                '}';
+        return "Customer{" + "\n  id=" + id + ", \n  name='" + getFirstName() + ' ' + getLastName() + '\'' + ", \n  username='" + getUsername() + '\'' + ", \n  Address='" + getAddress() + '\'' + ", \n  dob=" + dobString + ", \n  isActive='" + isActiveString + '\'' + '}';
     }
 
     @Override

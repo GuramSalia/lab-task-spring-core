@@ -13,8 +13,8 @@ import java.util.Optional;
 @Slf4j
 @Service
 public class TrainingService {
-    private TrainingDAO trainingDAO;
-    private TrainerDAO trainerDAO;
+    private final TrainingDAO trainingDAO;
+    private final TrainerDAO trainerDAO;
 
     public TrainingService(TrainingDAO trainingDAO, TrainerDAO trainerDAO) {
         this.trainingDAO = trainingDAO;
@@ -22,28 +22,18 @@ public class TrainingService {
     }
 
     public Optional<Training> create(Training training) {
-        //Assume I can create training without indicating trainerId or trainingType.
-
-        TrainingType trainingTypeOfTraining = training.getType();
-        TrainingType trainingTypeOfTrainer;
+        TrainingType trainingType = training.getType();
+        TrainingType trainerSpecialization;
         Optional<Trainer> optionalTrainer = trainerDAO.getById(training.getTrainerId());
+
         if (optionalTrainer.isEmpty()) {
             log.warn("There is no such trainer as indicated by training");
-            trainingTypeOfTrainer = null;
+            trainerSpecialization = null;
         } else {
-            trainingTypeOfTrainer = optionalTrainer.get().getSpecialization();
+            trainerSpecialization = optionalTrainer.get().getSpecialization();
         }
 
-        boolean equalTrainingTypesForTrainerAndTraining = false;
-        boolean condition1 = trainingTypeOfTraining != null && trainingTypeOfTrainer != null;
-        boolean condition2 = trainingTypeOfTraining == null && trainingTypeOfTrainer == null;
-        if (condition1) {
-            equalTrainingTypesForTrainerAndTraining = trainingTypeOfTraining.equals(trainingTypeOfTrainer);
-        } else if (condition2) {
-            equalTrainingTypesForTrainerAndTraining = true;
-        }
-
-        if (!equalTrainingTypesForTrainerAndTraining) {
+        if (!areTrainingTypesMatching(trainingType, trainerSpecialization)) {
             log.error("cannot create training, because the trainer has a different specialization");
             return Optional.empty();
         } else {
@@ -58,5 +48,13 @@ public class TrainingService {
         return trainingDAO.getById(id);
     }
 
-    // create/select Training profile
+    private boolean areTrainingTypesMatching(TrainingType type1, TrainingType type2) {
+        boolean matching = false;
+        if (type1 != null && type2 != null) {
+            matching = type1.equals(type2);
+        } else if (type1 == null && type2 == null) {
+            matching = true;
+        }
+        return matching;
+    }
 }

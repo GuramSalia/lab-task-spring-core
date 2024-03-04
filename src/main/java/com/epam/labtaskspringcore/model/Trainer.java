@@ -14,14 +14,7 @@ public class Trainer extends User {
 
     @Override
     public String toString() {
-        return "Trainer{" +
-                "\n  id=" + id +
-                ", \n  name='" + getFirstName() + ' ' + getLastName() + '\'' +
-                ", \n  username='" + getUsername() + '\'' +
-                ", \n  password='" + getPassword() + '\'' +
-                ", \n  spec.='" + getSpecialization() + '\'' +
-                ", \n  isActive='" + isActive() + '\'' +
-                '}';
+        return "Trainer{" + "\n  id=" + id + ", \n  name='" + getFirstName() + ' ' + getLastName() + '\'' + ", \n  username='" + getUsername() + '\'' + ", \n  spec.='" + getSpecialization() + '\'' + ", \n  isActive='" + isActive() + '\'' + '}';
     }
 
     @Override
