@@ -18,7 +18,7 @@ public class TraineeDAOImpl implements TraineeDAO {
     public TraineeDAOImpl(InMemoryStorage storage) {this.trainees = storage.getTrainees();}
 
     public Optional<Trainee> create(Trainee trainee) {
-        int id = trainee.getId();
+        int id = trainee.getUserId();
         if (trainees.containsKey(id)) {
             log.error("Trainee with id {} already exists", id);
             return Optional.empty();
@@ -29,7 +29,7 @@ public class TraineeDAOImpl implements TraineeDAO {
     }
 
     public Optional<Trainee> update(Trainee trainee) {
-        int id = trainee.getId();
+        int id = trainee.getUserId();
         if (trainees.containsKey(id)) {
             trainees.put(id, trainee);
             return Optional.of(trainees.get(id));

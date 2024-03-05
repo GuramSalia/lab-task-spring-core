@@ -28,106 +28,45 @@ public class LabTaskSpringCoreApplication {
         TraineeService traineeService = BeanProvider.getTraineeService();
         TrainingService trainingService = BeanProvider.getTrainingService();
 
-        log.info("\n\tSTART\n");
+        TrainingType YOGA = new TrainingType();
+        YOGA.setTrainingType(TrainingType.TrainingTypeEnum.YOGA);
+        TrainingType PERSONAL = new TrainingType();
+        PERSONAL.setTrainingType(TrainingType.TrainingTypeEnum.PERSONAL);
+
+        log.info(".......  START  .......\n");
         log.info("list of TRAINEES:");
         inMemoryStorage.getTrainees().values().stream().forEach(x -> log.info(x.toString()));
         log.info("list of TRAINERS:");
         inMemoryStorage.getTrainers().values().stream().forEach(x -> log.info(x.toString()));
         log.info("list of TRAININGS:");
         inMemoryStorage.getTrainings().values().stream().forEach(x -> log.info(x.toString()));
+        log.info(" ------ END of inMemoryStorage lists\n");
 
+        log.info("   .....   trainer userId=5 ");
+        Trainer trainer5 = trainerService.createTrainer(5, "John", "Doe", true, YOGA);
+        trainerService.logTrainerCreationDetails(trainer5);
+        log.info("   -----   end of trainer userId=5 \n");
 
-        log.info("\n \ttrainer 3 ");
-        Trainer trainer3 = new Trainer();
-        trainer3.setId(3);
-        trainer3.setFirstName("John");
-        trainer3.setLastName("Doe");
-        trainer3.setActive(true);
-        trainer3.setSpecialization(TrainingType.YOGA);
-        if (trainerService.create(trainer3).isEmpty()) {
-            log.error("could not create trainer");
-        } else {
-            Optional<Trainer> trainer3Optional = trainerService.getById(3);
-            if (trainer3Optional.isEmpty()) {
-                log.error("could not get trainer3");
-            } else {
-                log.info(trainer3Optional.get().toString());
-            }
-        }
-        log.info("\t end of trainer 3 \n");
+        log.info("   .....   trainer userId=6 ");
+        Trainer trainer6 = trainerService.createTrainer(6, "John", "Doe", true, YOGA);
+        trainerService.logTrainerCreationDetails(trainer6);
+        log.info("   -----   end of trainer userId=6 \n");
 
-        log.info("\n \ttrainer 4 ");
-        Trainer trainer4 = new Trainer();
-        trainer4.setId(4);
-        trainer4.setFirstName("John");
-        trainer4.setLastName("Doe");
-        trainer4.setActive(true);
-        trainer4.setSpecialization(TrainingType.YOGA);
-        if (trainerService.create(trainer4).isEmpty()) {
-            log.error("could not create trainer");
-        } else {
-            Optional<Trainer> trainer4Optional = trainerService.getById(3);
-            if (trainer4Optional.isEmpty()) {
-                log.error("could not get trainer3");
-            } else {
-                log.info(trainer4Optional.get().toString());
-            }
-        }
-        log.info("\t end of trainer 4 \n");
+        log.info("   .....   training 3 ");
 
-        log.info("\n \ttraining 3 ");
-        Training training3 = new Training();
-        training3.setId(3);
-        training3.setTraineeId(2);
-        training3.setTrainerId(3);
-        training3.setName("personal training");
-        training3.setType(TrainingType.PERSONAL);
-        training3.setDurationInMinutes(30);
-        if (trainingService.create(training3).isEmpty()) {
-            log.error("could not create training");
-        } else {
-            Optional<Training> training3Optional = trainingService.getById(3);
-            if (training3Optional.isEmpty()) {
-                log.error("could not get training3");
-            } else {
-                log.info(training3Optional.get().toString());
-            }
-        }
-        log.info("\tend of training 3 \n");
+        Training training3 = trainingService.createTraining(3, traineeService.getById(4)
+                                                                             .get(), trainer5, "personal training", PERSONAL, 30);
+        trainingService.logTrainingCreationDetails(training3);
+        log.info("   -----   end of training 3 \n");
 
-        log.info("\n \ttraining 4 ");
-        Training training4 = new Training();
-        training4.setId(4);
-        training4.setTraineeId(4);
-        training4.setTrainerId(3);
-        training4.setName("Yoga training");
-        training4.setType(TrainingType.YOGA);
-        training4.setDurationInMinutes(30);
-        if (trainingService.create(training4).isEmpty()) {
-            log.error("could not create training");
-        } else {
-            Optional<Training> training4Optional = trainingService.getById(4);
-            if (training4Optional.isEmpty()) {
-                log.error("could not get training3");
-            } else {
-                log.info(training4Optional.get().toString());
-            }
-        }
-        log.info("\tend of training 4 \n");
+        log.info("   .....   training 4 ");
+        Training training4 = trainingService.createTraining(4, traineeService.getById(3)
+                                                                             .get(), trainer5, "Yoga training", YOGA, 30);
+        trainingService.logTrainingCreationDetails(training4);
+        log.info("   -----   end of training 4 \n");
 
-        // updated trainee with id=2
-        log.info("\n trainee id=2");
-        if (traineeService.getById(2).isEmpty()) {
-            log.error("No training with id=2 exists");
-        } else {
-            Trainee trainee2 = traineeService.getById(2).get();
-            trainee2.setLastName("Schmidt");
-            if (traineeService.update(trainee2).isEmpty()) {
-                log.error("could not update trainee2");
-            } else {
-                log.info(traineeService.getById(2).get().toString());
-            }
-        }
-        log.info("\tend of trainee id=2 \n");
+        log.info("   .....   update trainee userId=4");
+        traineeService.logLastNameUpdateOfTrainee(4, "Schmidt");
+        log.info("   -----   end of trainee userId=4 \n");
     }
 }

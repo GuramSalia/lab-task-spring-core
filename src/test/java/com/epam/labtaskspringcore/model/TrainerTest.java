@@ -108,15 +108,25 @@ class TrainerTest {
 
         @Test
         void testSettersSpecialization() {
-            trainer1.setSpecialization(TrainingType.YOGA);
-            trainer2.setSpecialization(TrainingType.PERSONAL);
-            trainer3.setSpecialization(TrainingType.CARDIO);
-            trainer4.setSpecialization(TrainingType.STRENGTH);
+
+            TrainingType YOGA = new TrainingType();
+            YOGA.setTrainingType(TrainingType.TrainingTypeEnum.YOGA);
+            TrainingType PERSONAL = new TrainingType();
+            PERSONAL.setTrainingType(TrainingType.TrainingTypeEnum.PERSONAL);
+            TrainingType CARDIO = new TrainingType();
+            CARDIO.setTrainingType(TrainingType.TrainingTypeEnum.CARDIO);
+            TrainingType STRENGTH = new TrainingType();
+            STRENGTH.setTrainingType(TrainingType.TrainingTypeEnum.STRENGTH);
+
+            trainer1.setSpecialization(YOGA);
+            trainer2.setSpecialization(PERSONAL);
+            trainer3.setSpecialization(CARDIO);
+            trainer4.setSpecialization(STRENGTH);
             assertAll(
-                    () -> assertEquals(TrainingType.YOGA, trainer1.getSpecialization()),
-                    () -> assertEquals(TrainingType.PERSONAL, trainer2.getSpecialization()),
-                    () -> assertEquals(TrainingType.CARDIO, trainer3.getSpecialization()),
-                    () -> assertEquals(TrainingType.STRENGTH, trainer4.getSpecialization())
+                    () -> assertEquals(YOGA, trainer1.getSpecialization()),
+                    () -> assertEquals(PERSONAL, trainer2.getSpecialization()),
+                    () -> assertEquals(CARDIO, trainer3.getSpecialization()),
+                    () -> assertEquals(STRENGTH, trainer4.getSpecialization())
                      );
 
         }

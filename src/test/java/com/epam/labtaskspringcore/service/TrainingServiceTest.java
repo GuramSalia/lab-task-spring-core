@@ -44,6 +44,11 @@ class TrainingServiceTest {
         trainerService = new TrainerService(trainerDAO, usernameGenerator);
         trainingService = new TrainingService(trainingDAO, trainerDAO);
 
+        TrainingType YOGA = new TrainingType();
+        YOGA.setTrainingType(TrainingType.TrainingTypeEnum.YOGA);
+        TrainingType CARDIO = new TrainingType();
+        CARDIO.setTrainingType(TrainingType.TrainingTypeEnum.CARDIO);
+
         trainee1 = new Trainee();
         trainee1.setId(1);
         trainee1.setFirstName("Sam");
@@ -60,20 +65,20 @@ class TrainingServiceTest {
         trainer1.setId(1);
         trainer1.setFirstName("John");
         trainer1.setLastName("Doe");
-        trainer1.setSpecialization(TrainingType.YOGA);
+        trainer1.setSpecialization(YOGA);
         trainerService.create(trainer1);
 
         trainer2 = new Trainer();
         trainer2.setId(2);
         trainer2.setFirstName("Bob");
         trainer2.setLastName("Brown");
-        trainer2.setSpecialization(TrainingType.CARDIO);
+        trainer2.setSpecialization(CARDIO);
         trainerService.create(trainer2);
 
         training1 = new Training();
         training1.setId(1);
         training1.setName("training1");
-        training1.setType(TrainingType.YOGA);
+        training1.setType(YOGA);
         training1.setDurationInMinutes(25);
         training1.setTraineeId(1);
         training1.setTrainerId(1);
@@ -92,9 +97,13 @@ class TrainingServiceTest {
 
     @Test
     void testCreateInTrainingService() {
+
+        TrainingType HIIT = new TrainingType();
+        HIIT.setTrainingType(TrainingType.TrainingTypeEnum.HIIT);
+
         trainingService.create(training1);
         assertEquals(training1, storage.getTrainings().get(1), "created training should be in trainings list");
-        training2.setType(TrainingType.HIIT);
+        training2.setType(HIIT);
         training2.setTrainerId(2);
         trainingService.create(training2);
         assertTrue(Optional.ofNullable(storage.getTrainings().get(2)).isEmpty(), "name should be properly generated");
@@ -102,9 +111,13 @@ class TrainingServiceTest {
 
     @Test
     void TestGetByIdInTrainingService() {
+
+        TrainingType HIIT = new TrainingType();
+        HIIT.setTrainingType(TrainingType.TrainingTypeEnum.HIIT);
+
         trainingService.create(training1);
-        training2.setType(TrainingType.HIIT);
-        trainer2.setSpecialization(TrainingType.HIIT);
+        training2.setType(HIIT);
+        trainer2.setSpecialization(HIIT);
         training2.setTrainerId(2);
         trainingService.create(training2);
         Optional<Trainer> trainer = trainerService.getById(trainer2.getId());

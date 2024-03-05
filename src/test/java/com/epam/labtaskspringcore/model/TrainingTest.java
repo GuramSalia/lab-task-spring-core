@@ -80,15 +80,27 @@ class TrainingTest {
 
     @Test
     void testSettersGetType() {
-        training1.setType(TrainingType.YOGA);
-        training2.setType(TrainingType.PERSONAL);
-        training3.setType(TrainingType.GROUP);
-        training4.setType(TrainingType.CARDIO);
+
+        TrainingType YOGA = new TrainingType();
+        YOGA.setTrainingType(TrainingType.TrainingTypeEnum.YOGA);
+        TrainingType PERSONAL = new TrainingType();
+        PERSONAL.setTrainingType(TrainingType.TrainingTypeEnum.PERSONAL);
+        TrainingType CARDIO = new TrainingType();
+        CARDIO.setTrainingType(TrainingType.TrainingTypeEnum.CARDIO);
+        TrainingType GROUP = new TrainingType();
+        GROUP.setTrainingType(TrainingType.TrainingTypeEnum.GROUP);
+
+
+
+        training1.setType(YOGA);
+        training2.setType(PERSONAL);
+        training3.setType(GROUP);
+        training4.setType(CARDIO);
         assertAll(
-                () -> assertEquals(TrainingType.YOGA, training1.getType()),
-                () -> assertEquals(TrainingType.PERSONAL, training2.getType()),
-                () -> assertEquals(TrainingType.GROUP, training3.getType()),
-                () -> assertEquals(TrainingType.CARDIO, training4.getType())
+                () -> assertEquals(YOGA, training1.getType()),
+                () -> assertEquals(PERSONAL, training2.getType()),
+                () -> assertEquals(GROUP, training3.getType()),
+                () -> assertEquals(CARDIO, training4.getType())
                  );
     }
 

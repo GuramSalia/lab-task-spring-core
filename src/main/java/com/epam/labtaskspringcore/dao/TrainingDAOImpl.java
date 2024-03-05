@@ -19,7 +19,7 @@ public class TrainingDAOImpl implements TrainingDAO {
 
     @Override
     public Optional<Training> create(Training training) {
-        int id = training.getId();
+        int id = training.getTrainingId();
         if (trainings.containsKey(id)) {
             log.error("Training with id {} already exists", id);
             return Optional.empty();

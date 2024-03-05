@@ -58,24 +58,29 @@ class TrainingDAOImplTest {
 //        trainee2.setLastName("Schmidt");
 //        traineeService.create(trainee2);
 
+        TrainingType YOGA = new TrainingType();
+        YOGA.setTrainingType(TrainingType.TrainingTypeEnum.YOGA);
+        TrainingType CARDIO = new TrainingType();
+        CARDIO.setTrainingType(TrainingType.TrainingTypeEnum.CARDIO);
+
         trainer1 = new Trainer();
         trainer1.setId(1);
         trainer1.setFirstName("John");
         trainer1.setLastName("Doe");
-        trainer1.setSpecialization(TrainingType.YOGA);
+        trainer1.setSpecialization(YOGA);
         trainerService.create(trainer1);
 
         trainer2 = new Trainer();
         trainer2.setId(2);
         trainer2.setFirstName("Bob");
         trainer2.setLastName("Brown");
-        trainer2.setSpecialization(TrainingType.CARDIO);
+        trainer2.setSpecialization(CARDIO);
         trainerService.create(trainer2);
 
         training1 = new Training();
         training1.setId(1);
         training1.setName("training1");
-        training1.setType(TrainingType.YOGA);
+        training1.setType(YOGA);
         training1.setDurationInMinutes(25);
         training1.setTraineeId(1);
         training1.setTrainerId(1);

@@ -36,11 +36,15 @@ class TrainerServiceTest {
         traineeService = new TraineeService(traineeDAO, usernameGenerator);
         trainerService = new TrainerService(trainerDAO, usernameGenerator);
 
+
+        TrainingType YOGA = new TrainingType();
+        YOGA.setTrainingType(TrainingType.TrainingTypeEnum.YOGA);
+
         trainer1 = new Trainer();
         trainer1.setId(1);
         trainer1.setFirstName("Sam");
         trainer1.setLastName("Smith");
-        trainer1.setSpecialization(TrainingType.YOGA);
+        trainer1.setSpecialization(YOGA);
         trainer1.setActive(true);
         trainerService.create(trainer1);
 

@@ -48,4 +48,19 @@ public class TraineeService {
         log.info(">>>> Getting trainees");
         return traineeDAO.getTrainees();
     }
+
+    public void logLastNameUpdateOfTrainee(int traineeId, String traineeNewLastName) {
+        if (getById(traineeId).isEmpty()) {
+            log.error("trainee with userId=" + traineeId + " does not exists");
+        } else {
+            Trainee trainee = getById(traineeId).get();
+            trainee.setLastName(traineeNewLastName);
+            Optional<Trainee> traineeOptional = update(trainee);
+            if (traineeOptional.isEmpty()) {
+                log.error("could not update trainee with userId=" + traineeId);
+            } else {
+                log.info("Successfully updated" + getById(traineeId).get());
+            }
+        }
+    }
 }

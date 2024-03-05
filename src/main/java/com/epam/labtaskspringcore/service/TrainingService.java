@@ -2,6 +2,7 @@ package com.epam.labtaskspringcore.service;
 
 import com.epam.labtaskspringcore.dao.TrainerDAO;
 import com.epam.labtaskspringcore.dao.TrainingDAO;
+import com.epam.labtaskspringcore.model.Trainee;
 import com.epam.labtaskspringcore.model.Trainer;
 import com.epam.labtaskspringcore.model.Training;
 import com.epam.labtaskspringcore.model.TrainingType;
@@ -22,9 +23,9 @@ public class TrainingService {
     }
 
     public Optional<Training> create(Training training) {
-        TrainingType trainingType = training.getType();
+        TrainingType trainingType = training.getTrainingType();
         TrainingType trainerSpecialization;
-        Optional<Trainer> optionalTrainer = trainerDAO.getById(training.getTrainerId());
+        Optional<Trainer> optionalTrainer = trainerDAO.getById(training.getTrainer().getUserId());
 
         if (optionalTrainer.isEmpty()) {
             log.warn("There is no such trainer as indicated by training");
@@ -38,8 +39,8 @@ public class TrainingService {
             return Optional.empty();
         } else {
             trainingDAO.create(training);
-            log.info(">>>> Creating training: " + training.getName());
-            return trainingDAO.getById(training.getId());
+            log.info(">>>> Creating training: " + training.getTrainingName());
+            return trainingDAO.getById(training.getTrainingId());
         }
     }
 
@@ -56,5 +57,29 @@ public class TrainingService {
             matching = true;
         }
         return matching;
+    }
+
+    public Training createTraining(int trainingId, Trainee trainee, Trainer trainer, String trainingName, TrainingType trainingType, int trainingDurationInMinutes) {
+        Training training = new Training();
+        training.setTrainingId(trainingId);
+        training.setTrainee(trainee);
+        training.setTrainer(trainer);
+        training.setTrainingName(trainingName);
+        training.setTrainingType(trainingType);
+        training.setTrainingDurationInMinutes(trainingDurationInMinutes);
+        return training;
+    }
+
+    public void logTrainingCreationDetails(Training training) {
+        if (create(training).isEmpty()) {
+            log.error("could not create training with trainingId: " + training.getTrainingId());
+        } else {
+            Optional<Training> training3Optional = getById(training.getTrainingId());
+            if (training3Optional.isEmpty()) {
+                log.error("could not get training with trainingId: " + training.getTrainingId());
+            } else {
+                log.info("created successfully: " + training3Optional.get().toString());
+            }
+        }
     }
 }

@@ -42,10 +42,10 @@ public class StorageInitializer {
             JsonDataContainer root = om.readValue(inputStream, JsonDataContainer.class);
 
             // Assuming you have appropriate getters in your InMemoryStorage class
-            storage.setTrainers(root.trainer.stream().collect(Collectors.toMap(Trainer::getId, Function.identity())));
-            storage.setTrainees(root.trainee.stream().collect(Collectors.toMap(Trainee::getId, Function.identity())));
+            storage.setTrainers(root.trainer.stream().collect(Collectors.toMap(Trainer::getUserId, Function.identity())));
+            storage.setTrainees(root.trainee.stream().collect(Collectors.toMap(Trainee::getUserId, Function.identity())));
             storage.setTrainings(root.training.stream()
-                                              .collect(Collectors.toMap(Training::getId, Function.identity())));
+                                              .collect(Collectors.toMap(Training::getTrainingId, Function.identity())));
         } catch (IOException e) {
             log.error("Error initializing InMemoryStorage", e);
         }
