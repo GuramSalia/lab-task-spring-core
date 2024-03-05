@@ -22,44 +22,44 @@ public class TraineeService {
         log.info(">>>> TraineeService initialized");
     }
 
-    public Optional<Trainee> create(Trainee trainee) {
+    public Optional<Trainee> createWithDao(Trainee trainee) {
         trainee.setUsername(usernameGenerator.generateUsername(trainee));
         trainee.setPassword(RandomPasswordGenerator.generateRandomPassword());
         log.info(">>>> Creating trainee with username: " + trainee.getUsername());
         return traineeDAO.create(trainee);
     }
 
-    public Optional<Trainee> update(Trainee trainee) {
+    public Optional<Trainee> updateWithDao(Trainee trainee) {
         trainee.setUsername(usernameGenerator.generateUsername(trainee));
         return traineeDAO.update(trainee);
     }
 
-    public boolean delete(int traineeId) {
+    public boolean deleteWithDao(int traineeId) {
         log.info(">>>> Deleting trainee with id: " + traineeId);
         return traineeDAO.delete(traineeId);
     }
 
-    public Optional<Trainee> getById(int id) {
+    public Optional<Trainee> getByIdWithDao(int id) {
         log.info(">>>> Getting trainee with id: " + id);
         return traineeDAO.getById(id);
     }
 
-    public List<Trainee> getTrainees() {
+    public List<Trainee> getTraineesWithDao() {
         log.info(">>>> Getting trainees");
         return traineeDAO.getTrainees();
     }
 
     public void logLastNameUpdateOfTrainee(int traineeId, String traineeNewLastName) {
-        if (getById(traineeId).isEmpty()) {
+        if (getByIdWithDao(traineeId).isEmpty()) {
             log.error("trainee with userId=" + traineeId + " does not exists");
         } else {
-            Trainee trainee = getById(traineeId).get();
+            Trainee trainee = getByIdWithDao(traineeId).get();
             trainee.setLastName(traineeNewLastName);
-            Optional<Trainee> traineeOptional = update(trainee);
+            Optional<Trainee> traineeOptional = updateWithDao(trainee);
             if (traineeOptional.isEmpty()) {
                 log.error("could not update trainee with userId=" + traineeId);
             } else {
-                log.info("Successfully updated" + getById(traineeId).get());
+                log.info("Successfully updated" + getByIdWithDao(traineeId).get());
             }
         }
     }

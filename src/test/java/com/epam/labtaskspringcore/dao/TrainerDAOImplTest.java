@@ -1,12 +1,11 @@
 package com.epam.labtaskspringcore.dao;
+
 import com.epam.labtaskspringcore.config.InMemoryStorage;
-import com.epam.labtaskspringcore.model.Trainee;
 import com.epam.labtaskspringcore.model.Trainer;
 import com.epam.labtaskspringcore.model.TrainingType;
 import com.epam.labtaskspringcore.service.TraineeService;
 import com.epam.labtaskspringcore.service.TrainerService;
 import com.epam.labtaskspringcore.utils.UsernameGenerator;
-import com.epam.labtaskspringcore.utils.UsernameGeneratorImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,7 +13,8 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 class TrainerDAOImplTest {
     InMemoryStorage storage;
     TraineeDAO traineeDAO;
@@ -31,7 +31,7 @@ class TrainerDAOImplTest {
         storage = new InMemoryStorage();
         traineeDAO = new TraineeDAOImpl(storage);
         trainerDAO = new TrainerDAOImpl(storage);
-        usernameGenerator = new UsernameGeneratorImpl(trainerDAO, traineeDAO);
+        usernameGenerator = new UsernameGenerator(trainerDAO, traineeDAO);
         traineeService = new TraineeService(traineeDAO, usernameGenerator);
         trainerService = new TrainerService(trainerDAO, usernameGenerator);
 
@@ -39,17 +39,17 @@ class TrainerDAOImplTest {
         YOGA.setTrainingType(TrainingType.TrainingTypeEnum.YOGA);
 
         trainer1 = new Trainer();
-        trainer1.setId(1);
+        trainer1.setUserId(1);
         trainer1.setFirstName("Sam");
         trainer1.setLastName("Smith");
         trainer1.setSpecialization(YOGA);
-        trainer1.setActive(true);
-        trainerService.create(trainer1);
+        trainer1.setIsActive(true);
+        trainerService.createWithDao(trainer1);
 
         trainer2 = new Trainer();
-        trainer2.setId(2);
+        trainer2.setUserId(2);
         trainer3 = new Trainer();
-        trainer3.setId(3);
+        trainer3.setUserId(3);
     }
 
     @AfterEach
@@ -59,18 +59,18 @@ class TrainerDAOImplTest {
 
     @Test
     void testCreateInTrainerDAO() {
-        trainer2.setId(1);
+        trainer2.setUserId(1);
         assertEquals(trainerDAO.create(trainer2), Optional.empty());
-        trainer2.setId(2);
+        trainer2.setUserId(2);
         assertEquals(trainerDAO.create(trainer2), Optional.of(trainer2));
     }
 
     @Test
     void testUpdateInTrainerDAO() {
-        trainer2.setId(5);
+        trainer2.setUserId(5);
         assertEquals(trainerDAO.update(trainer2), Optional.empty());
         trainerDAO.create(trainer2);
-        trainer2.setActive(true);
+        trainer2.setIsActive(true);
         assertEquals(trainerDAO.update(trainer2), Optional.of(trainer2));
     }
 

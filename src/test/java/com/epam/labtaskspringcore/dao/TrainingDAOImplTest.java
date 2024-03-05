@@ -1,14 +1,12 @@
 package com.epam.labtaskspringcore.dao;
+
 import com.epam.labtaskspringcore.config.InMemoryStorage;
-import com.epam.labtaskspringcore.model.Trainee;
 import com.epam.labtaskspringcore.model.Trainer;
 import com.epam.labtaskspringcore.model.Training;
 import com.epam.labtaskspringcore.model.TrainingType;
-import com.epam.labtaskspringcore.service.TraineeService;
 import com.epam.labtaskspringcore.service.TrainerService;
 import com.epam.labtaskspringcore.service.TrainingService;
 import com.epam.labtaskspringcore.utils.UsernameGenerator;
-import com.epam.labtaskspringcore.utils.UsernameGeneratorImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,18 +14,19 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 class TrainingDAOImplTest {
     InMemoryStorage storage;
     TraineeDAO traineeDAO;
     TrainerDAO trainerDAO;
     TrainingDAO trainingDAO;
-//    TraineeService traineeService;
+    //    TraineeService traineeService;
     TrainerService trainerService;
     TrainingService trainingService;
     UsernameGenerator usernameGenerator;
-//    Trainee trainee1;
-//    Trainee trainee2;
+    //    Trainee trainee1;
+    //    Trainee trainee2;
     Trainer trainer1;
     Trainer trainer2;
 
@@ -41,22 +40,10 @@ class TrainingDAOImplTest {
         traineeDAO = new TraineeDAOImpl(storage);
         trainerDAO = new TrainerDAOImpl(storage);
         trainingDAO = new TrainingDAOImpl(storage);
-        usernameGenerator = new UsernameGeneratorImpl(trainerDAO, traineeDAO);
-//        traineeService = new TraineeService(traineeDAO, usernameGenerator);
+        usernameGenerator = new UsernameGenerator(trainerDAO, traineeDAO);
+        //        traineeService = new TraineeService(traineeDAO, usernameGenerator);
         trainerService = new TrainerService(trainerDAO, usernameGenerator);
         trainingService = new TrainingService(trainingDAO, trainerDAO);
-
-//        trainee1 = new Trainee();
-//        trainee1.setId(1);
-//        trainee1.setFirstName("Sam");
-//        trainee1.setLastName("Smith");
-//        traineeService.create(trainee1);
-//
-//        trainee2 = new Trainee();
-//        trainee2.setId(1);
-//        trainee2.setFirstName("Sally");
-//        trainee2.setLastName("Schmidt");
-//        traineeService.create(trainee2);
 
         TrainingType YOGA = new TrainingType();
         YOGA.setTrainingType(TrainingType.TrainingTypeEnum.YOGA);
@@ -64,32 +51,32 @@ class TrainingDAOImplTest {
         CARDIO.setTrainingType(TrainingType.TrainingTypeEnum.CARDIO);
 
         trainer1 = new Trainer();
-        trainer1.setId(1);
+        trainer1.setUserId(1);
         trainer1.setFirstName("John");
         trainer1.setLastName("Doe");
         trainer1.setSpecialization(YOGA);
-        trainerService.create(trainer1);
+        trainerService.createWithDao(trainer1);
 
         trainer2 = new Trainer();
-        trainer2.setId(2);
+        trainer2.setUserId(2);
         trainer2.setFirstName("Bob");
         trainer2.setLastName("Brown");
         trainer2.setSpecialization(CARDIO);
-        trainerService.create(trainer2);
+        trainerService.createWithDao(trainer2);
 
         training1 = new Training();
-        training1.setId(1);
-        training1.setName("training1");
-        training1.setType(YOGA);
-        training1.setDurationInMinutes(25);
-        training1.setTraineeId(1);
-        training1.setTrainerId(1);
-        trainingService.create(training1);
+        training1.setTrainingId(1);
+        training1.setTrainingName("training1");
+        training1.setTrainingType(YOGA);
+        training1.setTrainingDurationInMinutes(25);
+        //        training1.setTrainee(1);
+        training1.setTrainer(trainer1);
+        trainingService.createWithDao(training1);
 
         training2 = new Training();
-        training2.setId(2);
+        training2.setTrainingId(2);
         training3 = new Training();
-        training3.setId(3);
+        training3.setTrainingId(3);
     }
 
     @AfterEach
@@ -99,9 +86,9 @@ class TrainingDAOImplTest {
 
     @Test
     void testCreateInTrainingDAO() {
-        training2.setId(1);
+        training2.setTrainingId(1);
         assertEquals(trainingDAO.create(training2), Optional.empty());
-        training2.setId(2);
+        training2.setTrainingId(2);
         assertEquals(trainingDAO.create(training2).get(), training2);
     }
 

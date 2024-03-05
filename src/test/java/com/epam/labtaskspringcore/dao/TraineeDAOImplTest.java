@@ -1,10 +1,10 @@
 package com.epam.labtaskspringcore.dao;
+
 import com.epam.labtaskspringcore.config.InMemoryStorage;
 import com.epam.labtaskspringcore.model.Trainee;
 import com.epam.labtaskspringcore.service.TraineeService;
 import com.epam.labtaskspringcore.service.TrainerService;
 import com.epam.labtaskspringcore.utils.UsernameGenerator;
-import com.epam.labtaskspringcore.utils.UsernameGeneratorImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,7 +12,9 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 class TraineeDAOImplTest {
     InMemoryStorage storage;
     TraineeDAO traineeDAO;
@@ -29,22 +31,22 @@ class TraineeDAOImplTest {
         storage = new InMemoryStorage();
         traineeDAO = new TraineeDAOImpl(storage);
         trainerDAO = new TrainerDAOImpl(storage);
-        usernameGenerator = new UsernameGeneratorImpl(trainerDAO, traineeDAO);
+        usernameGenerator = new UsernameGenerator(trainerDAO, traineeDAO);
         traineeService = new TraineeService(traineeDAO, usernameGenerator);
         trainerService = new TrainerService(trainerDAO, usernameGenerator);
 
         trainee1 = new Trainee();
-        trainee1.setId(1);
+        trainee1.setUserId(1);
         trainee1.setFirstName("Sam");
         trainee1.setLastName("Smith");
         trainee1.setAddress("trainee1 address");
-        trainee1.setActive(true);
-        traineeService.create(trainee1);
+        trainee1.setIsActive(true);
+        traineeService.createWithDao(trainee1);
 
         trainee2 = new Trainee();
-        trainee2.setId(2);
+        trainee2.setUserId(2);
         trainee3 = new Trainee();
-        trainee3.setId(3);
+        trainee3.setUserId(3);
     }
 
     @AfterEach
@@ -52,21 +54,20 @@ class TraineeDAOImplTest {
         storage.clearStorage();
     }
 
-
     @Test
     void testCreateInTraineeDAO() {
-        trainee2.setId(1);
+        trainee2.setUserId(1);
         assertEquals(traineeDAO.create(trainee2), Optional.empty());
-        trainee2.setId(2);
+        trainee2.setUserId(2);
         assertEquals(traineeDAO.create(trainee2), Optional.of(trainee2));
     }
 
     @Test
     void testUpdateInTraineeDAO() {
-        trainee2.setId(5);
+        trainee2.setUserId(5);
         assertEquals(traineeDAO.update(trainee2), Optional.empty());
         traineeDAO.create(trainee2);
-        trainee2.setActive(true);
+        trainee2.setIsActive(true);
         assertEquals(traineeDAO.update(trainee2), Optional.of(trainee2));
     }
 

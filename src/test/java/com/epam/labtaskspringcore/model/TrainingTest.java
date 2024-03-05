@@ -21,60 +21,80 @@ class TrainingTest {
 
     @Test
     void testSettersGetId() {
-        training1.setId(1);
-        training2.setId(2);
-        training3.setId(3);
-        training4.setId(4);
+        training1.setTrainingId(1);
+        training2.setTrainingId(2);
+        training3.setTrainingId(3);
+        training4.setTrainingId(4);
 
         assertAll(
-                () -> assertEquals(1, training1.getId()),
-                () -> assertEquals(2, training2.getId()),
-                () -> assertEquals(3, training3.getId()),
-                () -> assertEquals(4, training4.getId())
+                () -> assertEquals(1, training1.getTrainingId()),
+                () -> assertEquals(2, training2.getTrainingId()),
+                () -> assertEquals(3, training3.getTrainingId()),
+                () -> assertEquals(4, training4.getTrainingId())
                  );
     }
 
     @Test
     void testSettersGetTraineeId() {
-        training1.setTraineeId(1);
-        training2.setTraineeId(2);
-        training3.setTraineeId(3);
-        training4.setTraineeId(4);
+
+        Trainee trainee1 = new Trainee();
+        trainee1.setUserId(1);
+        Trainee trainee2 = new Trainee();
+        trainee2.setUserId(2);
+        Trainee trainee3 = new Trainee();
+        trainee3.setUserId(3);
+        Trainee trainee4 = new Trainee();
+        trainee4.setUserId(4);
+
+        training1.setTrainee(trainee1);
+        training2.setTrainee(trainee2);
+        training3.setTrainee(trainee3);
+        training4.setTrainee(trainee4);
 
         assertAll(
-                () -> assertEquals(1, training1.getTraineeId()),
-                () -> assertEquals(2, training2.getTraineeId()),
-                () -> assertEquals(3, training3.getTraineeId()),
-                () -> assertEquals(4, training4.getTraineeId())
+                () -> assertEquals(1, training1.getTrainee().getUserId()),
+                () -> assertEquals(2, training2.getTrainee().getUserId()),
+                () -> assertEquals(3, training3.getTrainee().getUserId()),
+                () -> assertEquals(4, training4.getTrainee().getUserId())
                  );
     }
 
     @Test
     void testSettersGetTrainerId() {
-        training1.setTrainerId(1);
-        training2.setTrainerId(2);
-        training3.setTrainerId(3);
-        training4.setTrainerId(4);
+
+        Trainer trainer1 = new Trainer();
+        trainer1.setUserId(1);
+        Trainer trainer2 = new Trainer();
+        trainer2.setUserId(2);
+        Trainer trainer3 = new Trainer();
+        trainer3.setUserId(3);
+        Trainer trainer4 = new Trainer();
+        trainer4.setUserId(4);
+
+        training1.setTrainer(trainer1);
+        training2.setTrainer(trainer2);
+        training3.setTrainer(trainer3);
+        training4.setTrainer(trainer4);
 
         assertAll(
-                () -> assertEquals(1, training1.getTrainerId()),
-                () -> assertEquals(2, training2.getTrainerId()),
-                () -> assertEquals(3, training3.getTrainerId()),
-                () -> assertEquals(4, training4.getTrainerId())
+                () -> assertEquals(1, training1.getTrainer().getUserId()),
+                () -> assertEquals(2, training2.getTrainer().getUserId()),
+                () -> assertEquals(3, training3.getTrainer().getUserId()),
+                () -> assertEquals(4, training4.getTrainer().getUserId())
                  );
     }
 
     @Test
     void testSettersGetName() {
-        training1.setName("Training 1");
-        training2.setName("Training 2");
-        training3.setName("Training 3");
-        training4.setName("Training 4");
+        training1.setTrainingName("Training 1");
+        training2.setTrainingName("Training 2");
+        training3.setTrainingName("Training 3");
+        training4.setTrainingName("Training 4");
         assertAll(
-                () -> assertEquals("Training 1", training1.getName()),
-                () -> assertEquals("Training 2", training2.getName()),
-                () -> assertEquals("Training 3", training3.getName()),
-                () -> assertEquals("Training 4", training4.getName())
+                () -> assertEquals("Training 1", training1.getTrainingName()),
+                () -> assertEquals("Training 2", training2.getTrainingName()),
+                () -> assertEquals("Training 3", training3.getTrainingName()),
+                () -> assertEquals("Training 4", training4.getTrainingName())
                  );
     }
 
@@ -92,30 +112,30 @@ class TrainingTest {
 
 
 
-        training1.setType(YOGA);
-        training2.setType(PERSONAL);
-        training3.setType(GROUP);
-        training4.setType(CARDIO);
+        training1.setTrainingType(YOGA);
+        training2.setTrainingType(PERSONAL);
+        training3.setTrainingType(GROUP);
+        training4.setTrainingType(CARDIO);
         assertAll(
-                () -> assertEquals(YOGA, training1.getType()),
-                () -> assertEquals(PERSONAL, training2.getType()),
-                () -> assertEquals(GROUP, training3.getType()),
-                () -> assertEquals(CARDIO, training4.getType())
+                () -> assertEquals(YOGA, training1.getTrainingType()),
+                () -> assertEquals(PERSONAL, training2.getTrainingType()),
+                () -> assertEquals(GROUP, training3.getTrainingType()),
+                () -> assertEquals(CARDIO, training4.getTrainingType())
                  );
     }
 
 
     @Test
     void testSettersGetDurationInMinutes() {
-        training1.setDurationInMinutes(10);
-        training2.setDurationInMinutes(20);
-        training3.setDurationInMinutes(30);
-        training4.setDurationInMinutes(40);
+        training1.setTrainingDurationInMinutes(10);
+        training2.setTrainingDurationInMinutes(20);
+        training3.setTrainingDurationInMinutes(30);
+        training4.setTrainingDurationInMinutes(40);
         assertAll(
-                () -> assertEquals(10, training1.getDurationInMinutes()),
-                () -> assertEquals(20, training2.getDurationInMinutes()),
-                () -> assertEquals(30, training3.getDurationInMinutes()),
-                () -> assertEquals(40, training4.getDurationInMinutes())
+                () -> assertEquals(10, training1.getTrainingDurationInMinutes()),
+                () -> assertEquals(20, training2.getTrainingDurationInMinutes()),
+                () -> assertEquals(30, training3.getTrainingDurationInMinutes()),
+                () -> assertEquals(40, training4.getTrainingDurationInMinutes())
                  );
     }
 }

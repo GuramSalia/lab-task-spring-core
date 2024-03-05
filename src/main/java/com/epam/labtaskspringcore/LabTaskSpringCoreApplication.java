@@ -1,8 +1,6 @@
 package com.epam.labtaskspringcore;
 
-import com.epam.labtaskspringcore.config.ApplicationContextProvider;
 import com.epam.labtaskspringcore.config.InMemoryStorage;
-import com.epam.labtaskspringcore.model.Trainee;
 import com.epam.labtaskspringcore.model.Trainer;
 import com.epam.labtaskspringcore.model.Training;
 import com.epam.labtaskspringcore.model.TrainingType;
@@ -13,8 +11,6 @@ import com.epam.labtaskspringcore.utils.BeanProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import java.util.Optional;
 
 @Slf4j
 @SpringBootApplication
@@ -52,16 +48,16 @@ public class LabTaskSpringCoreApplication {
         trainerService.logTrainerCreationDetails(trainer6);
         log.info("   -----   end of trainer userId=6 \n");
 
-        log.info("   .....   training 3 ");
+        log.info("   .....   training 3 : should not create ");
 
-        Training training3 = trainingService.createTraining(3, traineeService.getById(4).get(),
-                trainer5, "personal training", PERSONAL, 30);
+        Training training3 = trainingService.createTraining(3, traineeService.getByIdWithDao(4).get(),
+                                                            trainer5, "personal training", PERSONAL, 30);
         trainingService.logTrainingCreationDetails(training3);
         log.info("   -----   end of training 3 \n");
 
         log.info("   .....   training 4 ");
-        Training training4 = trainingService.createTraining(4, traineeService.getById(3).get(),
-                trainer5, "Yoga training", YOGA, 30);
+        Training training4 = trainingService.createTraining(4, traineeService.getByIdWithDao(3).get(),
+                                                            trainer5, "Yoga training", YOGA, 30);
         trainingService.logTrainingCreationDetails(training4);
         log.info("   -----   end of training 4 \n");
 
@@ -69,8 +65,6 @@ public class LabTaskSpringCoreApplication {
         traineeService.logLastNameUpdateOfTrainee(4, "Schmidt");
         log.info("   -----   end of trainee userId=4 \n");
 
-        log.info(" ....... task2 related part starts here part end here .......\n");
-
-
+        log.info(" ....... task2 related part starts here  .......\n");
     }
 }

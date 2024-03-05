@@ -79,30 +79,30 @@ class TrainerTest {
 
         @Test
         void testSettersActive() {
-            trainer1.setActive(true);
-            trainer2.setActive(false);
-            trainer3.setActive(true);
-            trainer4.setActive(false);
+            trainer1.setIsActive(true);
+            trainer2.setIsActive(false);
+            trainer3.setIsActive(true);
+            trainer4.setIsActive(false);
             assertAll(
-                    () -> assertTrue(trainer1.isActive()),
-                    () -> assertFalse(trainer2.isActive()),
-                    () -> assertTrue(trainer3.isActive()),
-                    () -> assertFalse(trainer4.isActive())
+                    () -> assertTrue(trainer1.getIsActive()),
+                    () -> assertFalse(trainer2.getIsActive()),
+                    () -> assertTrue(trainer3.getIsActive()),
+                    () -> assertFalse(trainer4.getIsActive())
                      );
         }
 
         @Test
         void testSettersId() {
-            trainer1.setId(1);
-            trainer2.setId(2);
-            trainer3.setId(3);
-            trainer4.setId(4);
+            trainer1.setUserId(1);
+            trainer2.setUserId(2);
+            trainer3.setUserId(3);
+            trainer4.setUserId(4);
 
             assertAll(
-                    () -> assertEquals(1, trainer1.getId()),
-                    () -> assertEquals(2, trainer2.getId()),
-                    () -> assertEquals(3, trainer3.getId()),
-                    () -> assertEquals(4, trainer4.getId())
+                    () -> assertEquals(1, trainer1.getUserId()),
+                    () -> assertEquals(2, trainer2.getUserId()),
+                    () -> assertEquals(3, trainer3.getUserId()),
+                    () -> assertEquals(4, trainer4.getUserId())
                      );
         }
 

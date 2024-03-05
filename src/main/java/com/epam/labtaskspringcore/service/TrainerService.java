@@ -23,23 +23,23 @@ public class TrainerService {
         this.usernameGenerator = usernameGenerator;
     }
 
-    public Optional<Trainer> create(Trainer trainer) {
+    public Optional<Trainer> createWithDao(Trainer trainer) {
         trainer.setPassword(RandomPasswordGenerator.generateRandomPassword());
         trainer.setUsername(usernameGenerator.generateUsername(trainer));
         return trainerDAO.create(trainer);
     }
 
-    public Optional<Trainer> update(Trainer trainer) {
+    public Optional<Trainer> updateWithDao(Trainer trainer) {
         trainer.setUsername(usernameGenerator.generateUsername(trainer));
         return trainerDAO.update(trainer);
     }
 
-    public Optional<Trainer> getById(int id) {
+    public Optional<Trainer> getByIdWithDao(int id) {
         log.info(">>>> Getting trainer with id: " + id);
         return trainerDAO.getById(id);
     }
 
-    public List<User> getTrainers() {
+    public List<User> getTrainersWithDao() {
         log.info(">>>> Getting trainers");
         return trainerDAO.getTrainers();
     }
@@ -50,7 +50,7 @@ public class TrainerService {
             String lastName,
             boolean isActive,
             TrainingType specialization
-    ) {
+                                ) {
         Trainer trainer = new Trainer();
 
         trainer.setUserId(userId);
@@ -61,19 +61,16 @@ public class TrainerService {
         return trainer;
     }
 
-    public void logTrainerCreationDetails (Trainer trainer) {
-        if (create(trainer).isEmpty()) {
+    public void logTrainerCreationDetails(Trainer trainer) {
+        if (createWithDao(trainer).isEmpty()) {
             log.error("could not create trainer with userId: " + trainer.getUserId());
         } else {
-            Optional<Trainer> trainerOptional = getById(trainer.getUserId());
+            Optional<Trainer> trainerOptional = getByIdWithDao(trainer.getUserId());
             if (trainerOptional.isEmpty()) {
                 log.error("could not get trainer width userId: " + trainer.getUserId());
             } else {
-                log.info("created successfully: "+ trainerOptional.get());
+                log.info("created successfully: " + trainerOptional.get());
             }
         }
     }
-
-
-
 }
