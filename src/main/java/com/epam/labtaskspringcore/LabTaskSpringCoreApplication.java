@@ -54,19 +54,23 @@ public class LabTaskSpringCoreApplication {
 
         log.info("   .....   training 3 ");
 
-        Training training3 = trainingService.createTraining(3, traineeService.getById(4)
-                                                                             .get(), trainer5, "personal training", PERSONAL, 30);
+        Training training3 = trainingService.createTraining(3, traineeService.getById(4).get(),
+                trainer5, "personal training", PERSONAL, 30);
         trainingService.logTrainingCreationDetails(training3);
         log.info("   -----   end of training 3 \n");
 
         log.info("   .....   training 4 ");
-        Training training4 = trainingService.createTraining(4, traineeService.getById(3)
-                                                                             .get(), trainer5, "Yoga training", YOGA, 30);
+        Training training4 = trainingService.createTraining(4, traineeService.getById(3).get(),
+                trainer5, "Yoga training", YOGA, 30);
         trainingService.logTrainingCreationDetails(training4);
         log.info("   -----   end of training 4 \n");
 
         log.info("   .....   update trainee userId=4");
         traineeService.logLastNameUpdateOfTrainee(4, "Schmidt");
         log.info("   -----   end of trainee userId=4 \n");
+
+        log.info(" ....... task2 related part starts here part end here .......\n");
+
+
     }
 }
