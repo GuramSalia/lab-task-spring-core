@@ -21,7 +21,7 @@ public class LabTaskSpringCoreApplication {
 
         InMemoryStorage inMemoryStorage = BeanProvider.getInMemoryStorage();
         TrainerService trainerService = BeanProvider.getTrainerService();
-        TraineeService traineeService = BeanProvider.getTraineeService();
+        TraineeService traineeServiceWithInMemoryDao = BeanProvider.getTraineeService("IN_MEMORY");
         TrainingService trainingService = BeanProvider.getTrainingService();
 
         TrainingType YOGA = new TrainingType();
@@ -50,19 +50,19 @@ public class LabTaskSpringCoreApplication {
 
         log.info("   .....   training 3 : should not create ");
 
-        Training training3 = trainingService.createTraining(3, traineeService.getById(4).get(),
+        Training training3 = trainingService.createTraining(3, traineeServiceWithInMemoryDao.getById(4).get(),
                                                             trainer5, "personal training", PERSONAL, 30);
         trainingService.logTrainingCreationDetails(training3);
         log.info("   -----   end of training 3 \n");
 
         log.info("   .....   training 4 ");
-        Training training4 = trainingService.createTraining(4, traineeService.getById(3).get(),
+        Training training4 = trainingService.createTraining(4, traineeServiceWithInMemoryDao.getById(3).get(),
                                                             trainer5, "Yoga training", YOGA, 30);
         trainingService.logTrainingCreationDetails(training4);
         log.info("   -----   end of training 4 \n");
 
         log.info("   .....   update trainee userId=4");
-        traineeService.logLastNameUpdateOfTrainee(4, "Schmidt");
+        traineeServiceWithInMemoryDao.logLastNameUpdateOfTrainee(4, "Schmidt");
         log.info("   -----   end of trainee userId=4 \n");
 
         log.info(" ....... task2 related part starts here  .......\n");

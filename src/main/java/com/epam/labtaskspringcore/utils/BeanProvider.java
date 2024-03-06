@@ -19,8 +19,10 @@ public class BeanProvider {
         return context.getBean(TrainerService.class);
     }
 
-    public static TraineeService getTraineeService() {
-        return context.getBean(TraineeService.class);
+    public static TraineeService getTraineeService(String daoImplementationName) {
+        TraineeService traineeService = context.getBean(TraineeService.class);
+        traineeService.setTraineeDAOFromTraineeDAOs(daoImplementationName);
+        return traineeService;
     }
 
     public static TrainingService getTrainingService() {

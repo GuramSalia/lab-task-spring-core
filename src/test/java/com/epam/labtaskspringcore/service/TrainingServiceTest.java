@@ -11,9 +11,12 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 class TrainingServiceTest {
 
     InMemoryStorage storage;
@@ -40,7 +43,13 @@ class TrainingServiceTest {
         trainerDAO = new TrainerDAOInMemoryStorageImpl(storage);
         trainingDAO = new TrainingDAOInMemoryStorageImpl(storage);
         usernameGenerator = new UsernameGenerator(trainerDAO, traineeDAO);
-        traineeService = new TraineeService(traineeDAO, usernameGenerator);
+
+        // new way of creating traineeService
+        Map<String, TraineeDAO> traineeDAOMap = new HashMap<>();
+        traineeDAOMap.put("IN_MEMORY", traineeDAO);
+        traineeService = new TraineeService(traineeDAOMap, usernameGenerator);
+        traineeService.setTraineeDAO(traineeDAO);
+
         trainerService = new TrainerService(trainerDAO, usernameGenerator);
         trainingService = new TrainingService(trainingDAO, trainerDAO);
 
@@ -82,7 +91,6 @@ class TrainingServiceTest {
         training1.setTrainingDurationInMinutes(25);
         training1.setTrainee(trainee1);
         training1.setTrainer(trainer1);
-
 
         training2 = new Training();
         training2.setTrainingId(2);

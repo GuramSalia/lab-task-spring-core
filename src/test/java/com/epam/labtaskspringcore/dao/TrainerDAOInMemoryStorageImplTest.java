@@ -10,7 +10,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -28,11 +30,19 @@ class TrainerDAOInMemoryStorageImplTest {
 
     @BeforeEach
     void setUpBeforeEach() {
+
         storage = new InMemoryStorage();
         traineeDAO = new TraineeDAOInMemoryStorageImpl(storage);
         trainerDAO = new TrainerDAOInMemoryStorageImpl(storage);
         usernameGenerator = new UsernameGenerator(trainerDAO, traineeDAO);
-        traineeService = new TraineeService(traineeDAO, usernameGenerator);
+
+
+        // new way of creating traineeService
+        Map<String, TraineeDAO> traineeDAOMap = new HashMap<>();
+        traineeDAOMap.put("IN_MEMORY", traineeDAO);
+        traineeService = new TraineeService(traineeDAOMap, usernameGenerator);
+        traineeService.setTraineeDAO(traineeDAO);
+
         trainerService = new TrainerService(trainerDAO, usernameGenerator);
 
         TrainingType YOGA = new TrainingType();

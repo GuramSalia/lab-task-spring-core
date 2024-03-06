@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Slf4j
 @Primary
-@Repository
+@Repository("IN_MEMORY")
 public class TraineeDAOInMemoryStorageImpl implements TraineeDAO {
     private final Map<Integer, Trainee> trainees;
 

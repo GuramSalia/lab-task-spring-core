@@ -4,24 +4,43 @@ import com.epam.labtaskspringcore.dao.TraineeDAO;
 import com.epam.labtaskspringcore.model.Trainee;
 import com.epam.labtaskspringcore.utils.RandomPasswordGenerator;
 import com.epam.labtaskspringcore.utils.UsernameGenerator;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
 @Service
 public class TraineeService {
-    private final TraineeDAO traineeDAO;
+    //    private final TraineeDAO traineeDAO;
+
+
+    private final Map<String, TraineeDAO> traineeDAOs;
 
     private final UsernameGenerator usernameGenerator;
+    @Setter
+    private TraineeDAO traineeDAO;
 
-    public TraineeService(TraineeDAO traineeDAO, UsernameGenerator usernameGenerator) {
-        this.traineeDAO = traineeDAO;
+    @Autowired
+    public TraineeService(Map<String, TraineeDAO> traineeDAOs, UsernameGenerator usernameGenerator) {
+        this.traineeDAOs = traineeDAOs;
         this.usernameGenerator = usernameGenerator;
         log.info(">>>> TraineeService initialized");
     }
+
+    public void setTraineeDAOFromTraineeDAOs(String nameOfDao) {
+        this.traineeDAO = traineeDAOs.get(nameOfDao);
+    }
+
+    //    public TraineeService(TraineeDAO traineeDAO, UsernameGenerator usernameGenerator) {
+    //        this.traineeDAO = traineeDAO;
+    //        this.usernameGenerator = usernameGenerator;
+    //        log.info(">>>> TraineeService initialized");
+    //    }
 
     public Optional<Trainee> create(Trainee trainee) {
         trainee.setUsername(usernameGenerator.generateUsername(trainee));

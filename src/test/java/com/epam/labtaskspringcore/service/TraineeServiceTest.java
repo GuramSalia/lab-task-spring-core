@@ -1,4 +1,5 @@
 package com.epam.labtaskspringcore.service;
+
 import com.epam.labtaskspringcore.config.InMemoryStorage;
 import com.epam.labtaskspringcore.dao.TraineeDAO;
 import com.epam.labtaskspringcore.dao.TraineeDAOInMemoryStorageImpl;
@@ -10,6 +11,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -32,7 +35,13 @@ class TraineeServiceTest {
         traineeDAO = new TraineeDAOInMemoryStorageImpl(storage);
         trainerDAO = new TrainerDAOInMemoryStorageImpl(storage);
         usernameGenerator = new UsernameGenerator(trainerDAO, traineeDAO);
-        traineeService = new TraineeService(traineeDAO, usernameGenerator);
+
+        // new way of creating traineeService
+        Map<String, TraineeDAO> traineeDAOMap = new HashMap<>();
+        traineeDAOMap.put("IN_MEMORY", traineeDAO);
+        traineeService = new TraineeService(traineeDAOMap, usernameGenerator);
+        traineeService.setTraineeDAO(traineeDAO);
+
         trainerService = new TrainerService(trainerDAO, usernameGenerator);
 
         trainee1 = new Trainee();
