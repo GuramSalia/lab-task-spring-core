@@ -15,7 +15,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class TraineeDAOImplTest {
+class TraineeDAOInMemoryStorageImplTest {
     InMemoryStorage storage;
     TraineeDAO traineeDAO;
     TrainerDAO trainerDAO;
@@ -29,8 +29,8 @@ class TraineeDAOImplTest {
     @BeforeEach
     void setUpBeforeEach() {
         storage = new InMemoryStorage();
-        traineeDAO = new TraineeDAOImpl(storage);
-        trainerDAO = new TrainerDAOImpl(storage);
+        traineeDAO = new TraineeDAOInMemoryStorageImpl(storage);
+        trainerDAO = new TrainerDAOInMemoryStorageImpl(storage);
         usernameGenerator = new UsernameGenerator(trainerDAO, traineeDAO);
         traineeService = new TraineeService(traineeDAO, usernameGenerator);
         trainerService = new TrainerService(trainerDAO, usernameGenerator);
@@ -41,7 +41,7 @@ class TraineeDAOImplTest {
         trainee1.setLastName("Smith");
         trainee1.setAddress("trainee1 address");
         trainee1.setIsActive(true);
-        traineeService.createWithDao(trainee1);
+        traineeService.create(trainee1);
 
         trainee2 = new Trainee();
         trainee2.setUserId(2);
@@ -73,7 +73,7 @@ class TraineeDAOImplTest {
 
     @Test
     void testDeleteInTraineeDAO() {
-        assertTrue(traineeDAO.delete(1));
+        assertTrue(traineeDAO.delete(trainee1));
     }
 
     @Test

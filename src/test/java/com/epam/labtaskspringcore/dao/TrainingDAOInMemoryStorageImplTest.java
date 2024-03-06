@@ -16,7 +16,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class TrainingDAOImplTest {
+class TrainingDAOInMemoryStorageImplTest {
     InMemoryStorage storage;
     TraineeDAO traineeDAO;
     TrainerDAO trainerDAO;
@@ -37,9 +37,9 @@ class TrainingDAOImplTest {
     @BeforeEach
     void setUpBeforeEach() {
         storage = new InMemoryStorage();
-        traineeDAO = new TraineeDAOImpl(storage);
-        trainerDAO = new TrainerDAOImpl(storage);
-        trainingDAO = new TrainingDAOImpl(storage);
+        traineeDAO = new TraineeDAOInMemoryStorageImpl(storage);
+        trainerDAO = new TrainerDAOInMemoryStorageImpl(storage);
+        trainingDAO = new TrainingDAOInMemoryStorageImpl(storage);
         usernameGenerator = new UsernameGenerator(trainerDAO, traineeDAO);
         //        traineeService = new TraineeService(traineeDAO, usernameGenerator);
         trainerService = new TrainerService(trainerDAO, usernameGenerator);
@@ -55,14 +55,14 @@ class TrainingDAOImplTest {
         trainer1.setFirstName("John");
         trainer1.setLastName("Doe");
         trainer1.setSpecialization(YOGA);
-        trainerService.createWithDao(trainer1);
+        trainerService.create(trainer1);
 
         trainer2 = new Trainer();
         trainer2.setUserId(2);
         trainer2.setFirstName("Bob");
         trainer2.setLastName("Brown");
         trainer2.setSpecialization(CARDIO);
-        trainerService.createWithDao(trainer2);
+        trainerService.create(trainer2);
 
         training1 = new Training();
         training1.setTrainingId(1);
@@ -71,7 +71,7 @@ class TrainingDAOImplTest {
         training1.setTrainingDurationInMinutes(25);
         //        training1.setTrainee(1);
         training1.setTrainer(trainer1);
-        trainingService.createWithDao(training1);
+        trainingService.create(training1);
 
         training2 = new Training();
         training2.setTrainingId(2);

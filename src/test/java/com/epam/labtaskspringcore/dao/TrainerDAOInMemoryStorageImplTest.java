@@ -15,7 +15,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class TrainerDAOImplTest {
+class TrainerDAOInMemoryStorageImplTest {
     InMemoryStorage storage;
     TraineeDAO traineeDAO;
     TrainerDAO trainerDAO;
@@ -29,8 +29,8 @@ class TrainerDAOImplTest {
     @BeforeEach
     void setUpBeforeEach() {
         storage = new InMemoryStorage();
-        traineeDAO = new TraineeDAOImpl(storage);
-        trainerDAO = new TrainerDAOImpl(storage);
+        traineeDAO = new TraineeDAOInMemoryStorageImpl(storage);
+        trainerDAO = new TrainerDAOInMemoryStorageImpl(storage);
         usernameGenerator = new UsernameGenerator(trainerDAO, traineeDAO);
         traineeService = new TraineeService(traineeDAO, usernameGenerator);
         trainerService = new TrainerService(trainerDAO, usernameGenerator);
@@ -44,7 +44,7 @@ class TrainerDAOImplTest {
         trainer1.setLastName("Smith");
         trainer1.setSpecialization(YOGA);
         trainer1.setIsActive(true);
-        trainerService.createWithDao(trainer1);
+        trainerService.create(trainer1);
 
         trainer2 = new Trainer();
         trainer2.setUserId(2);

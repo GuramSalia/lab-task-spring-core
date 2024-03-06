@@ -1,0 +1,53 @@
+package com.epam.labtaskspringcore.dao;
+
+import com.epam.labtaskspringcore.model.Trainee;
+import com.epam.labtaskspringcore.repository.TraineeRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
+
+@Repository
+public class TraineeDAODatabaseImpl implements TraineeDAO {
+    private final TraineeRepository traineeRepository;
+
+    @Autowired
+    public TraineeDAODatabaseImpl(TraineeRepository traineeRepository) {
+        this.traineeRepository = traineeRepository;
+    }
+
+    @Override
+    public Optional<Trainee> create(Trainee trainee) {
+        return Optional.of(traineeRepository.save(trainee));
+    }
+
+    @Override
+    public Optional<Trainee> update(Trainee trainee) {
+        return Optional.of(traineeRepository.save(trainee));
+    }
+
+    @Override
+    public boolean delete(Trainee trainee) {
+        traineeRepository.delete(trainee);
+        return traineeRepository.findById(trainee.getUserId()).isPresent();
+    }
+
+    @Override
+    public Optional<Trainee> getById(int id) {
+        return traineeRepository.findById(id);
+    }
+
+    @Override
+    public List<Trainee> getTrainees() {
+        return traineeRepository.findAll();
+    }
+
+    public Optional<Trainee> findByUsername(String username) {
+        return traineeRepository.findByUsername(username);
+    }
+
+    public Optional<Trainee> findByUsernameAndPassword(String username, String password) {
+        return traineeRepository.findByUsernameAndPassword(username, password);
+    }
+}

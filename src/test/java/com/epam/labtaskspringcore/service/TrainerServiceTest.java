@@ -1,9 +1,9 @@
 package com.epam.labtaskspringcore.service;
 import com.epam.labtaskspringcore.config.InMemoryStorage;
 import com.epam.labtaskspringcore.dao.TraineeDAO;
-import com.epam.labtaskspringcore.dao.TraineeDAOImpl;
+import com.epam.labtaskspringcore.dao.TraineeDAOInMemoryStorageImpl;
 import com.epam.labtaskspringcore.dao.TrainerDAO;
-import com.epam.labtaskspringcore.dao.TrainerDAOImpl;
+import com.epam.labtaskspringcore.dao.TrainerDAOInMemoryStorageImpl;
 import com.epam.labtaskspringcore.model.Trainer;
 import com.epam.labtaskspringcore.model.TrainingType;
 import com.epam.labtaskspringcore.utils.UsernameGenerator;
@@ -28,8 +28,8 @@ class TrainerServiceTest {
     @BeforeEach
     void setUpBeforeEach() {
         storage = new InMemoryStorage();
-        traineeDAO = new TraineeDAOImpl(storage);
-        trainerDAO = new TrainerDAOImpl(storage);
+        traineeDAO = new TraineeDAOInMemoryStorageImpl(storage);
+        trainerDAO = new TrainerDAOInMemoryStorageImpl(storage);
         usernameGenerator = new UsernameGenerator(trainerDAO, traineeDAO);
         traineeService = new TraineeService(traineeDAO, usernameGenerator);
         trainerService = new TrainerService(trainerDAO, usernameGenerator);
@@ -44,7 +44,7 @@ class TrainerServiceTest {
         trainer1.setLastName("Smith");
         trainer1.setSpecialization(YOGA);
         trainer1.setIsActive(true);
-        trainerService.createWithDao(trainer1);
+        trainerService.create(trainer1);
 
         trainer2 = new Trainer();
         trainer2.setUserId(2);
@@ -61,7 +61,7 @@ class TrainerServiceTest {
     void testCreateInTrainerService() {
         trainer2.setFirstName("Sam");
         trainer2.setLastName("Smith");
-        trainerService.createWithDao(trainer2);
+        trainerService.create(trainer2);
         assertAll(
                 () -> assertEquals(trainer2,
                                    storage.getTrainers().get(2),
@@ -76,9 +76,9 @@ class TrainerServiceTest {
     void testUpdateInTrainerService() {
         trainer2.setFirstName("Sammy");
         trainer2.setLastName("Smith");
-        trainerService.createWithDao(trainer2);
+        trainerService.create(trainer2);
         trainer2.setFirstName("Sam");
-        trainerService.updateWithDao(trainer2);
+        trainerService.update(trainer2);
         assertAll(
                 () -> assertEquals(trainer2,
                                    storage.getTrainers().get(2),
@@ -93,11 +93,11 @@ class TrainerServiceTest {
     void TestGetByIdInTrainerService() {
         trainer2.setFirstName("Sam");
         trainer2.setLastName("Smith");
-        trainerService.createWithDao(trainer2);
-        Optional<Trainer> trainer = trainerService.getByIdWithDao(trainer2.getUserId());
+        trainerService.create(trainer2);
+        Optional<Trainer> trainer = trainerService.getById(trainer2.getUserId());
         assertAll(
-                () -> assertEquals(trainer1, trainerService.getByIdWithDao(1).get(), "trainer should be returned"),
-                () -> assertEquals(trainer2, trainerService.getByIdWithDao(2).get(), "trainer should be returned")
+                () -> assertEquals(trainer1, trainerService.getById(1).get(), "trainer should be returned"),
+                () -> assertEquals(trainer2, trainerService.getById(2).get(), "trainer should be returned")
                  );
     }
 
@@ -105,10 +105,10 @@ class TrainerServiceTest {
     void TestGetTrainersInTrainerService() {
         trainer2.setFirstName("Sam");
         trainer2.setLastName("Smith");
-        trainerService.createWithDao(trainer2);
+        trainerService.create(trainer2);
         trainer3.setFirstName("Sammy");
         trainer3.setLastName("Smith");
-        trainerService.createWithDao(trainer3);
-        assertEquals(3, trainerService.getTrainersWithDao().size(), "trainers should be returned");
+        trainerService.create(trainer3);
+        assertEquals(3, trainerService.getTrainers().size(), "trainers should be returned");
     }
 }

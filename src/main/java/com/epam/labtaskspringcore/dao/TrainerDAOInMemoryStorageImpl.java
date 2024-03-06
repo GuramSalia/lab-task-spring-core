@@ -13,10 +13,10 @@ import java.util.Optional;
 
 @Slf4j
 @Repository
-public class TrainerDAOImpl implements TrainerDAO {
+public class TrainerDAOInMemoryStorageImpl implements TrainerDAO {
     private final Map<Integer, Trainer> trainers;
 
-    public TrainerDAOImpl(InMemoryStorage storage) {this.trainers = storage.getTrainers();}
+    public TrainerDAOInMemoryStorageImpl(InMemoryStorage storage) {this.trainers = storage.getTrainers();}
 
     @Override
     public Optional<Trainer> create(Trainer trainer) {

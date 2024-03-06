@@ -1,9 +1,9 @@
 package com.epam.labtaskspringcore.service;
 import com.epam.labtaskspringcore.config.InMemoryStorage;
 import com.epam.labtaskspringcore.dao.TraineeDAO;
-import com.epam.labtaskspringcore.dao.TraineeDAOImpl;
+import com.epam.labtaskspringcore.dao.TraineeDAOInMemoryStorageImpl;
 import com.epam.labtaskspringcore.dao.TrainerDAO;
-import com.epam.labtaskspringcore.dao.TrainerDAOImpl;
+import com.epam.labtaskspringcore.dao.TrainerDAOInMemoryStorageImpl;
 import com.epam.labtaskspringcore.model.Trainee;
 import com.epam.labtaskspringcore.utils.UsernameGenerator;
 import org.junit.jupiter.api.AfterEach;
@@ -29,8 +29,8 @@ class TraineeServiceTest {
     @BeforeEach
     void setUpBeforeEach() {
         storage = new InMemoryStorage();
-        traineeDAO = new TraineeDAOImpl(storage);
-        trainerDAO = new TrainerDAOImpl(storage);
+        traineeDAO = new TraineeDAOInMemoryStorageImpl(storage);
+        trainerDAO = new TrainerDAOInMemoryStorageImpl(storage);
         usernameGenerator = new UsernameGenerator(trainerDAO, traineeDAO);
         traineeService = new TraineeService(traineeDAO, usernameGenerator);
         trainerService = new TrainerService(trainerDAO, usernameGenerator);
@@ -41,7 +41,7 @@ class TraineeServiceTest {
         trainee1.setLastName("Smith");
         trainee1.setAddress("trainee1 address");
         trainee1.setIsActive(true);
-        traineeService.createWithDao(trainee1);
+        traineeService.create(trainee1);
 
         trainee2 = new Trainee();
         trainee2.setUserId(2);
@@ -58,7 +58,7 @@ class TraineeServiceTest {
     void testCreateInTraineeService() {
         trainee2.setFirstName("Sam");
         trainee2.setLastName("Smith");
-        traineeService.createWithDao(trainee2);
+        traineeService.create(trainee2);
         assertAll(
                 () -> assertEquals(trainee2,
                                    storage.getTrainees().get(2),
@@ -73,9 +73,9 @@ class TraineeServiceTest {
     void testUpdateInTraineeService() {
         trainee2.setFirstName("Sammy");
         trainee2.setLastName("Smith");
-        traineeService.createWithDao(trainee2);
+        traineeService.create(trainee2);
         trainee2.setFirstName("Sam");
-        traineeService.updateWithDao(trainee2);
+        traineeService.update(trainee2);
         assertAll(
                 () -> assertEquals(trainee2,
                                    storage.getTrainees().get(2),
@@ -90,9 +90,9 @@ class TraineeServiceTest {
     void testDeleteInTraineeService() {
         trainee2.setFirstName("sam");
         trainee2.setLastName("Smith");
-        traineeService.createWithDao(trainee2);
-        traineeService.deleteWithDao(trainee2.getUserId());
-        traineeService.deleteWithDao(trainee1.getUserId());
+        traineeService.create(trainee2);
+        traineeService.delete(trainee2);
+        traineeService.delete(trainee1);
 
         assertAll(
                 () -> assertNull(storage.getTrainees().get(2), "deleted trainee should not be in trainees list"),
@@ -104,11 +104,11 @@ class TraineeServiceTest {
     void testGetByIdInTraineeService() {
         trainee2.setFirstName("Sam");
         trainee2.setLastName("Smith");
-        traineeService.createWithDao(trainee2);
-        Optional<Trainee> trainee = traineeService.getByIdWithDao(trainee2.getUserId());
+        traineeService.create(trainee2);
+        Optional<Trainee> trainee = traineeService.getById(trainee2.getUserId());
         assertAll(
-                () -> assertEquals(trainee1, traineeService.getByIdWithDao(1).get(), "trainee should be returned"),
-                () -> assertEquals(trainee2, traineeService.getByIdWithDao(2).get(), "trainee should be returned")
+                () -> assertEquals(trainee1, traineeService.getById(1).get(), "trainee should be returned"),
+                () -> assertEquals(trainee2, traineeService.getById(2).get(), "trainee should be returned")
                  );
     }
 
@@ -116,10 +116,10 @@ class TraineeServiceTest {
     void testGetInTraineesService() {
         trainee2.setFirstName("Sam");
         trainee2.setLastName("Smith");
-        traineeService.createWithDao(trainee2);
+        traineeService.create(trainee2);
         trainee3.setFirstName("Sammy");
         trainee3.setLastName("Smith");
-        traineeService.createWithDao(trainee3);
-        assertEquals(3, traineeService.getTraineesWithDao().size(), "trainees should be returned");
+        traineeService.create(trainee3);
+        assertEquals(3, traineeService.getTrainees().size(), "trainees should be returned");
     }
 }

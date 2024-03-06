@@ -22,7 +22,7 @@ public class TrainingService {
         this.trainerDAO = trainerDAO;
     }
 
-    public Optional<Training> createWithDao(Training training) {
+    public Optional<Training> create(Training training) {
         TrainingType trainingType = training.getTrainingType();
         TrainingType trainerSpecialization;
         Optional<Trainer> optionalTrainer = trainerDAO.getById(training.getTrainer().getUserId());
@@ -44,7 +44,7 @@ public class TrainingService {
         }
     }
 
-    public Optional<Training> getByIdWithDao(int id) {
+    public Optional<Training> getById(int id) {
         log.info(">>>> Getting training with id: " + id);
         return trainingDAO.getById(id);
     }
@@ -76,10 +76,10 @@ public class TrainingService {
     }
 
     public void logTrainingCreationDetails(Training training) {
-        if (createWithDao(training).isEmpty()) {
+        if (create(training).isEmpty()) {
             log.error("could not create training with trainingId: " + training.getTrainingId());
         } else {
-            Optional<Training> training3Optional = getByIdWithDao(training.getTrainingId());
+            Optional<Training> training3Optional = getById(training.getTrainingId());
             if (training3Optional.isEmpty()) {
                 log.error("could not get training with trainingId: " + training.getTrainingId());
             } else {

@@ -23,23 +23,23 @@ public class TrainerService {
         this.usernameGenerator = usernameGenerator;
     }
 
-    public Optional<Trainer> createWithDao(Trainer trainer) {
+    public Optional<Trainer> create(Trainer trainer) {
         trainer.setPassword(RandomPasswordGenerator.generateRandomPassword());
         trainer.setUsername(usernameGenerator.generateUsername(trainer));
         return trainerDAO.create(trainer);
     }
 
-    public Optional<Trainer> updateWithDao(Trainer trainer) {
+    public Optional<Trainer> update(Trainer trainer) {
         trainer.setUsername(usernameGenerator.generateUsername(trainer));
         return trainerDAO.update(trainer);
     }
 
-    public Optional<Trainer> getByIdWithDao(int id) {
+    public Optional<Trainer> getById(int id) {
         log.info(">>>> Getting trainer with id: " + id);
         return trainerDAO.getById(id);
     }
 
-    public List<User> getTrainersWithDao() {
+    public List<User> getTrainers() {
         log.info(">>>> Getting trainers");
         return trainerDAO.getTrainers();
     }
@@ -62,10 +62,10 @@ public class TrainerService {
     }
 
     public void logTrainerCreationDetails(Trainer trainer) {
-        if (createWithDao(trainer).isEmpty()) {
+        if (create(trainer).isEmpty()) {
             log.error("could not create trainer with userId: " + trainer.getUserId());
         } else {
-            Optional<Trainer> trainerOptional = getByIdWithDao(trainer.getUserId());
+            Optional<Trainer> trainerOptional = getById(trainer.getUserId());
             if (trainerOptional.isEmpty()) {
                 log.error("could not get trainer width userId: " + trainer.getUserId());
             } else {

@@ -10,7 +10,7 @@ public interface TraineeDAO {
 
     public Optional<Trainee> update(Trainee trainee);
 
-    public boolean delete(int id);
+    public boolean delete(Trainee trainee);
 
     public Optional<Trainee> getById(int id);
 

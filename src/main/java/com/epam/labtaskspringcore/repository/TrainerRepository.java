@@ -1,4 +1,4 @@
-package com.epam.labtaskspringcore.dao;
+package com.epam.labtaskspringcore.repository;
 
 import com.epam.labtaskspringcore.model.Trainer;
 import org.springframework.data.jpa.repository.JpaRepository;
