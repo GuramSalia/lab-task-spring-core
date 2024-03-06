@@ -15,4 +15,8 @@ public interface TraineeDAO {
     public Optional<Trainee> getById(int id);
 
     List<Trainee> getTrainees();
+
+    Optional<Trainee> findByUsername(String username);
+
+    Optional<Trainee> findByUsernameAndPassword(String username, String password);
 }

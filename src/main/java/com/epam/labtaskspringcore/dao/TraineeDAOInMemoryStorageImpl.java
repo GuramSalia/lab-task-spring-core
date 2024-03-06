@@ -51,4 +51,17 @@ public class TraineeDAOInMemoryStorageImpl implements TraineeDAO {
 
     @Override
     public List<Trainee> getTrainees() {return new ArrayList<>(trainees.values());}
+
+    @Override
+    public Optional<Trainee> findByUsername(String username) {
+        log.info("'findByUsername' method is not implemented in TraineeDaoInMemoryStorageImpl");
+        return Optional.empty();
+
+    }
+
+    @Override
+    public Optional<Trainee> findByUsernameAndPassword(String username, String password) {
+        log.info("'findByUsernameAndPassword' method is not implemented in TraineeDaoInMemoryStorageImpl");
+        return Optional.empty();
+    }
 }
