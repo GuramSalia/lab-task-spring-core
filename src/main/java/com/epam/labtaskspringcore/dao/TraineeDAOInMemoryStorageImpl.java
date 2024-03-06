@@ -13,13 +13,15 @@ import java.util.Optional;
 
 @Slf4j
 @Primary
-@Repository("IN_MEMORY")
+@Repository("TRAINEE_IN_MEMORY")
 public class TraineeDAOInMemoryStorageImpl implements TraineeDAO {
     private final Map<Integer, Trainee> trainees;
 
     public TraineeDAOInMemoryStorageImpl(InMemoryStorage storage) {this.trainees = storage.getTrainees();}
 
     public Optional<Trainee> create(Trainee trainee) {
+        log.info("<<>>>> TraineeDAOInMemoryStorageImpl create()");
+
         int id = trainee.getUserId();
         if (trainees.containsKey(id)) {
             log.error("Trainee with id {} already exists", id);
@@ -64,4 +66,6 @@ public class TraineeDAOInMemoryStorageImpl implements TraineeDAO {
         log.info("'findByUsernameAndPassword' method is not implemented in TraineeDaoInMemoryStorageImpl");
         return Optional.empty();
     }
+
+
 }

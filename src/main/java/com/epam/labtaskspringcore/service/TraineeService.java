@@ -18,21 +18,21 @@ import java.util.Optional;
 @Service
 public class TraineeService {
 
-    private final Map<String, TraineeDAO> traineeDAOs;
+    private final Map<String, TraineeDAO> traineeDAOMap;
 
     private final UsernameGenerator usernameGenerator;
     @Setter
     private TraineeDAO traineeDAO;
 
     @Autowired
-    public TraineeService(Map<String, TraineeDAO> traineeDAOs, UsernameGenerator usernameGenerator) {
-        this.traineeDAOs = traineeDAOs;
+    public TraineeService(Map<String, TraineeDAO> traineeDAOMap, UsernameGenerator usernameGenerator) {
+        this.traineeDAOMap = traineeDAOMap;
         this.usernameGenerator = usernameGenerator;
         log.info(">>>> TraineeService initialized");
     }
 
-    public void setTraineeDAOFromTraineeDAOs(String nameOfDao) {
-        this.traineeDAO = traineeDAOs.get(nameOfDao);
+    public void setTraineeDAOFromTraineeDAOMap(String nameOfDao) {
+        this.traineeDAO = traineeDAOMap.get(nameOfDao);
     }
 
     public Optional<Trainee> getById(int id) {
@@ -49,6 +49,7 @@ public class TraineeService {
 
     @Transactional
     public Optional<Trainee> create(Trainee trainee) {
+        log.info(">>>> training service create()");
 
         try {
             trainee.setUsername(usernameGenerator.generateUsername(trainee));

@@ -3,6 +3,7 @@ package com.epam.labtaskspringcore.dao;
 import com.epam.labtaskspringcore.config.InMemoryStorage;
 import com.epam.labtaskspringcore.model.Training;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -11,7 +12,8 @@ import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
-@Repository
+@Repository("TRAINING_IN_MEMORY")
+@Primary
 public class TrainingDAOInMemoryStorageImpl implements TrainingDAO {
     private final Map<Integer, Training> trainings;
 

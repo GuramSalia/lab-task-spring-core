@@ -1,5 +1,6 @@
 package com.epam.labtaskspringcore.dao;
 
+import com.epam.labtaskspringcore.model.Trainee;
 import com.epam.labtaskspringcore.model.Trainer;
 import com.epam.labtaskspringcore.model.User;
 
@@ -10,5 +11,8 @@ public interface TrainerDAO {
     public Optional<Trainer> create(Trainer trainer);
     public Optional<Trainer> update(Trainer trainer);
     public Optional<Trainer> getById(int id);
-    List<User> getTrainers();
+    List<Trainer> getTrainers();
+    Optional<Trainer> findByUsername(String username);
+
+    Optional<Trainer> findByUsernameAndPassword(String username, String password);
 }

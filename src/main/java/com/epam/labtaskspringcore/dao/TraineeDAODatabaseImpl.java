@@ -2,13 +2,15 @@ package com.epam.labtaskspringcore.dao;
 
 import com.epam.labtaskspringcore.model.Trainee;
 import com.epam.labtaskspringcore.repository.TraineeRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
-@Repository("DATABASE")
+@Slf4j
+@Repository("TRAINEE_DATABASE")
 public class TraineeDAODatabaseImpl implements TraineeDAO {
     private final TraineeRepository traineeRepository;
 
@@ -19,6 +21,7 @@ public class TraineeDAODatabaseImpl implements TraineeDAO {
 
     @Override
     public Optional<Trainee> create(Trainee trainee) {
+        log.info("<<>> TraineeDAODatabaseImpl create()");
         return Optional.of(traineeRepository.save(trainee));
     }
 
@@ -50,4 +53,6 @@ public class TraineeDAODatabaseImpl implements TraineeDAO {
     public Optional<Trainee> findByUsernameAndPassword(String username, String password) {
         return traineeRepository.findByUsernameAndPassword(username, password);
     }
+
+
 }

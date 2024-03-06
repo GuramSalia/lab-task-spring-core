@@ -45,7 +45,11 @@ class UsernameGeneratorTest {
         traineeService = new TraineeService(traineeDAOMap, usernameGenerator);
         traineeService.setTraineeDAO(traineeDAO);
 
-        trainerService = new TrainerService(trainerDAO, usernameGenerator);
+        // new way of creating trainerService
+        Map<String, TrainerDAO> trainerDAOMap = new HashMap<>();
+        trainerDAOMap.put("TRAINER_IN_MEMORY", trainerDAO);
+        trainerService = new TrainerService(trainerDAOMap, usernameGenerator);
+        trainerService.setTrainerDAO(trainerDAO);
 
         TrainingType YOGA = new TrainingType();
         YOGA.setTrainingType(TrainingType.TrainingTypeEnum.YOGA);

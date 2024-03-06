@@ -5,6 +5,7 @@ import com.epam.labtaskspringcore.model.Trainee;
 import com.epam.labtaskspringcore.service.TraineeService;
 import com.epam.labtaskspringcore.service.TrainerService;
 import com.epam.labtaskspringcore.utils.UsernameGenerator;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@Slf4j
 class TraineeDAOInMemoryStorageImplTest {
     InMemoryStorage storage;
     TraineeDAO traineeDAO;
@@ -32,17 +34,22 @@ class TraineeDAOInMemoryStorageImplTest {
     void setUpBeforeEach() {
         storage = new InMemoryStorage();
         traineeDAO = new TraineeDAOInMemoryStorageImpl(storage);
+        trainerDAO = new TrainerDAOInMemoryStorageImpl(storage);
         usernameGenerator = new UsernameGenerator(trainerDAO, traineeDAO);
 
         // new way of creating traineeService
         Map<String, TraineeDAO> traineeDAOMap = new HashMap<>();
-        traineeDAOMap.put("IN_MEMORY", traineeDAO);
+        traineeDAOMap.put("TRAINEE_IN_MEMORY", traineeDAO);
         traineeService = new TraineeService(traineeDAOMap, usernameGenerator);
         traineeService.setTraineeDAO(traineeDAO);
 
+        // new way of creating trainerService
+        Map<String, TrainerDAO> trainerDAOMap = new HashMap<>();
+        trainerDAOMap.put("TRAINER_IN_MEMORY", trainerDAO);
+        trainerService = new TrainerService(trainerDAOMap, usernameGenerator);
+        trainerService.setTrainerDAO(trainerDAO);
 
-        trainerDAO = new TrainerDAOInMemoryStorageImpl(storage);
-        trainerService = new TrainerService(trainerDAO, usernameGenerator);
+
 
         trainee1 = new Trainee();
         trainee1.setUserId(1);
@@ -65,10 +72,10 @@ class TraineeDAOInMemoryStorageImplTest {
 
     @Test
     void testCreateInTraineeDAO() {
-        trainee2.setUserId(1);
+        trainee1.setUserId(7);
+        assertEquals(traineeDAO.create(trainee1), Optional.of(trainee1));
+        trainee2.setUserId(7);
         assertEquals(traineeDAO.create(trainee2), Optional.empty());
-        trainee2.setUserId(2);
-        assertEquals(traineeDAO.create(trainee2), Optional.of(trainee2));
     }
 
     @Test

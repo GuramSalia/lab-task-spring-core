@@ -17,8 +17,8 @@ import java.util.function.Function;
 @Setter
 public class UsernameGenerator {
 
-    private final TrainerDAO trainerDAO;
     private final TraineeDAO traineeDAO;
+    private final TrainerDAO trainerDAO;
 
     public UsernameGenerator(TrainerDAO trainerDAO, TraineeDAO traineeDAO) {
         this.trainerDAO = trainerDAO;
@@ -26,11 +26,12 @@ public class UsernameGenerator {
     }
 
     public String generateUsername(User user) {
+
         String base = user.getFirstName() + "." + user.getLastName();
         int counter = 1;
         String username = base;
-        Function<String, Boolean> isUniqueInTrainers = u -> isUnique(user, u, trainerDAO.getTrainers());
         Function<String, Boolean> isUniqueInTrainees = u -> isUnique(user, u, traineeDAO.getTrainees());
+        Function<String, Boolean> isUniqueInTrainers = u -> isUnique(user, u, trainerDAO.getTrainers());
 
         while (!isUniqueInTrainees.apply(username) || !isUniqueInTrainers.apply(username)) {
             username = base + counter++;
