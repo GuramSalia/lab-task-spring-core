@@ -19,6 +19,6 @@ public interface TrainerRepository extends JpaRepository<Trainer, Integer> {
     @Query(value = "SELECT USER_ID FROM TRAINERS WHERE USER_ID NOT IN (SELECT gu.USER_ID FROM TRAINEES_TRAINERS tt " +
             "JOIN GYM_USERS gu ON tt.TRAINER_ID = gu.USER_ID WHERE tt.TRAINEE_ID = (SELECT tr.USER_ID FROM TRAINEES " +
             "tr JOIN GYM_USERS u ON tr.USER_ID = u.USER_ID WHERE u.USERNAME = ?1))", nativeQuery = true)
-    List<Integer> findUnassignedTrainersByTraineeUsername(@Param("username") String traineeUsername);
+    List<Integer> findIdsOfUnassignedTrainersByTraineeUsername(@Param("username") String traineeUsername);
 
 }

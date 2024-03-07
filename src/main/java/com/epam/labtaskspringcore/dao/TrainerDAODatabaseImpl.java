@@ -1,7 +1,6 @@
 package com.epam.labtaskspringcore.dao;
 
 import com.epam.labtaskspringcore.model.Trainer;
-import com.epam.labtaskspringcore.model.User;
 import com.epam.labtaskspringcore.repository.TrainerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -51,7 +50,7 @@ public class TrainerDAODatabaseImpl implements TrainerDAO {
 
     @Override
     public List<Integer>  findUnassignedTrainersByTraineeUsername(String traineeUsername) {
-        return trainerRepository.findUnassignedTrainersByTraineeUsername(traineeUsername);
+        return trainerRepository.findIdsOfUnassignedTrainersByTraineeUsername(traineeUsername);
     }
 
 

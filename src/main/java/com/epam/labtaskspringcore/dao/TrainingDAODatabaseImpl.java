@@ -4,18 +4,19 @@ import com.epam.labtaskspringcore.model.Training;
 import com.epam.labtaskspringcore.repository.TrainingRepository;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Repository("TRAINING_DATABASE")
-public class TrainingDAODatabaseImpl implements TrainingDAO{
+public class TrainingDAODatabaseImpl implements TrainingDAO {
 
     TrainingRepository trainingRepository;
 
     public TrainingDAODatabaseImpl(TrainingRepository trainingRepository) {
         this.trainingRepository = trainingRepository;
     }
-
 
     @Override
     public Optional<Training> create(Training training) {
@@ -30,5 +31,25 @@ public class TrainingDAODatabaseImpl implements TrainingDAO{
     @Override
     public List<Training> getTrainings() {
         return trainingRepository.findAll();
+    }
+
+    @Override
+    public List<Training> getTrainingsByTraineeAndOtherFilters(String traineeUsername, Date startDate,
+                                                               Date endDate,
+                                                               String trainerUsername, String trainingTypeName) {
+        List<Integer> trainingIds = new ArrayList<>();
+        trainingIds = trainingRepository.findIdsByTraineeAndTrainerAndType(
+                traineeUsername,
+                startDate,
+                endDate,
+                trainerUsername,
+                trainingTypeName);
+
+        List<Training> trainings = new ArrayList<>();
+        for (Integer trainingId : trainingIds) {
+            trainings.add(trainingRepository.findById(trainingId).get());
+        }
+
+        return trainings;
     }
 }

@@ -15,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Optional;
 import java.util.Set;
 
@@ -249,8 +251,24 @@ public class LabTaskSpringCoreApplication {
 
         log.info("\n\n>>>> START with JPQL  ==============\n");
 
-        log.info("list of trainers:  \n\n" + trainerServiceWithDatabaseDao.findUnassignedTrainersByTraineeUsername("John.Doe"));
+        log.info("list of trainers:  \n\n" + trainerServiceWithDatabaseDao.findUnassignedTrainersByTraineeUsername(
+                "John.Doe"));
         log.info("trainee with username:  \n\n" + traineeServiceWithDatabaseDao.findByUsernameWithQuery("John.Doe"));
+
+        String traineeUsername = "John.Doe";
+        String trainerUsername = "Tim.Smith";
+        Calendar cal = Calendar.getInstance();
+        cal.set(2020,Calendar.APRIL, 25);
+        Date fromDate = cal.getTime();
+        cal.set(2025,Calendar.APRIL, 25);
+        Date toDate = cal.getTime();
+        java.sql.Date sqlFromDate = new java.sql.Date(fromDate.getTime());
+        java.sql.Date sqlToDate = new java.sql.Date(toDate.getTime());
+        TrainingType cardio = CARDIO;
+
+
+        log.info("trainee with username:  \n\n" + trainingServiceWithDatabaseDao.getTrainingsByTraineeAndOtherFilters(
+                traineeUsername, sqlFromDate, sqlToDate, trainerUsername, "CARDIO"));
 
         log.info("\n\n>>>> END  ==============\n");
     }

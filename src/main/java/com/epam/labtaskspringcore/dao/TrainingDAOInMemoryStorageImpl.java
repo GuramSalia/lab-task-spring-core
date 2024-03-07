@@ -6,10 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.sql.Date;
+import java.util.*;
 
 @Slf4j
 @Repository("TRAINING_IN_MEMORY")
@@ -37,4 +35,10 @@ public class TrainingDAOInMemoryStorageImpl implements TrainingDAO {
 
     @Override
     public List<Training> getTrainings() {return new ArrayList<>(trainings.values());}
+
+    @Override
+    public List<Training> getTrainingsByTraineeAndOtherFilters(String traineeUsername, Date startDate, Date endDate, String trainerUsername, String trainingTypeName) {
+        log.info("Not implemented with In Memory Storage");
+        return null;
+    }
 }

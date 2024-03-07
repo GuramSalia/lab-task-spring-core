@@ -12,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -45,28 +47,6 @@ public class TrainingService {
         log.info(">>>> Getting training with id: " + id);
         return trainingDAO.getById(id);
     }
-
-    //    public Optional<Training> create(Training training) {
-    //        TrainingType trainingType = training.getTrainingType();
-    //        TrainingType trainerSpecialization;
-    //        Optional<Trainer> optionalTrainer = trainerDAO.getById(training.getTrainer().getUserId());
-    //
-    //        if (optionalTrainer.isEmpty()) {
-    //            log.warn("There is no such trainer as indicated by training");
-    //            trainerSpecialization = null;
-    //        } else {
-    //            trainerSpecialization = optionalTrainer.get().getSpecialization();
-    //        }
-    //
-    //        if (areMismatchingTrainingTypes(trainingType, trainerSpecialization)) {
-    //            log.error("cannot create training, because the trainer has a different specialization");
-    //            return Optional.empty();
-    //        } else {
-    //            trainingDAO.create(training);
-    //            log.info(">>>> Creating training: " + training.getTrainingName());
-    //            return trainingDAO.getById(training.getTrainingId());
-    //        }
-    //    }
 
     @Transactional
     public Optional<Training> create(Training training) {
@@ -102,6 +82,13 @@ public class TrainingService {
             log.error("something went wrong", e);
             return Optional.empty();
         }
+    }
+
+    public List<Training> getTrainingsByTraineeAndOtherFilters(String traineeUsername, Date startDate, Date endDate,
+                                                               String trainerUsername, String trainingTypeName) {
+        List<Training> trainings = trainingDAO.getTrainingsByTraineeAndOtherFilters(
+                traineeUsername, startDate, endDate, trainerUsername, trainingTypeName);
+        return trainings;
     }
 
     private boolean areMismatchingTrainingTypes(TrainingType type1, TrainingType type2) {
