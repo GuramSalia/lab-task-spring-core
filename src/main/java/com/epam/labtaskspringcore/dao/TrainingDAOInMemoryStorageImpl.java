@@ -41,4 +41,10 @@ public class TrainingDAOInMemoryStorageImpl implements TrainingDAO {
         log.info("Not implemented with In Memory Storage");
         return null;
     }
+
+    @Override
+    public List<Training> getTrainingsByTrainerAndOtherFilters(String traineeUsername, Date startDate, Date endDate, String trainerUsername) {
+        log.info("Not implemented with In Memory Storage");
+        return null;
+    }
 }

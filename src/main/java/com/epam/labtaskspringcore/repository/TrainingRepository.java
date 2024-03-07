@@ -10,7 +10,6 @@ import java.util.List;
 
 public interface TrainingRepository extends JpaRepository<Training, Integer> {
 
-    // should I use in param Date from util or from sql
     @Query(value = "SELECT TRAINING_ID FROM TRAININGS t WHERE t.TRAINEE_ID = (SELECT tr.USER_ID FROM TRAINEES tr JOIN" +
             " GYM_USERS u ON tr.USER_ID = u.USER_ID WHERE u.USERNAME = ?1) AND t.TRAINING_DATE BETWEEN " +
             "?2 AND ?3 AND t.TRAINER_ID = (SELECT gu.USER_ID FROM GYM_USERS gu WHERE gu.USERNAME " +
@@ -19,8 +18,18 @@ public interface TrainingRepository extends JpaRepository<Training, Integer> {
     List<Integer> findIdsByTraineeAndTrainerAndType(
             @Param("traineeUsername") String traineeUsername,
             @Param("startDate") Date startDate,
-            @Param("endDate") Date  endDate,
+            @Param("endDate") Date endDate,
             @Param("trainerUsername") String trainerUsername,
             @Param("trainingTypeName") String trainingTypeName);
+
+    @Query(value = "SELECT TRAINING_ID FROM TRAININGS t WHERE t.TRAINER_ID = (SELECT tr.USER_ID FROM TRAINERS tr JOIN" +
+            " GYM_USERS u ON tr.USER_ID = u.USER_ID WHERE u.USERNAME = ?1) AND t.TRAINING_DATE BETWEEN " +
+            "?2 AND ?3 AND t.TRAINEE_ID = (SELECT gu.USER_ID FROM GYM_USERS gu WHERE gu.USERNAME " +
+            "= ?4)", nativeQuery = true)
+    List<Integer> findIdsByTrainerAndTrainerAndType(
+            @Param("traineeUsername") String traineeUsername,
+            @Param("startDate") Date startDate,
+            @Param("endDate") Date endDate,
+            @Param("trainerUsername") String trainerUsername);
 }
 

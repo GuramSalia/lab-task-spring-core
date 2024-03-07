@@ -84,11 +84,23 @@ public class TrainingService {
         }
     }
 
-    public List<Training> getTrainingsByTraineeAndOtherFilters(String traineeUsername, Date startDate, Date endDate,
-                                                               String trainerUsername, String trainingTypeName) {
-        List<Training> trainings = trainingDAO.getTrainingsByTraineeAndOtherFilters(
+    public List<Training> getTrainingsByTraineeAndOtherFilters(
+            String traineeUsername,
+            Date startDate,
+            Date endDate,
+            String trainerUsername,
+            String trainingTypeName) {
+        return trainingDAO.getTrainingsByTraineeAndOtherFilters(
                 traineeUsername, startDate, endDate, trainerUsername, trainingTypeName);
-        return trainings;
+    }
+
+    public List<Training> getTrainingsByTrainerAndOtherFilters(
+            String trainerUsername,
+            Date startDate,
+            Date endDate,
+            String traineeUsername) {
+        return trainingDAO.getTrainingsByTrainerAndOtherFilters(
+                trainerUsername, startDate, endDate, traineeUsername);
     }
 
     private boolean areMismatchingTrainingTypes(TrainingType type1, TrainingType type2) {
@@ -103,10 +115,6 @@ public class TrainingService {
         }
         return !matching;
     }
-
-    //    private boolean areMismatchingTrainingTypes(TrainingType type1, TrainingType type2) {
-    //        return !areTrainingTypesMatching(type1, type2);
-    //    }
 
     public Training createTraining(int trainingId, Trainee trainee, Trainer trainer, String trainingName,
                                    TrainingType trainingType, int trainingDurationInMinutes) {

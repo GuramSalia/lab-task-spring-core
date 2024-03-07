@@ -27,66 +27,14 @@ public class LabTaskSpringCoreApplication {
 
         SpringApplication.run(LabTaskSpringCoreApplication.class, args);
 
-        InMemoryStorage inMemoryStorage = BeanProvider.getInMemoryStorage();
-        TrainerService trainerService = BeanProvider.getTrainerService("TRAINER_IN_MEMORY");
-        TraineeService traineeServiceWithInMemoryDao = BeanProvider
-                .getTraineeService("TRAINEE_IN_MEMORY");
-        TrainingService trainingService = BeanProvider
-                .getTrainingService("TRAINING_IN_MEMORY", "TRAINER_IN_MEMORY");
         TrainingTypeService trainingTypeService = BeanProvider.getTrainingTypeService();
-
         TrainingType PILATES = trainingTypeService.getTrainingType(TrainingType.TrainingTypeEnum.PILATES);
-        TrainingType STRENGTH = trainingTypeService.getTrainingType(TrainingType.TrainingTypeEnum.STRENGTH);
-        TrainingType GROUP = trainingTypeService.getTrainingType(TrainingType.TrainingTypeEnum.GROUP);
-        TrainingType CARDIO = trainingTypeService.getTrainingType(TrainingType.TrainingTypeEnum.CARDIO);
-        TrainingType HIIT = trainingTypeService.getTrainingType(TrainingType.TrainingTypeEnum.HIIT);
-        TrainingType PERSONAL = trainingTypeService.getTrainingType(TrainingType.TrainingTypeEnum.PERSONAL);
         TrainingType YOGA = trainingTypeService.getTrainingType(TrainingType.TrainingTypeEnum.YOGA);
-
-        //        TrainingType YOGA = new TrainingType();
-        //        YOGA.setTrainingType(TrainingType.TrainingTypeEnum.YOGA);
-        //        TrainingType PERSONAL = new TrainingType();
-        //        PERSONAL.setTrainingType(TrainingType.TrainingTypeEnum.PERSONAL);
-
-        log.info(".......  START  .......\n");
-        log.info("list of TRAINEES:");
-        inMemoryStorage.getTrainees().values().stream().forEach(x -> log.info(x.toString()));
-        log.info("list of TRAINERS:");
-        inMemoryStorage.getTrainers().values().stream().forEach(x -> log.info(x.toString()));
-        log.info("list of TRAININGS:");
-        inMemoryStorage.getTrainings().values().stream().forEach(x -> log.info(x.toString()));
-        log.info(" ------ END of inMemoryStorage lists\n");
-
-        log.info("   .....   trainer userId=5 ");
-        Trainer trainer5 = trainerService.createTrainer(5, "John", "Doe", true, YOGA);
-        trainerService.logTrainerCreationDetails(trainer5);
-        log.info("   -----   end of trainer userId=5 \n");
-
-        log.info("   .....   trainer userId=6 ");
-        Trainer trainer6 = trainerService.createTrainer(6, "John", "Doe", true, YOGA);
-        trainerService.logTrainerCreationDetails(trainer6);
-        log.info("   -----   end of trainer userId=6 \n");
-
-        log.info("   .....   training 3 : should not create ");
-
-        Training training3 = trainingService.createTraining(3, traineeServiceWithInMemoryDao.getById(4).get(),
-                                                            trainer5, "personal training", PERSONAL, 30);
-        trainingService.logTrainingCreationDetails(training3);
-        log.info("   -----   end of training 3 \n");
-
-        log.info("   .....   training 4 ");
-        Training training4 = trainingService.createTraining(4, traineeServiceWithInMemoryDao.getById(3).get(),
-                                                            trainer5, "Yoga training", YOGA, 30);
-        trainingService.logTrainingCreationDetails(training4);
-        log.info("   -----   end of training 4 \n");
-
-        log.info("   .....   update trainee userId=4");
-        traineeServiceWithInMemoryDao.logLastNameUpdateOfTrainee(4, "Schmidt");
-        log.info("   -----   end of trainee userId=4 \n");
 
         log.info(" ....... TASK-2 RELATED PART STARTS HERE  .......\n\n");
 
-        TraineeService traineeServiceWithDatabaseDao = BeanProvider.getTraineeService("TRAINEE_DATABASE");
+        TraineeService traineeServiceWithDatabaseDao = BeanProvider
+                .getTraineeService("TRAINEE_DATABASE");
         TrainerService trainerServiceWithDatabaseDao = BeanProvider
                 .getTrainerService("TRAINER_DATABASE");
         TrainingService trainingServiceWithDatabaseDao = BeanProvider
@@ -109,7 +57,7 @@ public class LabTaskSpringCoreApplication {
         optionalTraining1.ifPresent(training -> log.info(training.toString()));
         optionalTraining2.ifPresent(training -> log.info(training.toString()));
 
-        // stopped here: continue when other services finished
+
         log.info("   .....   With DB - create trainee 3");
         Trainee trainee_3 = new Trainee();
         Helper.setUpTrainee_3(trainee_3);
@@ -158,12 +106,12 @@ public class LabTaskSpringCoreApplication {
         log.info("deactivateInactiveTrainee trainee_3:");
         boolean deactivatedInactive = traineeServiceWithDatabaseDao
                 .deactivateTrainee(trainee3SavedOptional.get(), trainee3SavedOptional.get().getUsername(), "2233");
-        log.info("deactivateInactiveCustome trainee_3: " + deactivatedInactive);
+        log.info("deactivateInactiveTrainee trainee_3: " + deactivatedInactive);
 
         log.info("activateInactiveTrainee trainee_3:");
         boolean activatedInactive = traineeServiceWithDatabaseDao
                 .activateTrainee(trainee3SavedOptional.get(), trainee3SavedOptional.get().getUsername(), "2233");
-        log.info("deactivateInactiveTrainee trainee_3: " + activatedInactive);
+        log.info("activateInactiveTrainee trainee_3: " + activatedInactive);
 
         log.info("   .....   With DB - delete trainee_Lucy");
         Trainee lucy = new Trainee();
@@ -171,22 +119,6 @@ public class LabTaskSpringCoreApplication {
         traineeServiceWithDatabaseDao.create(lucy);
         log.info("Created trainee with id " + lucy.getUserId());
         traineeServiceWithDatabaseDao.delete(lucy.getUsername(), "111");
-
-        //        // ----------------------------------------------------------------
-        //
-        //        log.info("create trainer");
-        //        log.info("update trainer");
-        //        log.info("updated trainer password");
-        //        log.info("activate active trainer");
-        //        log.info("deactivate active trainer");
-        //        log.info("deactivate inactive trainer");
-        //        log.info("activate inactive trainer");
-        //
-        //        log.info("create training with trainer of the same training type");
-        //        log.info("create training with trainer of the different training type");
-        //
-        //        // ----------------------------------------------------------------
-        //
 
         log.info("   .....   With DB - create trainer Olivia");
         Trainer olivia = new Trainer();
@@ -225,7 +157,7 @@ public class LabTaskSpringCoreApplication {
                 .activateTrainer(olivia, olivia.getUsername(), "321");
         log.info("deactivate inactive trainer: " + result4);
 
-        log.info("create training with trainer of the same different type");
+        log.info("create training with trainer of the same type");
 
         Optional<Trainee> trainee_3Optional = traineeServiceWithDatabaseDao.getByUsername("John.Doe1", "2233");
         if (trainee_3Optional.isPresent()) {
@@ -251,24 +183,34 @@ public class LabTaskSpringCoreApplication {
 
         log.info("\n\n>>>> START with JPQL  ==============\n");
 
-        log.info("list of trainers:  \n\n" + trainerServiceWithDatabaseDao.findUnassignedTrainersByTraineeUsername(
-                "John.Doe"));
-        log.info("trainee with username:  \n\n" + traineeServiceWithDatabaseDao.findByUsernameWithQuery("John.Doe"));
+        log.info("list of trainers:\n\n"
+                         + trainerServiceWithDatabaseDao.findUnassignedTrainersByTraineeUsername("John.Doe"));
+
+        log.info("trainee with username:\n\n"
+                         + traineeServiceWithDatabaseDao.findByUsernameWithQuery("John.Doe"));
 
         String traineeUsername = "John.Doe";
         String trainerUsername = "Tim.Smith";
         Calendar cal = Calendar.getInstance();
-        cal.set(2020,Calendar.APRIL, 25);
+        cal.set(2020, Calendar.APRIL, 25);
         Date fromDate = cal.getTime();
-        cal.set(2025,Calendar.APRIL, 25);
+        cal.set(2025, Calendar.APRIL, 25);
         Date toDate = cal.getTime();
         java.sql.Date sqlFromDate = new java.sql.Date(fromDate.getTime());
         java.sql.Date sqlToDate = new java.sql.Date(toDate.getTime());
-        TrainingType cardio = CARDIO;
-
 
         log.info("trainee with username:  \n\n" + trainingServiceWithDatabaseDao.getTrainingsByTraineeAndOtherFilters(
-                traineeUsername, sqlFromDate, sqlToDate, trainerUsername, "CARDIO"));
+                traineeUsername,
+                sqlFromDate,
+                sqlToDate,
+                trainerUsername,
+                "CARDIO"));
+
+        log.info("trainer with username:  \n\n" + trainingServiceWithDatabaseDao.getTrainingsByTrainerAndOtherFilters(
+                trainerUsername,
+                sqlFromDate,
+                sqlToDate,
+                traineeUsername));
 
         log.info("\n\n>>>> END  ==============\n");
     }

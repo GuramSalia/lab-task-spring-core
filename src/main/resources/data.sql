@@ -3,7 +3,7 @@ INSERT INTO GYM_USERS (FIRST_NAME, LAST_NAME, USERNAME, PASSWORD, IS_ACTIVE) VAL
 ('Tim', 'Smith', 'Tim.Smith', '123', TRUE),
 ('Sam', 'Jones', 'Sam.Jones', '123', TRUE),
 ('John', 'Doe', 'John.Doe', '123', TRUE),
-('Jane', 'Jameson', 'Jane.Smith', '123', TRUE);
+('Jane', 'Smith', 'Jane.Smith', '123', TRUE);
 
 INSERT INTO TRAINEES (DATE_OF_BIRTH, ADDRESS, USER_ID) VALUES
 (DATE '2000-02-21', 'address of TRAINEE 1', 3),

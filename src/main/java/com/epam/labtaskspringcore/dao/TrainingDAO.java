@@ -1,6 +1,7 @@
 package com.epam.labtaskspringcore.dao;
 
 import com.epam.labtaskspringcore.model.Training;
+import org.springframework.data.repository.query.Param;
 
 import java.sql.Date;
 import java.util.List;
@@ -13,7 +14,16 @@ public interface TrainingDAO {
 
     public List<Training> getTrainings();
 
-    public List<Training> getTrainingsByTraineeAndOtherFilters(String traineeUsername, Date startDate,
-                                                               Date endDate,
-                                                               String trainerUsername, String trainingTypeName);
+    public List<Training> getTrainingsByTraineeAndOtherFilters(
+            String traineeUsername,
+            Date startDate,
+            Date endDate,
+            String trainerUsername,
+            String trainingTypeName);
+
+    List<Training> getTrainingsByTrainerAndOtherFilters(
+            String traineeUsername,
+            Date startDate,
+            Date endDate,
+            String trainerUsername);
 }
