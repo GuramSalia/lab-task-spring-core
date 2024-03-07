@@ -15,10 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Slf4j
 @SpringBootApplication
@@ -56,7 +53,6 @@ public class LabTaskSpringCoreApplication {
         log.info("list of TRAINEES from DB: \n");
         optionalTraining1.ifPresent(training -> log.info(training.toString()));
         optionalTraining2.ifPresent(training -> log.info(training.toString()));
-
 
         log.info("   .....   With DB - create trainee 3");
         Trainee trainee_3 = new Trainee();
@@ -212,6 +208,44 @@ public class LabTaskSpringCoreApplication {
                 sqlToDate,
                 traineeUsername));
 
+        // in db I have trainers with USER_IDs 1 (Tim.Smith, 123), 2 (Sam.Jones, 123) and 8 (Olivia.Bruno, 321).
+        // Trainee with id 4 (Jane.Smith, 123) has one trainer with USER_ID 1
+        // get trainee with id 4 and set trainers containing trainers with USER_ID: 2 and 8
+        Trainee jane = null;
+        Trainer sam = null;
+        olivia = null;
+
+        Optional<Trainee> janeOptional = traineeServiceWithDatabaseDao.getByUsername("Jane.Smith", "123");
+        if (janeOptional.isPresent()) {
+            jane = janeOptional.get();
+        }
+
+        Optional<Trainer> samOptional = trainerServiceWithDatabaseDao.getByUsername("Sam.Jones", "123");
+        if (samOptional.isPresent()) {
+            sam = samOptional.get();
+        }
+
+        Optional<Trainer> oliviaOptional = trainerServiceWithDatabaseDao.getByUsername("Olivia.Bruno", "321");
+        if (oliviaOptional.isPresent()) {
+            olivia = oliviaOptional.get();
+        }
+
+        log.info("jane: " + jane);
+        log.info("sam: " + sam);
+        log.info("olivia: " + olivia);
+
+        Set<Trainer> trainers = new HashSet<Trainer>();
+        trainers.add(sam);
+        trainers.add(olivia);
+        assert jane != null;
+        jane.setTrainers(trainers);
+
+        Optional<Trainee> updatedJaneOptional = traineeServiceWithDatabaseDao.update(jane, jane.getUsername(), "123");
+        if (updatedJaneOptional.isPresent()) {
+            jane = updatedJaneOptional.get();
+            log.info("updated trainee: " + jane);
+            log.info("updated trainee trainers: " + jane.getTrainers());
+        }
         log.info("\n\n>>>> END  ==============\n");
     }
 }

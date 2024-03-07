@@ -2,6 +2,7 @@ package com.epam.labtaskspringcore.service;
 
 import com.epam.labtaskspringcore.dao.TraineeDAO;
 import com.epam.labtaskspringcore.model.Trainee;
+import com.epam.labtaskspringcore.model.Trainer;
 import com.epam.labtaskspringcore.utils.RandomPasswordGenerator;
 import com.epam.labtaskspringcore.utils.UsernameGenerator;
 import jakarta.transaction.Transactional;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -39,13 +41,6 @@ public class TraineeService {
         log.info(">>>> Getting trainee with id: " + id);
         return traineeDAO.getById(id);
     }
-
-    //    public Optional<Trainee> create(Trainee trainee) {
-    //        trainee.setUsername(usernameGenerator.generateUsername(trainee));
-    //        trainee.setPassword(RandomPasswordGenerator.generateRandomPassword());
-    //        log.info(">>>> Creating trainee with username: " + trainee.getUsername());
-    //        return traineeDAO.create(trainee);
-    //    }
 
     @Transactional
     public Optional<Trainee> create(Trainee trainee) {
@@ -139,6 +134,7 @@ public class TraineeService {
             trainee.setPassword(newPassword);
             return traineeDAO.update(trainee);
         } catch (Exception e) {
+            log.error("couldn't update password");
             return Optional.empty();
         }
     }
@@ -216,6 +212,27 @@ public class TraineeService {
     public List<Trainee> getTrainees() {
         log.info(">>>> Getting trainees");
         return traineeDAO.getTrainees();
+    }
+
+    @Transactional
+    public Optional<Trainee> setTrainers(Trainee trainee, String username, String password, Set<Trainer> trainers) {
+        if (isInvalidUsernamePassword(trainee, username, password)) {
+            log.error("invalid username or password");
+            return Optional.empty();
+        }
+
+        if (UserService.isInvalidUser(trainee)) {
+            log.info("invalid user");
+            return Optional.empty();
+        }
+
+        try {
+            trainee.setTrainers(trainers);
+            return traineeDAO.update(trainee);
+        } catch (Exception e) {
+            log.error("couldn't update trainers");
+            return Optional.empty();
+        }
     }
 
     public Optional<Trainee> findByUsernameWithQuery(String username) {
