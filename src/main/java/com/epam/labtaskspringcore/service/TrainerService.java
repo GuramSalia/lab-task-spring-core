@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -189,6 +190,23 @@ public class TrainerService {
             return false;
         }
     }
+
+    public List<Trainer> findUnassignedTrainersByTraineeUsername(String traineeUsername) {
+        List<Integer> ids = trainerDAO.findUnassignedTrainersByTraineeUsername(traineeUsername);
+        List<Trainer> trainers = new ArrayList<>();
+        for (Integer id : ids) {
+            Optional<Trainer> trainerOptional = getById(id);
+            if (trainerOptional.isPresent()) {
+                trainers.add(trainerOptional.get());
+            }
+        }
+
+        return trainers;
+
+
+//        return trainerDAO.findUnassignedTrainersByTraineeUsername(traineeUsername);
+    }
+
 
 
 

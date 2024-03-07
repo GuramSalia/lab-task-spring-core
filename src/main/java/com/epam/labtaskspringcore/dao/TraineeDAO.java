@@ -20,5 +20,7 @@ public interface TraineeDAO {
 
     Optional<Trainee> findByUsernameAndPassword(String username, String password);
 
+    Optional<Trainee> findByUsernameWithQuery(String username);
+
 
 }

@@ -48,4 +48,11 @@ public class TrainerDAODatabaseImpl implements TrainerDAO {
     public Optional<Trainer> findByUsernameAndPassword(String username, String password) {
         return trainerRepository.findByUsernameAndPassword(username, password);
     }
+
+    @Override
+    public List<Integer>  findUnassignedTrainersByTraineeUsername(String traineeUsername) {
+        return trainerRepository.findUnassignedTrainersByTraineeUsername(traineeUsername);
+    }
+
+
 }

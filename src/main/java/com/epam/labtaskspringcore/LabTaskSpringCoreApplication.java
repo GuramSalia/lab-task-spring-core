@@ -226,7 +226,9 @@ public class LabTaskSpringCoreApplication {
         log.info("create training with trainer of the same different type");
 
         Optional<Trainee> trainee_3Optional = traineeServiceWithDatabaseDao.getByUsername("John.Doe1", "2233");
-        if(trainee_3Optional.isPresent()){trainee_3 = trainee_3Optional.get();}
+        if (trainee_3Optional.isPresent()) {
+            trainee_3 = trainee_3Optional.get();
+        }
 
         Training training_3 = new Training();
         Helper.setUpTraining_3(training_3, olivia, trainee_3);
@@ -244,6 +246,11 @@ public class LabTaskSpringCoreApplication {
 
         log.info("deleting trainee cascades to deleting training");
         traineeServiceWithDatabaseDao.delete("John.Doe1", "2233");
+
+        log.info("\n\n>>>> START with JPQL  ==============\n");
+
+        log.info("list of trainers:  \n\n" + trainerServiceWithDatabaseDao.findUnassignedTrainersByTraineeUsername("John.Doe"));
+        log.info("trainee with username:  \n\n" + traineeServiceWithDatabaseDao.findByUsernameWithQuery("John.Doe"));
 
         log.info("\n\n>>>> END  ==============\n");
     }

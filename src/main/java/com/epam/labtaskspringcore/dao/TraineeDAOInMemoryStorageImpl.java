@@ -67,5 +67,9 @@ public class TraineeDAOInMemoryStorageImpl implements TraineeDAO {
         return Optional.empty();
     }
 
-
+    @Override
+    public Optional<Trainee> findByUsernameWithQuery(String username) {
+        log.info("'findWithUsername' method is not implemented in TraineeDaoInMemoryStorageImpl");
+        return Optional.empty();
+    }
 }

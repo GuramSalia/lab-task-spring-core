@@ -65,4 +65,12 @@ public class TrainerDAOInMemoryStorageImpl implements TrainerDAO {
         log.info("'findByUsernameAndPassword' method is not implemented in TrainerDaoInMemoryStorageImpl");
         return Optional.empty();
     }
+
+    @Override
+    public List<Integer> findUnassignedTrainersByTraineeUsername(String traineeUsername) {
+        log.info("'findUnassignedTrainersByTraineeUsername' method is not implemented in TrainerDaoInMemoryStorageImpl");
+        return null;
+    }
+
+
 }

@@ -104,121 +104,122 @@ public class TraineeService {
         }
     }
 
+    public Optional<Trainee> getByUsername(String username, String password) {
 
-
-
-        public Optional<Trainee> getByUsername(String username, String password) {
-
-            Optional<Trainee> traineeOptional = traineeDAO.findByUsername(username);
-            if (traineeOptional.isEmpty()) {
-                log.error("invalid username or password");
-                return Optional.empty();
-            }
-
-            Trainee trainee = traineeOptional.get();
-            if (isInvalidUsernamePassword(trainee, username, trainee.getPassword())) {
-                log.error("invalid username or password");
-                return Optional.empty();
-            }
-
-            log.info(">>>> Getting trainee using getByUsername: : " + username);
-            return traineeOptional;
+        Optional<Trainee> traineeOptional = traineeDAO.findByUsername(username);
+        if (traineeOptional.isEmpty()) {
+            log.error("invalid username or password");
+            return Optional.empty();
         }
 
-        @Transactional
-        public Optional<Trainee> updatePassword(Trainee trainee, String username, String currentPassword, String
-        newPassword) {
-
-            if (isInvalidUsernamePassword(trainee, username, currentPassword)) {
-                log.error("invalid username or password");
-                return Optional.empty();
-            }
-
-            if (UserService.isInvalidUser(trainee)) {
-                return Optional.empty();
-            }
-
-            try {
-                trainee.setPassword(newPassword);
-                return traineeDAO.update(trainee);
-            } catch (Exception e) {
-                return Optional.empty();
-            }
+        Trainee trainee = traineeOptional.get();
+        if (isInvalidUsernamePassword(trainee, username, trainee.getPassword())) {
+            log.error("invalid username or password");
+            return Optional.empty();
         }
 
-        @Transactional
-        public boolean activateTrainee(Trainee trainee, String username, String password) {
+        log.info(">>>> Getting trainee using getByUsername: : " + username);
+        return traineeOptional;
+    }
 
-            if (isInvalidUsernamePassword(trainee, username, password)) {
-                log.error("invalid username or password");
-                return false;
-            }
+    @Transactional
+    public Optional<Trainee> updatePassword(Trainee trainee, String username, String currentPassword, String
+            newPassword) {
 
-            if (trainee.getIsActive()) {
-                log.info("trainee is already active");
-                return false;
-            }
-
-            try {
-                trainee.setIsActive(true);
-                traineeDAO.update(trainee);
-                log.info("trainee is active");
-                return true;
-            } catch (Exception e) {
-                log.error("couldn't activate the trainee", e);
-                return false;
-            }
+        if (isInvalidUsernamePassword(trainee, username, currentPassword)) {
+            log.error("invalid username or password");
+            return Optional.empty();
         }
 
-        @Transactional
-        public boolean deactivateTrainee(Trainee trainee, String username, String password) {
-
-            if (isInvalidUsernamePassword(trainee, username, password)) {
-                log.error("invalid username or password");
-                return false;
-            }
-
-            if (!trainee.getIsActive()) {
-                log.info("trainee is already deactivated");
-                return false;
-            }
-
-            try {
-                trainee.setIsActive(false);
-                traineeDAO.update(trainee);
-                log.info("trainee is deactivated");
-                return true;
-            } catch (Exception e) {
-                log.error("couldn't deactivate the trainee");
-                return false;
-            }
+        if (UserService.isInvalidUser(trainee)) {
+            return Optional.empty();
         }
 
-        @Transactional
-        public boolean delete(String username, String password) {
-            Optional<Trainee> optionalTrainee = getByUsername(username, password);
-            if (optionalTrainee.isEmpty()) {
-                log.error("wrong username or password");
-                return false;
-            }
-            Trainee trainee = optionalTrainee.get();
-            if (isInvalidUsernamePassword(trainee, username, password)) {
-                log.error("wrong username or password");
-                return false;
-            }
-            try {
-                log.info(">>>> Deleting trainee with username: " + username);
-                traineeDAO.delete(trainee);
-                return true;
-            } catch (Exception e) {
-                log.error("couldn't delete the trainee");
-                return false;
-            }
+        try {
+            trainee.setPassword(newPassword);
+            return traineeDAO.update(trainee);
+        } catch (Exception e) {
+            return Optional.empty();
         }
+    }
+
+    @Transactional
+    public boolean activateTrainee(Trainee trainee, String username, String password) {
+
+        if (isInvalidUsernamePassword(trainee, username, password)) {
+            log.error("invalid username or password");
+            return false;
+        }
+
+        if (trainee.getIsActive()) {
+            log.info("trainee is already active");
+            return false;
+        }
+
+        try {
+            trainee.setIsActive(true);
+            traineeDAO.update(trainee);
+            log.info("trainee is active");
+            return true;
+        } catch (Exception e) {
+            log.error("couldn't activate the trainee", e);
+            return false;
+        }
+    }
+
+    @Transactional
+    public boolean deactivateTrainee(Trainee trainee, String username, String password) {
+
+        if (isInvalidUsernamePassword(trainee, username, password)) {
+            log.error("invalid username or password");
+            return false;
+        }
+
+        if (!trainee.getIsActive()) {
+            log.info("trainee is already deactivated");
+            return false;
+        }
+
+        try {
+            trainee.setIsActive(false);
+            traineeDAO.update(trainee);
+            log.info("trainee is deactivated");
+            return true;
+        } catch (Exception e) {
+            log.error("couldn't deactivate the trainee");
+            return false;
+        }
+    }
+
+    @Transactional
+    public boolean delete(String username, String password) {
+        Optional<Trainee> optionalTrainee = getByUsername(username, password);
+        if (optionalTrainee.isEmpty()) {
+            log.error("wrong username or password");
+            return false;
+        }
+        Trainee trainee = optionalTrainee.get();
+        if (isInvalidUsernamePassword(trainee, username, password)) {
+            log.error("wrong username or password");
+            return false;
+        }
+        try {
+            log.info(">>>> Deleting trainee with username: " + username);
+            traineeDAO.delete(trainee);
+            return true;
+        } catch (Exception e) {
+            log.error("couldn't delete the trainee");
+            return false;
+        }
+    }
 
     public List<Trainee> getTrainees() {
         log.info(">>>> Getting trainees");
         return traineeDAO.getTrainees();
+    }
+
+    public Optional<Trainee> findByUsernameWithQuery(String username) {
+        return traineeDAO.findByUsernameWithQuery(username);
     }
 
     private boolean isValidUsernamePassword(Trainee trainee, String username, String password) {

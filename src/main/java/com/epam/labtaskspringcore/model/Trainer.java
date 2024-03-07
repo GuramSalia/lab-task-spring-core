@@ -31,13 +31,9 @@ public class Trainer extends User {
     @ManyToMany(mappedBy = "trainers")
     private Set<Trainee> trainees = new HashSet<>();
 
-
-
-
-
     @Override
     public String toString() {
-        return "Trainer{" + "trainerId=" + userId + " " + getFirstName() + " " + getLastName() + '}';
+        return "Trainer{" + "trainerId=" + userId + " " + getFirstName() + " " + getLastName() + " username: " + getUsername() + '}';
     }
 
     @Override

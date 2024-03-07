@@ -3,6 +3,7 @@ package com.epam.labtaskspringcore.dao;
 import com.epam.labtaskspringcore.model.Trainee;
 import com.epam.labtaskspringcore.model.Trainer;
 import com.epam.labtaskspringcore.model.User;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,4 +16,8 @@ public interface TrainerDAO {
     Optional<Trainer> findByUsername(String username);
 
     Optional<Trainer> findByUsernameAndPassword(String username, String password);
+
+    List<Integer> findUnassignedTrainersByTraineeUsername(String traineeUsername);
+
+
 }

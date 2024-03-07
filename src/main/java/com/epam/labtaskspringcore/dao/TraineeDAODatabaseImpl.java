@@ -54,5 +54,8 @@ public class TraineeDAODatabaseImpl implements TraineeDAO {
         return traineeRepository.findByUsernameAndPassword(username, password);
     }
 
-
+    @Override
+    public Optional<Trainee> findByUsernameWithQuery(String username) {
+        return traineeRepository.findByUsernameWithQuery(username);
+    }
 }

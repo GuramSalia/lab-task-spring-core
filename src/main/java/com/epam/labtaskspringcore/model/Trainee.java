@@ -56,7 +56,7 @@ public class Trainee extends User {
     }
 
     @Override
-    public String toString() {return "Trainee{" + "traineeId=" + userId + " " + getFirstName() + " " + getLastName() + '}';}
+    public String toString() {return "Trainee{" + "traineeId=" + userId + " " + getFirstName() + " " + getLastName() + " username: " + getUsername() + '}';}
 
     @Override
     public boolean equals(Object o) {
