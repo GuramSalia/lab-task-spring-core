@@ -57,6 +57,7 @@ class TrainerServiceTest {
         trainer1.setUserId(1);
         trainer1.setFirstName("Sam");
         trainer1.setLastName("Smith");
+        trainer1.setPassword("123");
         trainer1.setSpecialization(YOGA);
         trainer1.setIsActive(true);
         trainerService.create(trainer1);
@@ -106,13 +107,15 @@ class TrainerServiceTest {
 
     @Test
     void TestGetByIdInTrainerService() {
-        trainer2.setFirstName("Sam");
+        trainer2.setFirstName("Tommy");
         trainer2.setLastName("Smith");
+        trainer2.setPassword("123");
         trainerService.create(trainer2);
-        Optional<Trainer> trainer = trainerService.getById(trainer2.getUserId());
+        Optional<Trainer> trainer = trainerService.getById(trainer2.getUserId(), "Tommy.Smith", "123");
         assertAll(
-                () -> assertEquals(trainer1, trainerService.getById(1).get(), "trainer should be returned"),
-                () -> assertEquals(trainer2, trainerService.getById(2).get(), "trainer should be returned")
+                () -> assertEquals(trainer1, trainerService.getById(1, "Sam.Smith", "123").get(), "trainer should be " +
+                        "returned"),
+                () -> assertEquals(trainer2, trainerService.getById(2, "Tommy.Smith", "123").get(), "trainer should be returned")
                  );
     }
 

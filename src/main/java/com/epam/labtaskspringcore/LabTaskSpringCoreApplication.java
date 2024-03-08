@@ -33,16 +33,16 @@ public class LabTaskSpringCoreApplication {
         TraineeService traineeServiceWithDatabaseDao = BeanProvider
                 .getTraineeService("TRAINEE_DATABASE");
         TrainerService trainerServiceWithDatabaseDao = BeanProvider
-                .getTrainerService("TRAINER_DATABASE");
+                .getTrainerService("TRAINER_DATABASE", "TRAINEE_DATABASE");
         TrainingService trainingServiceWithDatabaseDao = BeanProvider
                 .getTrainingService("TRAINING_DATABASE", "TRAINER_DATABASE");
 
-        Optional<Trainer> optionalTrainer1 = trainerServiceWithDatabaseDao.getById(1);
-        Optional<Trainer> optionalTrainer2 = trainerServiceWithDatabaseDao.getById(2);
+        Optional<Trainer> optionalTrainer1 = trainerServiceWithDatabaseDao.getById(1, "Tim.Smith", "123");
+        Optional<Trainer> optionalTrainer2 = trainerServiceWithDatabaseDao.getById(2,"Sam.Jones", "123");
         Optional<Training> optionalTraining1 = trainingServiceWithDatabaseDao.getById(1);
         Optional<Training> optionalTraining2 = trainingServiceWithDatabaseDao.getById(2);
-        Optional<Trainee> optionalTrainee1 = traineeServiceWithDatabaseDao.getById(3);
-        Optional<Trainee> optionalTrainee2 = traineeServiceWithDatabaseDao.getById(4);
+        Optional<Trainee> optionalTrainee1 = traineeServiceWithDatabaseDao.getById(3, "John.Doe", "123");
+        Optional<Trainee> optionalTrainee2 = traineeServiceWithDatabaseDao.getById(4, "Jane.Smith", "123");
 
         log.info("list of TRAINEES from DB: \n");
         optionalTrainee1.ifPresent(trainee -> log.info(trainee.toString()));
@@ -60,7 +60,7 @@ public class LabTaskSpringCoreApplication {
         trainee_3.setTrainers(Set.of(optionalTrainer1.get(), optionalTrainer2.get()));
         Optional<Trainee> trainee3SavedOptional = traineeServiceWithDatabaseDao.create(trainee_3);
         trainee3SavedOptional.ifPresent(trainee -> log.info(trainee.getFirstName() + " saved"));
-        log.info("trainee_3 found by id of 5 :" + traineeServiceWithDatabaseDao.getById(5).toString());
+        log.info("trainee_3 found by id of 5 :" + traineeServiceWithDatabaseDao.getById(5, "Dave.Miller", "123456").toString());
         log.info("   -----   end  \n");
 
         log.info("   .....   With DB - create trainee 4");
@@ -180,10 +180,10 @@ public class LabTaskSpringCoreApplication {
         log.info("\n\n>>>> START with JPQL  ==============\n");
 
         log.info("list of trainers:\n\n"
-                         + trainerServiceWithDatabaseDao.findUnassignedTrainersByTraineeUsername("John.Doe"));
+                         + trainerServiceWithDatabaseDao.findUnassignedTrainersByTraineeUsername("John.Doe", "123"));
 
         log.info("trainee with username:\n\n"
-                         + traineeServiceWithDatabaseDao.findByUsernameWithQuery("John.Doe"));
+                         + traineeServiceWithDatabaseDao.findByUsernameWithQuery("John.Doe", "123"));
 
         String traineeUsername = "John.Doe";
         String trainerUsername = "Tim.Smith";

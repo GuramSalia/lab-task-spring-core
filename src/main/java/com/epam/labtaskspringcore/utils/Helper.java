@@ -9,10 +9,10 @@ import java.util.Calendar;
 import java.util.Optional;
 
 import static java.util.Calendar.*;
-import static java.util.Calendar.DATE;
 
 @Slf4j
 public class Helper {
+
     public static void setUpTrainee_3(Trainee trainee_3) {
         trainee_3.setFirstName("Dave");
         trainee_3.setLastName("Miller");

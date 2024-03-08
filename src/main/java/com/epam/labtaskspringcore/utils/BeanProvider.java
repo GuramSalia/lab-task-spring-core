@@ -2,6 +2,8 @@ package com.epam.labtaskspringcore.utils;
 
 import com.epam.labtaskspringcore.config.ApplicationContextProvider;
 import com.epam.labtaskspringcore.config.InMemoryStorage;
+import com.epam.labtaskspringcore.dao.TraineeDAODatabaseImpl;
+import com.epam.labtaskspringcore.dao.TrainerDAODatabaseImpl;
 import com.epam.labtaskspringcore.service.TraineeService;
 import com.epam.labtaskspringcore.service.TrainerService;
 import com.epam.labtaskspringcore.service.TrainingService;
@@ -22,9 +24,10 @@ public class BeanProvider {
         return traineeService;
     }
 
-    public static TrainerService getTrainerService(String daoImplementationName) {
+    public static TrainerService getTrainerService(String daoImplNameForTrainer, String daoImplNameForTrainee) {
         TrainerService trainerService = context.getBean(TrainerService.class);
-        trainerService.setTrainerDAOFromTrainerDAOMap(daoImplementationName);
+        trainerService.setTrainerDAOFromTrainerDAOMap(daoImplNameForTrainer);
+        trainerService.setTraineeDAOFromTraineeDAOMap(daoImplNameForTrainee);
         return trainerService;
     }
 
@@ -37,5 +40,13 @@ public class BeanProvider {
 
     public static TrainingTypeService getTrainingTypeService() {
         return context.getBean(TrainingTypeService.class);
+    }
+
+    public static TraineeDAODatabaseImpl getTraineeDAODatabaseImpl() {
+        return context.getBean(TraineeDAODatabaseImpl.class);
+    }
+
+    public static TrainerDAODatabaseImpl getTrainerDAODatabaseImpl() {
+        return context.getBean(TrainerDAODatabaseImpl.class);
     }
 }

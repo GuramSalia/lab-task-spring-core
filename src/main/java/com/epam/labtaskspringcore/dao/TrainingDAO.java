@@ -21,7 +21,7 @@ public interface TrainingDAO {
             String trainerUsername,
             String trainingTypeName);
 
-    List<Training> getTrainingsByTrainerAndOtherFilters(
+    public List<Training> getTrainingsByTrainerAndOtherFilters(
             String traineeUsername,
             Date startDate,
             Date endDate,

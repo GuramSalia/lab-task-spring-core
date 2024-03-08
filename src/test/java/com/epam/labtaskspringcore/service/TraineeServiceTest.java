@@ -131,10 +131,11 @@ class TraineeServiceTest {
         trainee2.setFirstName("Sam");
         trainee2.setLastName("Smith");
         traineeService.create(trainee2);
-        Optional<Trainee> trainee = traineeService.getById(trainee2.getUserId());
+        Optional<Trainee> trainee = traineeService.getById(trainee2.getUserId(), "Sam.Smith", "123");
         assertAll(
-                () -> assertEquals(trainee1, traineeService.getById(1).get(), "trainee should be returned"),
-                () -> assertEquals(trainee2, traineeService.getById(2).get(), "trainee should be returned")
+                () -> assertEquals(trainee1, traineeDAO.getById(1).get(), "trainee should be " +
+                        "returned"),
+                () -> assertEquals(trainee2, traineeDAO.getById(2).get(), "trainee should be returned")
                  );
     }
 
