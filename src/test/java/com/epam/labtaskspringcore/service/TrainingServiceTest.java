@@ -55,7 +55,7 @@ class TrainingServiceTest {
         // new way of creating trainerService
         Map<String, TrainerDAO> trainerDAOMap = new HashMap<>();
         trainerDAOMap.put("TRAINER_IN_MEMORY", trainerDAO);
-        trainerService = new TrainerService(trainerDAOMap, usernameGenerator);
+        trainerService = new TrainerService(trainerDAOMap,traineeDAOMap, usernameGenerator);
         trainerService.setTrainerDAO(trainerDAO);
 
         // new way of creating trainingService

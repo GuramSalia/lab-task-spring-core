@@ -2,10 +2,12 @@ package com.epam.labtaskspringcore.service;
 
 import com.epam.labtaskspringcore.model.User;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
+@Service
 @Slf4j
 public class UserService {
-    public static boolean isValidUser(User user) {
+    public boolean isValidUser(User user) {
         if (user == null) {
             log.error("Customer is null");
             return false;
@@ -36,7 +38,7 @@ public class UserService {
         return valid;
     }
 
-    public static boolean isInvalidUser(User user) {
+    public boolean isInvalidUser(User user) {
         return !isValidUser(user);
     }
 }

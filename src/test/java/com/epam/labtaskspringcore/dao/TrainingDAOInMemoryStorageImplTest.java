@@ -51,7 +51,9 @@ class TrainingDAOInMemoryStorageImplTest {
         // new way of creating trainerService
         Map<String, TrainerDAO> trainerDAOMap = new HashMap<>();
         trainerDAOMap.put("TRAINER_IN_MEMORY", trainerDAO);
-        trainerService = new TrainerService(trainerDAOMap, usernameGenerator);
+        Map<String,TraineeDAO> traineeDAOMap = new HashMap<>();
+        traineeDAOMap.put("TRAINEE_IN_MEMORY", traineeDAO);
+        trainerService = new TrainerService(trainerDAOMap, traineeDAOMap, usernameGenerator);
         trainerService.setTrainerDAO(trainerDAO);
 
         // new way of creating trainingService
@@ -102,19 +104,19 @@ class TrainingDAOInMemoryStorageImplTest {
 
 
     @Test
-    @Disabled
+
     void testCreateInTrainingDAO() {
-        training2.setTrainingId(1);
-        assertEquals(trainingDAO.create(training2), Optional.empty());
-        training2.setTrainingId(2);
-        assertEquals(trainingDAO.create(training2).get(), training2);
+        training2.setTrainingId(10);
+        assertEquals(trainingDAO.create(training2), Optional.of(training2));
+        training1.setTrainingId(10);
+        assertEquals(trainingDAO.create(training1), Optional.empty());
     }
 
     @Test
-    @Disabled
+//    @Disabled
     void testGetByIdInTrainingDAO() {
+        trainingDAO.create(training1);
         trainingDAO.create(training2);
-        trainingDAO.create(training3);
-        assertEquals(trainingDAO.getTrainings(), List.of(training1, training2, training3));
+        assertEquals(trainingDAO.getTrainings(), List.of(training1, training2));
     }
 }

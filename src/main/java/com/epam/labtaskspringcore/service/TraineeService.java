@@ -22,14 +22,18 @@ import java.util.Set;
 public class TraineeService {
 
     private final Map<String, TraineeDAO> traineeDAOMap;
+    private final Authentication authentication;
+    private final UserService userService;
 
     private final UsernameGenerator usernameGenerator;
     @Setter
     private TraineeDAO traineeDAO;
 
     @Autowired
-    public TraineeService(Map<String, TraineeDAO> traineeDAOMap, UsernameGenerator usernameGenerator) {
+    public TraineeService(Map<String, TraineeDAO> traineeDAOMap, Authentication authentication, UserService userService, UsernameGenerator usernameGenerator) {
         this.traineeDAOMap = traineeDAOMap;
+        this.authentication = authentication;
+        this.userService = userService;
         this.usernameGenerator = usernameGenerator;
         log.info(">>>> TraineeService initialized");
     }
@@ -39,7 +43,7 @@ public class TraineeService {
     }
 
     public Optional<Trainee> getById(int id, String username, String password) {
-        if (!Authentication.isAuthenticated(traineeDAO, username, password)) {
+        if (!authentication.isAuthenticated(traineeDAO, username, password)) {
             return Optional.empty();
         }
         log.info(">>>> Getting trainee with id: " + id);
@@ -57,7 +61,7 @@ public class TraineeService {
             }
             log.info(">>>> Creating trainee with username: " + trainee.getUsername());
 
-            if (UserService.isInvalidUser(trainee)) {
+            if (userService.isInvalidUser(trainee)) {
                 log.error("invalid trainee");
                 return Optional.empty();
             }
@@ -84,11 +88,11 @@ public class TraineeService {
     @Transactional
     public Optional<Trainee> update(Trainee trainee, String username, String password) {
 
-        if (!Authentication.isAuthenticated(traineeDAO, username, password)) {
+        if (!authentication.isAuthenticated(traineeDAO, username, password)) {
             return Optional.empty();
         }
 
-        if (UserService.isInvalidUser(trainee)) {
+        if (userService.isInvalidUser(trainee)) {
             log.info("invalid user");
             return Optional.empty();
         }
@@ -104,7 +108,7 @@ public class TraineeService {
 
     public Optional<Trainee> getByUsername(String username, String password) {
 
-        if (!Authentication.isAuthenticated(traineeDAO, username, password)) {
+        if (!authentication.isAuthenticated(traineeDAO, username, password)) {
             return Optional.empty();
         }
 
@@ -118,11 +122,11 @@ public class TraineeService {
     public Optional<Trainee> updatePassword(Trainee trainee, String username, String currentPassword, String
             newPassword) {
 
-        if (!Authentication.isAuthenticated(traineeDAO, username, currentPassword)) {
+        if (!authentication.isAuthenticated(traineeDAO, username, currentPassword)) {
             return Optional.empty();
         }
 
-        if (UserService.isInvalidUser(trainee)) {
+        if (userService.isInvalidUser(trainee)) {
             return Optional.empty();
         }
 
@@ -138,7 +142,7 @@ public class TraineeService {
     @Transactional
     public boolean activateTrainee(Trainee trainee, String username, String password) {
 
-        if (!Authentication.isAuthenticated(traineeDAO, username, password)) {
+        if (!authentication.isAuthenticated(traineeDAO, username, password)) {
             return false;
         }
 
@@ -161,7 +165,7 @@ public class TraineeService {
     @Transactional
     public boolean deactivateTrainee(Trainee trainee, String username, String password) {
 
-        if (!Authentication.isAuthenticated(traineeDAO, username, password)) {
+        if (!authentication.isAuthenticated(traineeDAO, username, password)) {
             return false;
         }
 
@@ -184,7 +188,7 @@ public class TraineeService {
     @Transactional
     public boolean delete(String username, String password) {
 
-        if (!Authentication.isAuthenticated(traineeDAO, username, password)) {
+        if (!authentication.isAuthenticated(traineeDAO, username, password)) {
             return false;
         }
 
@@ -213,11 +217,11 @@ public class TraineeService {
     @Transactional
     public Optional<Trainee> setTrainers(Trainee trainee, String username, String password, Set<Trainer> trainers) {
 
-        if (!Authentication.isAuthenticated(traineeDAO, username, password)) {
+        if (!authentication.isAuthenticated(traineeDAO, username, password)) {
             return Optional.empty();
         }
 
-        if (UserService.isInvalidUser(trainee)) {
+        if (userService.isInvalidUser(trainee)) {
             log.info("invalid user");
             return Optional.empty();
         }
@@ -232,7 +236,7 @@ public class TraineeService {
     }
 
     public Optional<Trainee> findByUsernameWithQuery(String username, String password) {
-        if (!Authentication.isAuthenticated(traineeDAO, username, password)) {
+        if (!authentication.isAuthenticated(traineeDAO, username, password)) {
             return Optional.empty();
         }
         return traineeDAO.findByUsernameWithQuery(username);

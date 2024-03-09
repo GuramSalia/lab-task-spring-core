@@ -1,91 +1,63 @@
 package com.epam.labtaskspringcore.utils;
 
-import com.epam.labtaskspringcore.config.InMemoryStorage;
 import com.epam.labtaskspringcore.dao.TraineeDAO;
-import com.epam.labtaskspringcore.dao.TraineeDAOInMemoryStorageImpl;
 import com.epam.labtaskspringcore.dao.TrainerDAO;
-import com.epam.labtaskspringcore.dao.TrainerDAOInMemoryStorageImpl;
 import com.epam.labtaskspringcore.model.Trainee;
 import com.epam.labtaskspringcore.model.Trainer;
-import com.epam.labtaskspringcore.model.TrainingType;
-import com.epam.labtaskspringcore.service.TraineeService;
-import com.epam.labtaskspringcore.service.TrainerService;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
 @Slf4j
 @DisplayName("When generating username with generateUsername method")
+@ExtendWith(MockitoExtension.class)
 class UsernameGeneratorTest {
-    InMemoryStorage storage;
-    TraineeDAO traineeDAO;
-    TrainerDAO trainerDAO;
-    TrainerService trainerService;
-    TraineeService traineeService;
-    UsernameGenerator usernameGenerator;
-    Trainee trainee2;
-    Trainee trainee3;
-    Trainer trainer2;
-    Trainer trainer3;
+    @Mock
+    private TraineeDAO traineeDAO;
+    @Mock
+    private TrainerDAO trainerDAO;
+
+    private Trainee traineeInDb1;
+
+    private Trainee traineeNew;
+
+    private Trainer trainerInDb1;
+
+    private Trainer trainerNew;
+
+    @InjectMocks
+    private UsernameGenerator usernameGenerator;
 
     @BeforeEach
-    void setUpBeforeEach() {
-        storage = new InMemoryStorage();
-        traineeDAO = new TraineeDAOInMemoryStorageImpl(storage);
-        trainerDAO = new TrainerDAOInMemoryStorageImpl(storage);
-        usernameGenerator = new UsernameGenerator(trainerDAO, traineeDAO);
+    void setUp() {
+        traineeInDb1 = new Trainee();
+        traineeInDb1.setUsername("John.Doe");
+        traineeInDb1.setUserId(10);
 
-        // new way of creating traineeService
-        Map<String, TraineeDAO> traineeDAOMap = new HashMap<>();
-        traineeDAOMap.put("IN_MEMORY", traineeDAO);
-        traineeService = new TraineeService(traineeDAOMap, usernameGenerator);
-        traineeService.setTraineeDAO(traineeDAO);
+        traineeNew = new Trainee();
+        traineeNew.setFirstName("John");
+        traineeNew.setLastName("Doe");
+        traineeNew.setUserId(11);
 
-        // new way of creating trainerService
-        Map<String, TrainerDAO> trainerDAOMap = new HashMap<>();
-        trainerDAOMap.put("TRAINER_IN_MEMORY", trainerDAO);
-        trainerService = new TrainerService(trainerDAOMap, usernameGenerator);
-        trainerService.setTrainerDAO(trainerDAO);
+        trainerInDb1 = new Trainer();
+        trainerInDb1.setUsername("John.Doe");
+        trainerInDb1.setUserId(20);
 
-        TrainingType YOGA = new TrainingType();
-        YOGA.setTrainingType(TrainingType.TrainingTypeEnum.YOGA);
-
-        Trainee trainee1 = new Trainee();
-        trainee1.setUserId(1);
-        trainee1.setFirstName("Sam");
-        trainee1.setLastName("Smith");
-        trainee1.setAddress("trainee1 address");
-        trainee1.setIsActive(true);
-        traineeService.create(trainee1);
-        //        log.info("created trainee: " + trainee1);
-
-        trainee2 = new Trainee();
-        trainee2.setUserId(2);
-        trainee3 = new Trainee();
-        trainee3.setUserId(3);
-
-        Trainer trainer1 = new Trainer();
-        trainer1.setUserId(1);
-        trainer1.setFirstName("John");
-        trainer1.setLastName("Doe");
-        trainer1.setSpecialization(YOGA);
-        trainer1.setIsActive(true);
-        trainerService.create(trainer1);
-        //        log.info("created trainer: " + trainer1);
-
-        trainer2 = new Trainer();
-        trainer2.setUserId(2);
-        trainer3 = new Trainer();
-        trainer3.setUserId(3);
-    }
-
-    @AfterEach
-    void tearDownAfterEach() {
-        storage.clearStorage();
+        trainerNew = new Trainer();
+        trainerNew.setFirstName("John");
+        trainerNew.setLastName("Doe");
+        trainerNew.setUserId(21);
     }
 
     @Nested
@@ -94,39 +66,25 @@ class UsernameGeneratorTest {
         @Test
         @DisplayName("when first.last name is unique in trainees and trainers")
         void testTraineeUniqueName() {
-            trainee2.setFirstName("George");
-            trainee2.setLastName("Fisher");
-            traineeService.create(trainee2);
-
-            assertEquals("George.Fisher",
-                         trainee2.getUsername(),
-                         "username should be of format 'firstName.lastName'");
+            when(traineeDAO.getTrainees()).thenReturn(List.of());
+            when(trainerDAO.getTrainers()).thenReturn(List.of());
+            assertEquals("John.Doe", usernameGenerator.generateUsername(traineeNew));
         }
 
         @Test
         @DisplayName("when first.last name repeats in trainees")
         void testTraineeUsernameRepeatsInTrainees() {
-            trainee2.setFirstName("Sam");
-            trainee2.setLastName("Smith");
-            traineeService.create(trainee2);
-
-            assertEquals("Sam.Smith1",
-                         trainee2.getUsername(),
-                         "username should be added int incrementally until it is unique in trainees");
+            when(traineeDAO.getTrainees()).thenReturn(List.of(traineeInDb1));
+            when(trainerDAO.getTrainers()).thenReturn(List.of());
+            assertEquals("John.Doe1", usernameGenerator.generateUsername(traineeNew));
         }
 
         @Test
         @DisplayName("when first.last name repeats in trainers")
         void testTraineeUsernameRepeatsInTrainers() {
-            trainee2.setFirstName("John");
-            trainee2.setLastName("Doe");
-            traineeService.create(trainee2);
-            trainee2.setAddress("some address");
-            traineeService.update(trainee2);
-
-            assertEquals("John.Doe1",
-                         trainee2.getUsername(),
-                         "username should be added int incrementally until it is unique");
+            when(traineeDAO.getTrainees()).thenReturn(List.of());
+            when(trainerDAO.getTrainers()).thenReturn(List.of(trainerInDb1));
+            assertEquals("John.Doe1", usernameGenerator.generateUsername(traineeNew));
         }
     }
 
@@ -135,44 +93,26 @@ class UsernameGeneratorTest {
     class TestUsernameGeneratorForTrainer {
         @Test
         @DisplayName("when first.last name is unique in trainees and trainers")
-        void testTrainerUniqueName() {
-            trainer3.setFirstName("George");
-            trainer3.setLastName("Fisher");
-            trainerService.create(trainer3);
-            trainer3.setIsActive(true);
-            trainerService.update(trainer3);
-
-            assertEquals("George.Fisher",
-                         trainer3.getUsername(),
-                         "username should be of format 'firstName.lastName'");
+        void testTraineeUniqueName() {
+            when(traineeDAO.getTrainees()).thenReturn(List.of());
+            when(trainerDAO.getTrainers()).thenReturn(List.of());
+            assertEquals("John.Doe", usernameGenerator.generateUsername(trainerNew));
         }
 
         @Test
         @DisplayName("when first.last name repeats in trainees")
-        void testTrainerUsernameRepeatsInTrainees() {
-            trainer3.setFirstName("Sam");
-            trainer3.setLastName("Smith");
-            trainerService.create(trainer3);
-            trainer3.setIsActive(true);
-            trainerService.update(trainer3);
-
-            assertEquals("Sam.Smith1",
-                         trainer3.getUsername(),
-                         "username should be added int incrementally until it is unique");
+        void testTraineeUsernameRepeatsInTrainees() {
+            when(traineeDAO.getTrainees()).thenReturn(List.of(traineeInDb1));
+            when(trainerDAO.getTrainers()).thenReturn(List.of());
+            assertEquals("John.Doe1", usernameGenerator.generateUsername(trainerNew));
         }
 
         @Test
         @DisplayName("when first.last name repeats in trainers")
-        void testTrainerUsernameRepeatsInTrainers() {
-            trainer3.setFirstName("John");
-            trainer3.setLastName("Doe");
-            trainerService.create(trainer3);
-            trainer3.setIsActive(true);
-            trainerService.update(trainer3);
-
-            assertEquals("John.Doe1",
-                         trainer3.getUsername(),
-                         "username should be added int incrementally until it is unique");
+        void testTraineeUsernameRepeatsInTrainers() {
+            when(traineeDAO.getTrainees()).thenReturn(List.of());
+            when(trainerDAO.getTrainers()).thenReturn(List.of(trainerInDb1));
+            assertEquals("John.Doe1", usernameGenerator.generateUsername(trainerNew));
         }
     }
 }

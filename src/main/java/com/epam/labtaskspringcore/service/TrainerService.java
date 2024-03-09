@@ -22,6 +22,8 @@ import java.util.Optional;
 public class TrainerService {
     private final Map<String, TrainerDAO> trainerDAOMap;
     private final Map<String, TraineeDAO> traineeDAOMap;
+    private final Authentication authentication;
+    private final UserService userService;
 
     private final UsernameGenerator usernameGenerator;
 
@@ -34,10 +36,12 @@ public class TrainerService {
     @Autowired
     public TrainerService(
             Map<String, TrainerDAO> trainerDAOMap,
-            Map<String, TraineeDAO> traineeDAOMap,
+            Map<String, TraineeDAO> traineeDAOMap, Authentication authentication, UserService userService,
             UsernameGenerator usernameGenerator) {
         this.trainerDAOMap = trainerDAOMap;
         this.traineeDAOMap = traineeDAOMap;
+        this.authentication = authentication;
+        this.userService = userService;
         this.usernameGenerator = usernameGenerator;
     }
 
@@ -50,7 +54,7 @@ public class TrainerService {
     }
 
     public Optional<Trainer> getById(int id, String username, String password) {
-        if (!Authentication.isAuthenticated(trainerDAO, username, password)) {
+        if (!authentication.isAuthenticated(trainerDAO, username, password)) {
             return Optional.empty();
         }
         log.info(">>>> Getting trainer with id: " + id);
@@ -66,14 +70,13 @@ public class TrainerService {
     public Optional<Trainer> create(Trainer trainer) {
 
         try {
-
             trainer.setUsername(usernameGenerator.generateUsername(trainer));
             if (trainer.getPassword() == null) {
                 trainer.setPassword(RandomPasswordGenerator.generateRandomPassword());
             }
             log.info(">>>> Creating trainer with username: " + trainer.getUsername());
 
-            if (UserService.isInvalidUser(trainer)) {
+            if (userService.isInvalidUser(trainer)) {
                 log.error("invalid customer");
                 return Optional.empty();
             }
@@ -94,11 +97,12 @@ public class TrainerService {
     @Transactional
     public Optional<Trainer> update(Trainer trainer, String username, String password) {
 
-        if (!Authentication.isAuthenticated(trainerDAO, username, password)) {
+        if (!authentication.isAuthenticated(trainerDAO, username, password)) {
+            log.error("invalid username");
             return Optional.empty();
         }
 
-        if (UserService.isInvalidUser(trainer)) {
+        if (userService.isInvalidUser(trainer)) {
             log.info("invalid user");
             return Optional.empty();
         }
@@ -115,7 +119,7 @@ public class TrainerService {
 
     public Optional<Trainer> getByUsername(String username, String password) {
 
-        if (!Authentication.isAuthenticated(trainerDAO, username, password)) {
+        if (!authentication.isAuthenticated(trainerDAO, username, password)) {
             return Optional.empty();
         }
 
@@ -135,11 +139,11 @@ public class TrainerService {
     public Optional<Trainer> updatePassword(Trainer trainer, String username, String currentPassword,
                                             String newPassword) {
 
-        if (!Authentication.isAuthenticated(trainerDAO, username, currentPassword)) {
+        if (!authentication.isAuthenticated(trainerDAO, username, currentPassword)) {
             return Optional.empty();
         }
 
-        if (UserService.isInvalidUser(trainer)) {
+        if (userService.isInvalidUser(trainer)) {
             return Optional.empty();
         }
 
@@ -154,7 +158,7 @@ public class TrainerService {
     @Transactional
     public boolean activateTrainer(Trainer trainer, String username, String password) {
 
-        if (!Authentication.isAuthenticated(trainerDAO, username, password)) {
+        if (!authentication.isAuthenticated(trainerDAO, username, password)) {
             return false;
         }
 
@@ -177,7 +181,7 @@ public class TrainerService {
     @Transactional
     public boolean deactivateTrainer(Trainer trainer, String username, String password) {
 
-        if (!Authentication.isAuthenticated(trainerDAO, username, password)) {
+        if (!authentication.isAuthenticated(trainerDAO, username, password)) {
             return false;
         }
 
@@ -199,7 +203,7 @@ public class TrainerService {
 
     public List<Trainer> findUnassignedTrainersByTraineeUsername(String traineeUsername, String password) {
 
-        if (!Authentication.isAuthenticated(traineeDAO, traineeUsername, password)) {
+        if (!authentication.isAuthenticated(traineeDAO, traineeUsername, password)) {
             return null;
         }
 
@@ -207,9 +211,7 @@ public class TrainerService {
         List<Trainer> trainers = new ArrayList<>();
         for (Integer id : ids) {
             Optional<Trainer> trainerOptional = trainerDAO.getById(id);
-            if (trainerOptional.isPresent()) {
-                trainers.add(trainerOptional.get());
-            }
+            trainerOptional.ifPresent(trainers::add);
         }
 
         return trainers;

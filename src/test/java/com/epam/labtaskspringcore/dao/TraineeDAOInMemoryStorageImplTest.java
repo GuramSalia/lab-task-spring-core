@@ -8,7 +8,10 @@ import com.epam.labtaskspringcore.utils.UsernameGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +22,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
+@ExtendWith(MockitoExtension.class)
+//@Disabled
 class TraineeDAOInMemoryStorageImplTest {
+
     InMemoryStorage storage;
     TraineeDAO traineeDAO;
     TrainerDAO trainerDAO;
@@ -46,10 +52,9 @@ class TraineeDAOInMemoryStorageImplTest {
         // new way of creating trainerService
         Map<String, TrainerDAO> trainerDAOMap = new HashMap<>();
         trainerDAOMap.put("TRAINER_IN_MEMORY", trainerDAO);
-        trainerService = new TrainerService(trainerDAOMap, usernameGenerator);
+
+        trainerService = new TrainerService(trainerDAOMap, traineeDAOMap, usernameGenerator);
         trainerService.setTrainerDAO(trainerDAO);
-
-
 
         trainee1 = new Trainee();
         trainee1.setUserId(1);
