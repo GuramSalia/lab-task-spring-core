@@ -6,6 +6,8 @@ import com.epam.labtaskspringcore.model.Training;
 import com.epam.labtaskspringcore.model.TrainingType;
 import com.epam.labtaskspringcore.service.TrainerService;
 import com.epam.labtaskspringcore.service.TrainingService;
+import com.epam.labtaskspringcore.service.UserService;
+import com.epam.labtaskspringcore.utils.Authentication;
 import com.epam.labtaskspringcore.utils.UsernameGenerator;
 import jakarta.persistence.Id;
 import org.junit.jupiter.api.AfterEach;
@@ -25,12 +27,12 @@ class TrainingDAOInMemoryStorageImplTest {
     TraineeDAO traineeDAO;
     TrainerDAO trainerDAO;
     TrainingDAO trainingDAO;
-    //    TraineeService traineeService;
+    Authentication authentication;
+    UserService userService;
     TrainerService trainerService;
     TrainingService trainingService;
     UsernameGenerator usernameGenerator;
-    //    Trainee trainee1;
-    //    Trainee trainee2;
+
     Trainer trainer1;
     Trainer trainer2;
 
@@ -45,15 +47,17 @@ class TrainingDAOInMemoryStorageImplTest {
         trainerDAO = new TrainerDAOInMemoryStorageImpl(storage);
         trainingDAO = new TrainingDAOInMemoryStorageImpl(storage);
         usernameGenerator = new UsernameGenerator(trainerDAO, traineeDAO);
-        //        traineeService = new TraineeService(traineeDAO, usernameGenerator);
-
+        authentication = new Authentication();
+        userService = new UserService();
 
         // new way of creating trainerService
         Map<String, TrainerDAO> trainerDAOMap = new HashMap<>();
         trainerDAOMap.put("TRAINER_IN_MEMORY", trainerDAO);
-        Map<String,TraineeDAO> traineeDAOMap = new HashMap<>();
+        Map<String, TraineeDAO> traineeDAOMap = new HashMap<>();
         traineeDAOMap.put("TRAINEE_IN_MEMORY", traineeDAO);
-        trainerService = new TrainerService(trainerDAOMap, traineeDAOMap, usernameGenerator);
+        trainerService = new TrainerService(
+                trainerDAOMap, traineeDAOMap, authentication,
+                userService, usernameGenerator);
         trainerService.setTrainerDAO(trainerDAO);
 
         // new way of creating trainingService
@@ -102,9 +106,7 @@ class TrainingDAOInMemoryStorageImplTest {
         storage.clearStorage();
     }
 
-
     @Test
-
     void testCreateInTrainingDAO() {
         training2.setTrainingId(10);
         assertEquals(trainingDAO.create(training2), Optional.of(training2));
@@ -113,7 +115,7 @@ class TrainingDAOInMemoryStorageImplTest {
     }
 
     @Test
-//    @Disabled
+        //    @Disabled
     void testGetByIdInTrainingDAO() {
         trainingDAO.create(training1);
         trainingDAO.create(training2);

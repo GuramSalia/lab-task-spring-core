@@ -6,12 +6,14 @@ import com.epam.labtaskspringcore.dao.TraineeDAOInMemoryStorageImpl;
 import com.epam.labtaskspringcore.dao.TrainerDAO;
 import com.epam.labtaskspringcore.dao.TrainerDAOInMemoryStorageImpl;
 import com.epam.labtaskspringcore.model.Trainee;
+import com.epam.labtaskspringcore.utils.Authentication;
 import com.epam.labtaskspringcore.utils.UsernameGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +30,11 @@ class TraineeServiceTest {
     TrainerDAO trainerDAO;
     TrainerService trainerService;
     TraineeService traineeService;
+    @Mock
+    Authentication authentication;
+
+    @Mock
+    private UserService userService;
     UsernameGenerator usernameGenerator;
     Trainee trainee1;
     Trainee trainee2;
@@ -43,13 +50,14 @@ class TraineeServiceTest {
         // new way of creating traineeService
         Map<String, TraineeDAO> traineeDAOMap = new HashMap<>();
         traineeDAOMap.put("IN_MEMORY", traineeDAO);
-        traineeService = new TraineeService(traineeDAOMap, usernameGenerator);
+        traineeService = new TraineeService(traineeDAOMap, authentication, userService, usernameGenerator);
         traineeService.setTraineeDAO(traineeDAO);
 
         // new way of creating trainerService
         Map<String, TrainerDAO> trainerDAOMap = new HashMap<>();
         trainerDAOMap.put("TRAINER_IN_MEMORY", trainerDAO);
-        trainerService = new TrainerService(trainerDAOMap, traineeDAOMap, usernameGenerator);
+        trainerService = new TrainerService(trainerDAOMap, traineeDAOMap, authentication, userService,
+                                            usernameGenerator);
         trainerService.setTrainerDAO(trainerDAO);
 
         trainee1 = new Trainee();

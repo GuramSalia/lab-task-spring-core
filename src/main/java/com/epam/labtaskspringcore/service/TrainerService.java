@@ -22,8 +22,10 @@ import java.util.Optional;
 public class TrainerService {
     private final Map<String, TrainerDAO> trainerDAOMap;
     private final Map<String, TraineeDAO> traineeDAOMap;
-    private final Authentication authentication;
-    private final UserService userService;
+    @Setter
+    private Authentication authentication;
+    @Setter
+    private UserService userService;
 
     private final UsernameGenerator usernameGenerator;
 
@@ -98,12 +100,12 @@ public class TrainerService {
     public Optional<Trainer> update(Trainer trainer, String username, String password) {
 
         if (!authentication.isAuthenticated(trainerDAO, username, password)) {
-            log.error("invalid username");
+            log.error("invalid username ^^^");
             return Optional.empty();
         }
 
         if (userService.isInvalidUser(trainer)) {
-            log.info("invalid user");
+            log.info("invalid user :::");
             return Optional.empty();
         }
 

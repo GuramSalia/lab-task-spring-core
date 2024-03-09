@@ -5,6 +5,8 @@ import com.epam.labtaskspringcore.model.Trainer;
 import com.epam.labtaskspringcore.model.TrainingType;
 import com.epam.labtaskspringcore.service.TraineeService;
 import com.epam.labtaskspringcore.service.TrainerService;
+import com.epam.labtaskspringcore.service.UserService;
+import com.epam.labtaskspringcore.utils.Authentication;
 import com.epam.labtaskspringcore.utils.UsernameGenerator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,6 +25,8 @@ class TrainerDAOInMemoryStorageImplTest {
     TrainerDAO trainerDAO;
     TrainerService trainerService;
     TraineeService traineeService;
+    Authentication authentication;
+    UserService userService;
     UsernameGenerator usernameGenerator;
     Trainer trainer1;
     Trainer trainer2;
@@ -35,18 +39,21 @@ class TrainerDAOInMemoryStorageImplTest {
         traineeDAO = new TraineeDAOInMemoryStorageImpl(storage);
         trainerDAO = new TrainerDAOInMemoryStorageImpl(storage);
         usernameGenerator = new UsernameGenerator(trainerDAO, traineeDAO);
+        authentication = new Authentication();
+        userService = new UserService();
 
 
         // new way of creating traineeService
         Map<String, TraineeDAO> traineeDAOMap = new HashMap<>();
         traineeDAOMap.put("IN_MEMORY", traineeDAO);
-        traineeService = new TraineeService(traineeDAOMap, usernameGenerator);
+        traineeService = new TraineeService(traineeDAOMap, authentication, userService, usernameGenerator);
         traineeService.setTraineeDAO(traineeDAO);
 
         // new way of creating trainerService
         Map<String, TrainerDAO> trainerDAOMap = new HashMap<>();
         trainerDAOMap.put("TRAINER_IN_MEMORY", trainerDAO);
-        trainerService = new TrainerService(trainerDAOMap, traineeDAOMap, usernameGenerator);
+        trainerService = new TrainerService(trainerDAOMap, traineeDAOMap,authentication, userService,
+                                            usernameGenerator);
         trainerService.setTrainerDAO(trainerDAO);
 
         TrainingType YOGA = new TrainingType();
