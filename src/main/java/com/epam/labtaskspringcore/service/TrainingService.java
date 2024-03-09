@@ -115,29 +115,4 @@ public class TrainingService {
         }
         return !matching;
     }
-
-    public Training createTraining(int trainingId, Trainee trainee, Trainer trainer, String trainingName,
-                                   TrainingType trainingType, int trainingDurationInMinutes) {
-        Training training = new Training();
-        training.setTrainingId(trainingId);
-        training.setTrainee(trainee);
-        training.setTrainer(trainer);
-        training.setTrainingName(trainingName);
-        training.setTrainingType(trainingType);
-        training.setTrainingDurationInMinutes(trainingDurationInMinutes);
-        return training;
-    }
-
-    public void logTrainingCreationDetails(Training training) {
-        if (create(training).isEmpty()) {
-            log.error("could not create training with trainingId: " + training.getTrainingId());
-        } else {
-            Optional<Training> training3Optional = getById(training.getTrainingId());
-            if (training3Optional.isEmpty()) {
-                log.error("could not get training with trainingId: " + training.getTrainingId());
-            } else {
-                log.info("created successfully: " + training3Optional.get().toString());
-            }
-        }
-    }
 }

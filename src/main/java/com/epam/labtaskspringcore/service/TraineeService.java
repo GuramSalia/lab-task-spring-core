@@ -22,15 +22,17 @@ import java.util.Set;
 public class TraineeService {
 
     private final Map<String, TraineeDAO> traineeDAOMap;
-    private final Authentication authentication;
-    private final UserService userService;
-
+    @Setter
+    private Authentication authentication;
+    @Setter
+    private UserService userService;
     private final UsernameGenerator usernameGenerator;
     @Setter
     private TraineeDAO traineeDAO;
 
     @Autowired
-    public TraineeService(Map<String, TraineeDAO> traineeDAOMap, Authentication authentication, UserService userService, UsernameGenerator usernameGenerator) {
+    public TraineeService(Map<String, TraineeDAO> traineeDAOMap, Authentication authentication,
+                          UserService userService, UsernameGenerator usernameGenerator) {
         this.traineeDAOMap = traineeDAOMap;
         this.authentication = authentication;
         this.userService = userService;
@@ -192,7 +194,7 @@ public class TraineeService {
             return false;
         }
 
-        Optional<Trainee> optionalTrainee = getByUsername(username, password);
+        Optional<Trainee> optionalTrainee = traineeDAO.findByUsername(username);
         if (optionalTrainee.isEmpty()) {
             log.error("wrong username or password");
             return false;
@@ -201,8 +203,9 @@ public class TraineeService {
 
         try {
             log.info(">>>> Deleting trainee with username: " + username);
-            traineeDAO.delete(trainee);
-            return true;
+//            traineeDAO.delete(trainee);
+//            return true;
+            return traineeDAO.delete(trainee);
         } catch (Exception e) {
             log.error("couldn't delete the trainee");
             return false;
