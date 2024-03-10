@@ -19,6 +19,7 @@ public class TrainingType {
     @Column(name = "TRAINING_TYPE_ID")
     private int trainingTypeId;
 
+    @Setter
     @Enumerated(EnumType.STRING)
     @Column(name = "TRAINING_TYPE_NAME")
     private TrainingTypeEnum trainingType;
