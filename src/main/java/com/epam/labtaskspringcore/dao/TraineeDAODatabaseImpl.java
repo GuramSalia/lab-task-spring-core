@@ -33,7 +33,8 @@ public class TraineeDAODatabaseImpl implements TraineeDAO {
     @Override
     public boolean delete(Trainee trainee) {
         traineeRepository.delete(trainee);
-        return traineeRepository.findById(trainee.getUserId()).isPresent();
+        return traineeRepository.findById(trainee.getUserId()).isEmpty();
+
     }
 
     @Override
