@@ -1,7 +1,9 @@
 package com.epam.labtaskspringcore.model;
+
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 class TrainerTest {
 
     private Trainer trainer1;
@@ -16,7 +18,6 @@ class TrainerTest {
         trainer3 = new Trainer();
         trainer4 = new Trainer();
     }
-
 
     @Nested
     @DisplayName("when testing getters and setters")
@@ -128,35 +129,6 @@ class TrainerTest {
                     () -> assertEquals(CARDIO, trainer3.getSpecialization()),
                     () -> assertEquals(STRENGTH, trainer4.getSpecialization())
                      );
-
         }
     }
-
-//    @Test
-//    void setFirstName() {
-//    }
-//
-//    @Test
-//    void setLastName() {
-//    }
-//
-//    @Test
-//    void setUsername() {
-//    }
-//
-//    @Test
-//    void setPassword() {
-//    }
-//
-//    @Test
-//    void setActive() {
-//    }
-//
-//    @Test
-//    void setId() {
-//    }
-//
-//    @Test
-//    void setSpecialization() {
-//    }
 }

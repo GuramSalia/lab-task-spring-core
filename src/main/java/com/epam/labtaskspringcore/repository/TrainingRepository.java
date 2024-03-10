@@ -27,9 +27,9 @@ public interface TrainingRepository extends JpaRepository<Training, Integer> {
             "?2 AND ?3 AND t.TRAINEE_ID = (SELECT gu.USER_ID FROM GYM_USERS gu WHERE gu.USERNAME " +
             "= ?4)", nativeQuery = true)
     List<Integer> findIdsByTrainerAndTrainerAndType(
-            @Param("traineeUsername") String traineeUsername,
+            @Param("trainerUsername") String trainerUsername,
             @Param("startDate") Date startDate,
             @Param("endDate") Date endDate,
-            @Param("trainerUsername") String trainerUsername);
+            @Param("traineeUsername") String traineeUsername);
 }
 

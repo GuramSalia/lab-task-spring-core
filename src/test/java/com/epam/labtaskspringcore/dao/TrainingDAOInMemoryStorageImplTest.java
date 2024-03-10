@@ -9,10 +9,8 @@ import com.epam.labtaskspringcore.service.TrainingService;
 import com.epam.labtaskspringcore.service.UserService;
 import com.epam.labtaskspringcore.utils.Authentication;
 import com.epam.labtaskspringcore.utils.UsernameGenerator;
-import jakarta.persistence.Id;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;

@@ -8,11 +8,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -28,7 +27,6 @@ class TrainerDAODatabaseImplTest {
 
     @Mock
     private Trainer trainer2;
-
 
     @BeforeEach
     void setUp() {
@@ -73,8 +71,7 @@ class TrainerDAODatabaseImplTest {
 
     @Test
     void findUnassignedTrainersByTraineeUsername() {
-        when(trainerRepository.findIdsOfUnassignedTrainersByTraineeUsername("Sam.Smith")).thenReturn(List.of(1,2));
+        when(trainerRepository.findIdsOfUnassignedTrainersByTraineeUsername("Sam.Smith")).thenReturn(List.of(1, 2));
         assertEquals(trainerDB.findUnassignedTrainersByTraineeUsername("Sam.Smith"), List.of(1, 2));
-
     }
 }

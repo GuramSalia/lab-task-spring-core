@@ -42,7 +42,6 @@ class TrainerDAOInMemoryStorageImplTest {
         authentication = new Authentication();
         userService = new UserService();
 
-
         // new way of creating traineeService
         Map<String, TraineeDAO> traineeDAOMap = new HashMap<>();
         traineeDAOMap.put("IN_MEMORY", traineeDAO);
@@ -52,7 +51,7 @@ class TrainerDAOInMemoryStorageImplTest {
         // new way of creating trainerService
         Map<String, TrainerDAO> trainerDAOMap = new HashMap<>();
         trainerDAOMap.put("TRAINER_IN_MEMORY", trainerDAO);
-        trainerService = new TrainerService(trainerDAOMap, traineeDAOMap,authentication, userService,
+        trainerService = new TrainerService(trainerDAOMap, traineeDAOMap, authentication, userService,
                                             usernameGenerator);
         trainerService.setTrainerDAO(trainerDAO);
 
