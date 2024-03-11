@@ -1,48 +1,82 @@
 package com.epam.labtaskspringcore.model;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 
+import static java.time.LocalDate.now;
+
+@Entity
+@Table(name = "TRAININGS")
 @Setter
 @Getter
+@Slf4j
 public class Training {
-    private int id;
-    private int trainerId;
-    private int traineeId;
-    private String name;
-    private TrainingType type;
-    private Date date;
-    private int durationInMinutes;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "TRAINING_ID")
+    private Integer trainingId;
+
+    @ManyToOne
+    @JoinColumn(name = "TRAINEE_ID")
+    private Trainee trainee;
+
+    @ManyToOne
+    @JoinColumn(name = "TRAINER_ID")
+    private Trainer trainer;
+
+    @Column(name = "TRAINING_NAME")
+    private String trainingName;
+
+    @ManyToOne(fetch = FetchType.EAGER, optional = true)
+    @JoinColumn(name = "TRAINING_TYPE_ID", referencedColumnName = "TRAINING_TYPE_ID", nullable = true)
+    @Enumerated(EnumType.ORDINAL)
+    private TrainingType trainingType;
+
+    @Column(name = "TRAINING_DATE")
+    private Date trainingDate;
+
+    @Column(name = "TRAINING_DURATION")
+    private int trainingDurationInMinutes;
+
+    public void setTrainingDateEasy(Integer year, Integer month, Integer day) {
+        if (year > now().getYear()) {
+            log.info("birth year cannot be in the future");
+            return;
+        }
+
+        if (month > 11 || month < 0) {
+            log.info("birth month cannot be in the future");
+            return;
+        }
+
+        if (day > 31 || day < 0) {
+            log.info("birth day cannot be in the future");
+            return;
+        }
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, year);
+        cal.set(Calendar.MONTH, month);
+        cal.set(Calendar.DAY_OF_MONTH, day);
+        setTrainingDate(cal.getTime());
+    }
+
+    @Override
+    public String toString() {return "Training{" + "trainingId=" + trainingId + ", trainingName='" + trainingName + '\'' + '}';}
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Training training = (Training) o;
-        return getId() == training.getId();
+        return getTrainingId() == training.getTrainingId() && Objects.equals(getTrainingName(), training.getTrainingName());
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(getId(), getId(), getTrainerId(), getName(), getType(), getDate(), getDurationInMinutes());
-    }
-
-    @Override
-    public String toString() {
-        Calendar calendar = Calendar.getInstance();
-        String dateString = "null";
-        if (date != null) {
-            calendar.setTime(date);
-            int year = calendar.get(Calendar.YEAR);
-            int month = calendar.get(Calendar.MONTH) + 1;
-            int day = calendar.get(Calendar.DAY_OF_MONTH);
-            dateString = year + "-" + month + "-" + day;
-        }
-
-        return "Training{" + "\n  id=" + id + ", \n  traineeId=" + id + ", \n  trainerId=" + trainerId + ", \n  name='" + name + '\'' + ", \n  type=" + type + ", \n  date=" + dateString + ", \n  durationInMinutes=" + durationInMinutes + '}';
-    }
+    public int hashCode() {return Objects.hash(getTrainingId(), getTrainingName());}
 }

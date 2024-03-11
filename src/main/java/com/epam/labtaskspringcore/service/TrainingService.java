@@ -2,45 +2,45 @@ package com.epam.labtaskspringcore.service;
 
 import com.epam.labtaskspringcore.dao.TrainerDAO;
 import com.epam.labtaskspringcore.dao.TrainingDAO;
+import com.epam.labtaskspringcore.model.Trainee;
 import com.epam.labtaskspringcore.model.Trainer;
 import com.epam.labtaskspringcore.model.Training;
 import com.epam.labtaskspringcore.model.TrainingType;
+import jakarta.transaction.Transactional;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
 @Service
 public class TrainingService {
-    private final TrainingDAO trainingDAO;
-    private final TrainerDAO trainerDAO;
+    private final Map<String, TrainingDAO> trainingDAOMap;
+    private final Map<String, TrainerDAO> trainerDAOMap;
 
-    public TrainingService(TrainingDAO trainingDAO, TrainerDAO trainerDAO) {
-        this.trainingDAO = trainingDAO;
-        this.trainerDAO = trainerDAO;
+    @Autowired
+    public TrainingService(Map<String, TrainingDAO> trainingDAOMap, Map<String, TrainerDAO> trainerDAOMap) {
+        this.trainingDAOMap = trainingDAOMap;
+        this.trainerDAOMap = trainerDAOMap;
     }
 
-    public Optional<Training> create(Training training) {
-        TrainingType trainingType = training.getType();
-        TrainingType trainerSpecialization;
-        Optional<Trainer> optionalTrainer = trainerDAO.getById(training.getTrainerId());
+    @Setter
+    private TrainingDAO trainingDAO;
 
-        if (optionalTrainer.isEmpty()) {
-            log.warn("There is no such trainer as indicated by training");
-            trainerSpecialization = null;
-        } else {
-            trainerSpecialization = optionalTrainer.get().getSpecialization();
-        }
+    @Setter
+    private TrainerDAO trainerDAO;
 
-        if (!areTrainingTypesMatching(trainingType, trainerSpecialization)) {
-            log.error("cannot create training, because the trainer has a different specialization");
-            return Optional.empty();
-        } else {
-            trainingDAO.create(training);
-            log.info(">>>> Creating training: " + training.getName());
-            return trainingDAO.getById(training.getId());
-        }
+    public void setTrainingDAOFromTrainingDAOMap(String nameOfDao) {
+        this.trainingDAO = trainingDAOMap.get(nameOfDao);
+    }
+
+    public void setTrainerDAOFromTrainerDAOMap(String nameOfDao) {
+        this.trainerDAO = trainerDAOMap.get(nameOfDao);
     }
 
     public Optional<Training> getById(int id) {
@@ -48,13 +48,71 @@ public class TrainingService {
         return trainingDAO.getById(id);
     }
 
-    private boolean areTrainingTypesMatching(TrainingType type1, TrainingType type2) {
+    @Transactional
+    public Optional<Training> create(Training training) {
+
+        TrainingType trainingType = training.getTrainingType();
+        TrainingType trainerSpecialization;
+        Optional<Trainer> optionalTrainer = Optional.ofNullable(training.getTrainer());
+
+        if (optionalTrainer.isEmpty()) {
+            log.info("There is no such trainer as indicated by training");
+            trainerSpecialization = null;
+        } else {
+
+            Optional<Trainer> trainerFromDb = trainerDAO.findByUsername(optionalTrainer.get().getUsername());
+            if (trainerFromDb.isEmpty()) {
+                log.error("Cannot create training, because the trainer does not exist");
+                return Optional.empty();
+            }
+
+            trainerSpecialization = optionalTrainer.get().getSpecialization();
+        }
+
+        if (areMismatchingTrainingTypes(trainingType, trainerSpecialization)) {
+            log.error("cannot create training, because the trainer has a different specialization");
+            return Optional.empty();
+        }
+
+        try {
+            trainingDAO.create(training);
+            log.info(">>>> Creating training: " + training.getTrainingName());
+            return trainingDAO.getById(training.getTrainingId());
+        } catch (Exception e) {
+            log.error("something went wrong", e);
+            return Optional.empty();
+        }
+    }
+
+    public List<Training> getTrainingsByTraineeAndOtherFilters(
+            String traineeUsername,
+            Date startDate,
+            Date endDate,
+            String trainerUsername,
+            String trainingTypeName) {
+        return trainingDAO.getTrainingsByTraineeAndOtherFilters(
+                traineeUsername, startDate, endDate, trainerUsername, trainingTypeName);
+    }
+
+    public List<Training> getTrainingsByTrainerAndOtherFilters(
+            String trainerUsername,
+            Date startDate,
+            Date endDate,
+            String traineeUsername) {
+        return trainingDAO.getTrainingsByTrainerAndOtherFilters(
+                trainerUsername, startDate, endDate, traineeUsername);
+    }
+
+    private boolean areMismatchingTrainingTypes(TrainingType type1, TrainingType type2) {
         boolean matching = false;
+
         if (type1 != null && type2 != null) {
             matching = type1.equals(type2);
-        } else if (type1 == null && type2 == null) {
+        }
+
+        if (type1 == null && type2 == null) {
             matching = true;
         }
-        return matching;
+        return !matching;
     }
 }

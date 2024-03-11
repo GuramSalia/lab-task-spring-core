@@ -2,9 +2,12 @@ package com.epam.labtaskspringcore.utils;
 
 import com.epam.labtaskspringcore.config.ApplicationContextProvider;
 import com.epam.labtaskspringcore.config.InMemoryStorage;
+import com.epam.labtaskspringcore.dao.TraineeDAODatabaseImpl;
+import com.epam.labtaskspringcore.dao.TrainerDAODatabaseImpl;
 import com.epam.labtaskspringcore.service.TraineeService;
 import com.epam.labtaskspringcore.service.TrainerService;
 import com.epam.labtaskspringcore.service.TrainingService;
+import com.epam.labtaskspringcore.service.TrainingTypeService;
 import org.springframework.context.ApplicationContext;
 
 public class BeanProvider {
@@ -15,15 +18,35 @@ public class BeanProvider {
         return context.getBean(InMemoryStorage.class);
     }
 
-    public static TrainerService getTrainerService() {
-        return context.getBean(TrainerService.class);
+    public static TraineeService getTraineeService(String daoImplementationName) {
+        TraineeService traineeService = context.getBean(TraineeService.class);
+        traineeService.setTraineeDAOFromTraineeDAOMap(daoImplementationName);
+        return traineeService;
     }
 
-    public static TraineeService getTraineeService() {
-        return context.getBean(TraineeService.class);
+    public static TrainerService getTrainerService(String daoImplNameForTrainer, String daoImplNameForTrainee) {
+        TrainerService trainerService = context.getBean(TrainerService.class);
+        trainerService.setTrainerDAOFromTrainerDAOMap(daoImplNameForTrainer);
+        trainerService.setTraineeDAOFromTraineeDAOMap(daoImplNameForTrainee);
+        return trainerService;
     }
 
-    public static TrainingService getTrainingService() {
-        return context.getBean(TrainingService.class);
+    public static TrainingService getTrainingService(String daoImplNameForTraining, String daoImplNameForTrainer) {
+        TrainingService trainingService = context.getBean(TrainingService.class);
+        trainingService.setTrainingDAOFromTrainingDAOMap(daoImplNameForTraining);
+        trainingService.setTrainerDAOFromTrainerDAOMap(daoImplNameForTrainer);
+        return trainingService;
+    }
+
+    public static TrainingTypeService getTrainingTypeService() {
+        return context.getBean(TrainingTypeService.class);
+    }
+
+    public static TraineeDAODatabaseImpl getTraineeDAODatabaseImpl() {
+        return context.getBean(TraineeDAODatabaseImpl.class);
+    }
+
+    public static TrainerDAODatabaseImpl getTrainerDAODatabaseImpl() {
+        return context.getBean(TrainerDAODatabaseImpl.class);
     }
 }

@@ -1,7 +1,9 @@
 package com.epam.labtaskspringcore.model;
+
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 class TrainerTest {
 
     private Trainer trainer1;
@@ -16,7 +18,6 @@ class TrainerTest {
         trainer3 = new Trainer();
         trainer4 = new Trainer();
     }
-
 
     @Nested
     @DisplayName("when testing getters and setters")
@@ -79,74 +80,55 @@ class TrainerTest {
 
         @Test
         void testSettersActive() {
-            trainer1.setActive(true);
-            trainer2.setActive(false);
-            trainer3.setActive(true);
-            trainer4.setActive(false);
+            trainer1.setIsActive(true);
+            trainer2.setIsActive(false);
+            trainer3.setIsActive(true);
+            trainer4.setIsActive(false);
             assertAll(
-                    () -> assertTrue(trainer1.isActive()),
-                    () -> assertFalse(trainer2.isActive()),
-                    () -> assertTrue(trainer3.isActive()),
-                    () -> assertFalse(trainer4.isActive())
+                    () -> assertTrue(trainer1.getIsActive()),
+                    () -> assertFalse(trainer2.getIsActive()),
+                    () -> assertTrue(trainer3.getIsActive()),
+                    () -> assertFalse(trainer4.getIsActive())
                      );
         }
 
         @Test
         void testSettersId() {
-            trainer1.setId(1);
-            trainer2.setId(2);
-            trainer3.setId(3);
-            trainer4.setId(4);
+            trainer1.setUserId(1);
+            trainer2.setUserId(2);
+            trainer3.setUserId(3);
+            trainer4.setUserId(4);
 
             assertAll(
-                    () -> assertEquals(1, trainer1.getId()),
-                    () -> assertEquals(2, trainer2.getId()),
-                    () -> assertEquals(3, trainer3.getId()),
-                    () -> assertEquals(4, trainer4.getId())
+                    () -> assertEquals(1, trainer1.getUserId()),
+                    () -> assertEquals(2, trainer2.getUserId()),
+                    () -> assertEquals(3, trainer3.getUserId()),
+                    () -> assertEquals(4, trainer4.getUserId())
                      );
         }
 
         @Test
         void testSettersSpecialization() {
-            trainer1.setSpecialization(TrainingType.YOGA);
-            trainer2.setSpecialization(TrainingType.PERSONAL);
-            trainer3.setSpecialization(TrainingType.CARDIO);
-            trainer4.setSpecialization(TrainingType.STRENGTH);
-            assertAll(
-                    () -> assertEquals(TrainingType.YOGA, trainer1.getSpecialization()),
-                    () -> assertEquals(TrainingType.PERSONAL, trainer2.getSpecialization()),
-                    () -> assertEquals(TrainingType.CARDIO, trainer3.getSpecialization()),
-                    () -> assertEquals(TrainingType.STRENGTH, trainer4.getSpecialization())
-                     );
 
+            TrainingType YOGA = new TrainingType();
+            YOGA.setTrainingType(TrainingType.TrainingTypeEnum.YOGA);
+            TrainingType PERSONAL = new TrainingType();
+            PERSONAL.setTrainingType(TrainingType.TrainingTypeEnum.PERSONAL);
+            TrainingType CARDIO = new TrainingType();
+            CARDIO.setTrainingType(TrainingType.TrainingTypeEnum.CARDIO);
+            TrainingType STRENGTH = new TrainingType();
+            STRENGTH.setTrainingType(TrainingType.TrainingTypeEnum.STRENGTH);
+
+            trainer1.setSpecialization(YOGA);
+            trainer2.setSpecialization(PERSONAL);
+            trainer3.setSpecialization(CARDIO);
+            trainer4.setSpecialization(STRENGTH);
+            assertAll(
+                    () -> assertEquals(YOGA, trainer1.getSpecialization()),
+                    () -> assertEquals(PERSONAL, trainer2.getSpecialization()),
+                    () -> assertEquals(CARDIO, trainer3.getSpecialization()),
+                    () -> assertEquals(STRENGTH, trainer4.getSpecialization())
+                     );
         }
     }
-
-//    @Test
-//    void setFirstName() {
-//    }
-//
-//    @Test
-//    void setLastName() {
-//    }
-//
-//    @Test
-//    void setUsername() {
-//    }
-//
-//    @Test
-//    void setPassword() {
-//    }
-//
-//    @Test
-//    void setActive() {
-//    }
-//
-//    @Test
-//    void setId() {
-//    }
-//
-//    @Test
-//    void setSpecialization() {
-//    }
 }

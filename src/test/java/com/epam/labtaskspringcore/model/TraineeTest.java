@@ -1,9 +1,12 @@
 package com.epam.labtaskspringcore.model;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("when having Trainee instance")
@@ -83,30 +86,30 @@ class TraineeTest {
 
         @Test
         void testSettersActive() {
-            trainee1.setActive(true);
-            trainee2.setActive(false);
-            trainee3.setActive(true);
-            trainee4.setActive(false);
+            trainee1.setIsActive(true);
+            trainee2.setIsActive(false);
+            trainee3.setIsActive(true);
+            trainee4.setIsActive(false);
             assertAll(
-                    () -> assertTrue(trainee1.isActive()),
-                    () -> assertFalse(trainee2.isActive()),
-                    () -> assertTrue(trainee3.isActive()),
-                    () -> assertFalse(trainee4.isActive())
+                    () -> assertTrue(trainee1.getIsActive()),
+                    () -> assertFalse(trainee2.getIsActive()),
+                    () -> assertTrue(trainee3.getIsActive()),
+                    () -> assertFalse(trainee4.getIsActive())
                      );
         }
 
         @Test
         void testSettersId() {
-            trainee1.setId(1);
-            trainee2.setId(2);
-            trainee3.setId(3);
-            trainee4.setId(4);
+            trainee1.setUserId(1);
+            trainee2.setUserId(2);
+            trainee3.setUserId(3);
+            trainee4.setUserId(4);
 
             assertAll(
-                    () -> assertEquals(1, trainee1.getId()),
-                    () -> assertEquals(2, trainee2.getId()),
-                    () -> assertEquals(3, trainee3.getId()),
-                    () -> assertEquals(4, trainee4.getId())
+                    () -> assertEquals(1, trainee1.getUserId()),
+                    () -> assertEquals(2, trainee2.getUserId()),
+                    () -> assertEquals(3, trainee3.getUserId()),
+                    () -> assertEquals(4, trainee4.getUserId())
                      );
         }
 

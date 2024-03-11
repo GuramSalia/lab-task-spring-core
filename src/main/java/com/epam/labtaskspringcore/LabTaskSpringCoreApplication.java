@@ -1,6 +1,5 @@
 package com.epam.labtaskspringcore;
 
-import com.epam.labtaskspringcore.config.ApplicationContextProvider;
 import com.epam.labtaskspringcore.config.InMemoryStorage;
 import com.epam.labtaskspringcore.model.Trainee;
 import com.epam.labtaskspringcore.model.Trainer;
@@ -9,12 +8,14 @@ import com.epam.labtaskspringcore.model.TrainingType;
 import com.epam.labtaskspringcore.service.TraineeService;
 import com.epam.labtaskspringcore.service.TrainerService;
 import com.epam.labtaskspringcore.service.TrainingService;
+import com.epam.labtaskspringcore.service.TrainingTypeService;
 import com.epam.labtaskspringcore.utils.BeanProvider;
+import com.epam.labtaskspringcore.utils.Helper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @SpringBootApplication
@@ -23,111 +24,228 @@ public class LabTaskSpringCoreApplication {
 
         SpringApplication.run(LabTaskSpringCoreApplication.class, args);
 
-        InMemoryStorage inMemoryStorage = BeanProvider.getInMemoryStorage();
-        TrainerService trainerService = BeanProvider.getTrainerService();
-        TraineeService traineeService = BeanProvider.getTraineeService();
-        TrainingService trainingService = BeanProvider.getTrainingService();
+        TrainingTypeService trainingTypeService = BeanProvider.getTrainingTypeService();
+        TrainingType PILATES = trainingTypeService.getTrainingType(TrainingType.TrainingTypeEnum.PILATES);
+        TrainingType YOGA = trainingTypeService.getTrainingType(TrainingType.TrainingTypeEnum.YOGA);
 
-        log.info("\n\tSTART\n");
-        log.info("list of TRAINEES:");
-        inMemoryStorage.getTrainees().values().stream().forEach(x -> log.info(x.toString()));
-        log.info("list of TRAINERS:");
-        inMemoryStorage.getTrainers().values().stream().forEach(x -> log.info(x.toString()));
-        log.info("list of TRAININGS:");
-        inMemoryStorage.getTrainings().values().stream().forEach(x -> log.info(x.toString()));
+        log.info(" ....... TASK-2 RELATED PART STARTS HERE  .......\n\n");
 
+        TraineeService traineeServiceWithDatabaseDao = BeanProvider
+                .getTraineeService("TRAINEE_DATABASE");
+        TrainerService trainerServiceWithDatabaseDao = BeanProvider
+                .getTrainerService("TRAINER_DATABASE", "TRAINEE_DATABASE");
+        TrainingService trainingServiceWithDatabaseDao = BeanProvider
+                .getTrainingService("TRAINING_DATABASE", "TRAINER_DATABASE");
 
-        log.info("\n \ttrainer 3 ");
-        Trainer trainer3 = new Trainer();
-        trainer3.setId(3);
-        trainer3.setFirstName("John");
-        trainer3.setLastName("Doe");
-        trainer3.setActive(true);
-        trainer3.setSpecialization(TrainingType.YOGA);
-        if (trainerService.create(trainer3).isEmpty()) {
-            log.error("could not create trainer");
-        } else {
-            Optional<Trainer> trainer3Optional = trainerService.getById(3);
-            if (trainer3Optional.isEmpty()) {
-                log.error("could not get trainer3");
-            } else {
-                log.info(trainer3Optional.get().toString());
-            }
+        Optional<Trainer> optionalTrainer1 = trainerServiceWithDatabaseDao.getById(1, "Tim.Smith", "123");
+        Optional<Trainer> optionalTrainer2 = trainerServiceWithDatabaseDao.getById(2,"Sam.Jones", "123");
+        Optional<Training> optionalTraining1 = trainingServiceWithDatabaseDao.getById(1);
+        Optional<Training> optionalTraining2 = trainingServiceWithDatabaseDao.getById(2);
+        Optional<Trainee> optionalTrainee1 = traineeServiceWithDatabaseDao.getById(3, "John.Doe", "123");
+        Optional<Trainee> optionalTrainee2 = traineeServiceWithDatabaseDao.getById(4, "Jane.Smith", "123");
+
+        log.info("list of TRAINEES from DB: \n");
+        optionalTrainee1.ifPresent(trainee -> log.info(trainee.toString()));
+        optionalTrainee2.ifPresent(trainee -> log.info(trainee.toString()));
+        log.info("list of TRAINERS from DB: \n");
+        optionalTrainer1.ifPresent(trainer -> log.info(trainer.toString()));
+        optionalTrainer2.ifPresent(trainer -> log.info(trainer.toString()));
+        log.info("list of TRAINEES from DB: \n");
+        optionalTraining1.ifPresent(training -> log.info(training.toString()));
+        optionalTraining2.ifPresent(training -> log.info(training.toString()));
+
+        log.info("   .....   With DB - create trainee 3");
+        Trainee trainee_3 = new Trainee();
+        Helper.setUpTrainee_3(trainee_3);
+        trainee_3.setTrainers(Set.of(optionalTrainer1.get(), optionalTrainer2.get()));
+        Optional<Trainee> trainee3SavedOptional = traineeServiceWithDatabaseDao.create(trainee_3);
+        trainee3SavedOptional.ifPresent(trainee -> log.info(trainee.getFirstName() + " saved"));
+        log.info("trainee_3 found by id of 5 :" + traineeServiceWithDatabaseDao.getById(5, "Dave.Miller", "123456").toString());
+        log.info("   -----   end  \n");
+
+        log.info("   .....   With DB - create trainee 4");
+        Trainee trainee_4 = new Trainee();
+        Helper.setUpTrainee_4(trainee_4);
+        Optional<Trainee> trainee4SavedOptional = traineeServiceWithDatabaseDao.create(trainee_4);
+        trainee4SavedOptional.ifPresent(trainee -> log.info(trainee.toString()));
+        log.info("   -----   end  \n");
+
+        log.info("   .....   With DB - update trainee_3");
+        Trainee trainee_3Saved = trainee3SavedOptional.get();
+        Helper.updateTrainee_3Saved(trainee_3Saved);
+        trainee3SavedOptional = traineeServiceWithDatabaseDao.update(
+                trainee_3Saved, trainee_3Saved.getUsername(), "123456");
+        trainee3SavedOptional.ifPresent(trainee -> log.info("Updated trainee_3: " + trainee.toString()));
+        log.info("   -----   end  \n");
+
+        log.info("   .....   With DB - getByUsername trainee_3");
+        trainee3SavedOptional = traineeServiceWithDatabaseDao.getByUsername("John.Doe1", "1122");
+        trainee3SavedOptional.ifPresent(trainee -> log.info(trainee.toString()));
+        log.info("   -----   end  \n");
+
+        log.info("   .....   With DB - updatePassword trainee_3");
+        trainee3SavedOptional = traineeServiceWithDatabaseDao
+                .updatePassword(trainee_3, trainee_3.getUsername(), "1122", "2233");
+        log.info("   -----   end  \n");
+
+        log.info("   .....   With DB - activateActiveTrainee trainee_3");
+        log.info("activateActiveTrainee trainee_3: ");
+        boolean activatedActive = traineeServiceWithDatabaseDao
+                .activateTrainee(trainee3SavedOptional.get(), trainee3SavedOptional.get().getUsername(), "2233");
+        log.info("activateActiveTrainee trainee_3: " + activatedActive);
+
+        log.info("deactivateActiveTrainee trainee_3:");
+        boolean deactivatedActive = traineeServiceWithDatabaseDao
+                .deactivateTrainee(trainee3SavedOptional.get(), trainee3SavedOptional.get().getUsername(), "2233");
+        log.info("deactivateActiveTrainee trainee_3: " + deactivatedActive);
+
+        log.info("deactivateInactiveTrainee trainee_3:");
+        boolean deactivatedInactive = traineeServiceWithDatabaseDao
+                .deactivateTrainee(trainee3SavedOptional.get(), trainee3SavedOptional.get().getUsername(), "2233");
+        log.info("deactivateInactiveTrainee trainee_3: " + deactivatedInactive);
+
+        log.info("activateInactiveTrainee trainee_3:");
+        boolean activatedInactive = traineeServiceWithDatabaseDao
+                .activateTrainee(trainee3SavedOptional.get(), trainee3SavedOptional.get().getUsername(), "2233");
+        log.info("activateInactiveTrainee trainee_3: " + activatedInactive);
+
+        log.info("   .....   With DB - delete trainee_Lucy");
+        Trainee lucy = new Trainee();
+        Helper.createLucy(lucy);
+        traineeServiceWithDatabaseDao.create(lucy);
+        log.info("Created trainee with id " + lucy.getUserId());
+        traineeServiceWithDatabaseDao.delete(lucy.getUsername(), "111");
+
+        log.info("   .....   With DB - create trainer Olivia");
+        Trainer olivia = new Trainer();
+        Helper.updateOlivia(olivia);
+        olivia.setSpecialization(PILATES);
+        trainerServiceWithDatabaseDao.create(olivia);
+
+        log.info(" .....   With DB - update trainer Olivia, new specification YOGA");
+        olivia.setSpecialization(YOGA);
+        olivia = trainerServiceWithDatabaseDao.update(olivia, olivia.getUsername(), "123").get();
+        log.info("updated trainer: " + olivia + " with new specialization: " + olivia
+                .getSpecialization());
+
+        log.info("updated trainer password: new password '321'");
+        olivia = trainerServiceWithDatabaseDao
+                .updatePassword(olivia, olivia.getUsername(), "123", "321").get();
+        log.info("updated trainer: " + olivia + " with new password: " + olivia.getPassword());
+
+        log.info("activate active trainer");
+        boolean result = trainerServiceWithDatabaseDao
+                .activateTrainer(olivia, olivia.getUsername(), "321");
+        log.info("activate active trainer: " + result);
+
+        log.info("deactivate active trainer");
+        boolean result2 = trainerServiceWithDatabaseDao
+                .deactivateTrainer(olivia, olivia.getUsername(), "321");
+        log.info("deactivate active trainer: " + result2);
+
+        log.info("deactivate inactive trainer");
+        boolean result3 = trainerServiceWithDatabaseDao
+                .deactivateTrainer(olivia, olivia.getUsername(), "321");
+        log.info("deactivate inactive trainer: " + result3);
+
+        log.info("activate inactive trainer");
+        boolean result4 = trainerServiceWithDatabaseDao
+                .activateTrainer(olivia, olivia.getUsername(), "321");
+        log.info("deactivate inactive trainer: " + result4);
+
+        log.info("create training with trainer of the same type");
+
+        Optional<Trainee> trainee_3Optional = traineeServiceWithDatabaseDao.getByUsername("John.Doe1", "2233");
+        if (trainee_3Optional.isPresent()) {
+            trainee_3 = trainee_3Optional.get();
         }
-        log.info("\t end of trainer 3 \n");
 
-        log.info("\n \ttrainer 4 ");
-        Trainer trainer4 = new Trainer();
-        trainer4.setId(4);
-        trainer4.setFirstName("John");
-        trainer4.setLastName("Doe");
-        trainer4.setActive(true);
-        trainer4.setSpecialization(TrainingType.YOGA);
-        if (trainerService.create(trainer4).isEmpty()) {
-            log.error("could not create trainer");
-        } else {
-            Optional<Trainer> trainer4Optional = trainerService.getById(3);
-            if (trainer4Optional.isEmpty()) {
-                log.error("could not get trainer3");
-            } else {
-                log.info(trainer4Optional.get().toString());
-            }
-        }
-        log.info("\t end of trainer 4 \n");
+        Training training_3 = new Training();
+        Helper.setUpTraining_3(training_3, olivia, trainee_3);
+        training_3.setTrainingType(PILATES);
+        Optional<Training> training3_Optional = trainingServiceWithDatabaseDao.create(training_3);
+        Helper.logResultOfTraing3Creation(training3_Optional, olivia, training_3);
 
-        log.info("\n \ttraining 3 ");
-        Training training3 = new Training();
-        training3.setId(3);
-        training3.setTraineeId(2);
-        training3.setTrainerId(3);
-        training3.setName("personal training");
-        training3.setType(TrainingType.PERSONAL);
-        training3.setDurationInMinutes(30);
-        if (trainingService.create(training3).isEmpty()) {
-            log.error("could not create training");
-        } else {
-            Optional<Training> training3Optional = trainingService.getById(3);
-            if (training3Optional.isEmpty()) {
-                log.error("could not get training3");
-            } else {
-                log.info(training3Optional.get().toString());
-            }
-        }
-        log.info("\tend of training 3 \n");
+        log.info("create training with trainer of the different training type");
+        Training training_4 = new Training();
+        Helper.setUpTraining_4(training_4, olivia, trainee_3);
+        training_4.setTrainingType(YOGA);
+        Optional<Training> training4_Optional = trainingServiceWithDatabaseDao.create(training_4);
+        Optional<Training> optional = trainingServiceWithDatabaseDao.create(training_4);
+        Helper.logResultOfTraing4Creation(optional, olivia, training_4);
 
-        log.info("\n \ttraining 4 ");
-        Training training4 = new Training();
-        training4.setId(4);
-        training4.setTraineeId(4);
-        training4.setTrainerId(3);
-        training4.setName("Yoga training");
-        training4.setType(TrainingType.YOGA);
-        training4.setDurationInMinutes(30);
-        if (trainingService.create(training4).isEmpty()) {
-            log.error("could not create training");
-        } else {
-            Optional<Training> training4Optional = trainingService.getById(4);
-            if (training4Optional.isEmpty()) {
-                log.error("could not get training3");
-            } else {
-                log.info(training4Optional.get().toString());
-            }
-        }
-        log.info("\tend of training 4 \n");
+        log.info("deleting trainee cascades to deleting training");
+        traineeServiceWithDatabaseDao.delete("John.Doe1", "2233");
 
-        // updated trainee with id=2
-        log.info("\n trainee id=2");
-        if (traineeService.getById(2).isEmpty()) {
-            log.error("No training with id=2 exists");
-        } else {
-            Trainee trainee2 = traineeService.getById(2).get();
-            trainee2.setLastName("Schmidt");
-            if (traineeService.update(trainee2).isEmpty()) {
-                log.error("could not update trainee2");
-            } else {
-                log.info(traineeService.getById(2).get().toString());
-            }
+        log.info("\n\n>>>> START with JPQL  ==============\n");
+
+        log.info("list of trainers:\n\n"
+                         + trainerServiceWithDatabaseDao.findUnassignedTrainersByTraineeUsername("John.Doe", "123"));
+
+        log.info("trainee with username:\n\n"
+                         + traineeServiceWithDatabaseDao.findByUsernameWithQuery("John.Doe", "123"));
+
+        String traineeUsername = "John.Doe";
+        String trainerUsername = "Tim.Smith";
+        Calendar cal = Calendar.getInstance();
+        cal.set(2020, Calendar.APRIL, 25);
+        Date fromDate = cal.getTime();
+        cal.set(2025, Calendar.APRIL, 25);
+        Date toDate = cal.getTime();
+        java.sql.Date sqlFromDate = new java.sql.Date(fromDate.getTime());
+        java.sql.Date sqlToDate = new java.sql.Date(toDate.getTime());
+
+        log.info("trainee with username:  \n\n" + trainingServiceWithDatabaseDao.getTrainingsByTraineeAndOtherFilters(
+                traineeUsername,
+                sqlFromDate,
+                sqlToDate,
+                trainerUsername,
+                "CARDIO"));
+
+        log.info("trainer with username:  \n\n" + trainingServiceWithDatabaseDao.getTrainingsByTrainerAndOtherFilters(
+                trainerUsername,
+                sqlFromDate,
+                sqlToDate,
+                traineeUsername));
+
+        // in db I have trainers with USER_IDs 1 (Tim.Smith, 123), 2 (Sam.Jones, 123) and 8 (Olivia.Bruno, 321).
+        // Trainee with id 4 (Jane.Smith, 123) has one trainer with USER_ID 1
+        // get trainee with id 4 and set trainers containing trainers with USER_ID: 2 and 8
+        Trainee jane = null;
+        Trainer sam = null;
+        olivia = null;
+
+        Optional<Trainee> janeOptional = traineeServiceWithDatabaseDao.getByUsername("Jane.Smith", "123");
+        if (janeOptional.isPresent()) {
+            jane = janeOptional.get();
         }
-        log.info("\tend of trainee id=2 \n");
+
+        Optional<Trainer> samOptional = trainerServiceWithDatabaseDao.getByUsername("Sam.Jones", "123");
+        if (samOptional.isPresent()) {
+            sam = samOptional.get();
+        }
+
+        Optional<Trainer> oliviaOptional = trainerServiceWithDatabaseDao.getByUsername("Olivia.Bruno", "321");
+        if (oliviaOptional.isPresent()) {
+            olivia = oliviaOptional.get();
+        }
+
+        log.info("jane: " + jane);
+        log.info("sam: " + sam);
+        log.info("olivia: " + olivia);
+
+        Set<Trainer> trainers = new HashSet<Trainer>();
+        trainers.add(sam);
+        trainers.add(olivia);
+        assert jane != null;
+        jane.setTrainers(trainers);
+
+        Optional<Trainee> updatedJaneOptional = traineeServiceWithDatabaseDao.update(jane, jane.getUsername(), "123");
+        if (updatedJaneOptional.isPresent()) {
+            jane = updatedJaneOptional.get();
+            log.info("updated trainee: " + jane);
+            log.info("updated trainee trainers: " + jane.getTrainers());
+        }
+        log.info("\n\n>>>> END  ==============\n");
     }
 }
