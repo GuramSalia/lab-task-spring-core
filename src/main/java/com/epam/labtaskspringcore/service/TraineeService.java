@@ -244,4 +244,8 @@ public class TraineeService {
         }
         return traineeDAO.findByUsernameWithQuery(username);
     }
+
+    public Optional<Trainee> findByUsernameAndPassword(String username, String password) {
+        return traineeDAO.findByUsernameAndPassword(username, password);
+    }
 }

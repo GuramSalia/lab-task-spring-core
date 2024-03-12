@@ -218,4 +218,8 @@ public class TrainerService {
 
         return trainers;
     }
+
+    public Optional<Trainer> findByUsernameAndPassword(String username, String password) {
+        return trainerDAO.findByUsernameAndPassword(username, password);
+    }
 }

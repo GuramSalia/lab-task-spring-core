@@ -1,8 +1,13 @@
 package com.epam.labtaskspringcore.service;
 
+import com.epam.labtaskspringcore.model.Trainee;
+import com.epam.labtaskspringcore.model.Trainer;
 import com.epam.labtaskspringcore.model.User;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -41,4 +46,10 @@ public class UserService {
     public boolean isInvalidUser(User user) {
         return !isValidUser(user);
     }
+
+    public User findUserByUsername(String username) {
+        log.info("'findUserByUsername' method is not implemented in UserService");
+        return null;
+    }
+
 }
