@@ -26,7 +26,7 @@ public class UserController {
         this.trainerService = trainerService;
     }
 
-    @GetMapping("/user/login")
+    @PostMapping("/user/login")
     public ResponseEntity<?> login(HttpServletRequest request,
                                    HttpServletResponse response,
                                    @RequestBody UsernamePassword usernamePassword) {
@@ -37,7 +37,17 @@ public class UserController {
         //     b.	Response
         //        I.	200 OK
 
-        return null;
+        Optional<Trainee> trainee = traineeService.findByUsernameAndPassword(usernamePassword.getUsername(),
+                                                                             usernamePassword.getPassword());
+        Optional<Trainer> trainer = trainerService.findByUsernameAndPassword(usernamePassword.getUsername(),
+                                                                             usernamePassword.getPassword());
+        boolean success = false;
+
+        if (trainee.isPresent() || trainer.isPresent()) {
+            return ResponseEntity.ok().build();
+        }
+
+        return ResponseEntity.badRequest().build();
     }
 
     @PutMapping("/user/login")
@@ -56,7 +66,7 @@ public class UserController {
                                                                              usernamePassword.getOldPassword());
         Optional<Trainer> trainer = trainerService.findByUsernameAndPassword(usernamePassword.getUsername(),
                                                                              usernamePassword.getOldPassword());
-        Boolean success = false;
+        boolean success = false;
 
         if (trainee.isPresent()) {
             traineeService.updatePassword(
