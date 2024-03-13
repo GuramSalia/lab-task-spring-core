@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
-@Primary
 @Repository("TRAINEE_IN_MEMORY")
 public class TraineeDAOInMemoryStorageImpl implements TraineeDAO {
     private final Map<Integer, Trainee> trainees;

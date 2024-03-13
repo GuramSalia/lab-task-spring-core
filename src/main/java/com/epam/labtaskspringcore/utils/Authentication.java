@@ -14,7 +14,7 @@ public class Authentication {
 
     public <T extends ImplementsFindByUsernameAndPassword, U extends User> boolean isAuthenticated(
             T t, String username, String password
-                                                                                                         ) {
+                                                                                                  ) {
         U userInDb;
         try {
             Optional<U> uOptional = t.findByUsernameAndPassword(username, password);

@@ -15,7 +15,6 @@ import java.util.Optional;
 
 @Slf4j
 @Repository("TRAINER_IN_MEMORY")
-@Primary
 public class TrainerDAOInMemoryStorageImpl implements TrainerDAO {
     private final Map<Integer, Trainer> trainers;
 

@@ -6,8 +6,10 @@ import com.epam.labtaskspringcore.payloads.PasswordUpdateRequest;
 import com.epam.labtaskspringcore.payloads.UsernamePassword;
 import com.epam.labtaskspringcore.service.TraineeService;
 import com.epam.labtaskspringcore.service.TrainerService;
+import com.epam.labtaskspringcore.utils.ControllerAuthentication;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,35 +21,26 @@ public class UserController {
 
     private final TraineeService traineeService;
     private final TrainerService trainerService;
+    private final ControllerAuthentication controllerAuthentication;
 
     @Autowired
-    public UserController(TraineeService traineeService, TrainerService trainerService) {
+    public UserController(TraineeService traineeService, TrainerService trainerService,
+                          ControllerAuthentication controllerAuthentication) {
         this.traineeService = traineeService;
         this.trainerService = trainerService;
+        this.controllerAuthentication = controllerAuthentication;
     }
 
     @PostMapping("/user/login")
     public ResponseEntity<?> login(HttpServletRequest request,
                                    HttpServletResponse response,
-                                   @RequestBody UsernamePassword usernamePassword) {
+                                   @Valid @RequestBody UsernamePassword usernamePassword) {
 
-        //     a.	Request
-        //        I.	Username (required)
-        //        II.    Password (required)
-        //     b.	Response
-        //        I.	200 OK
 
-        Optional<Trainee> trainee = traineeService.findByUsernameAndPassword(usernamePassword.getUsername(),
-                                                                             usernamePassword.getPassword());
-        Optional<Trainer> trainer = trainerService.findByUsernameAndPassword(usernamePassword.getUsername(),
-                                                                             usernamePassword.getPassword());
-        boolean success = false;
-
-        if (trainee.isPresent() || trainer.isPresent()) {
-            return ResponseEntity.ok().build();
-        }
-
-        return ResponseEntity.badRequest().build();
+        String username = usernamePassword.getUsername();
+        String password = usernamePassword.getPassword();
+        controllerAuthentication.performAuthentication(username, password);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/user/login")
@@ -55,42 +48,19 @@ public class UserController {
                                             HttpServletResponse response,
                                             @RequestBody PasswordUpdateRequest usernamePassword) {
 
-        //   a.	Request
-        //        I.	Username (required)
-        //        II.	Old Password (required)
-        //        III.	New Password (required)
-        //   b.	Response
-        //        I.	200 OK
+        String username = usernamePassword.getUsername();
+        String oldPassword = usernamePassword.getOldPassword();
+        String newPassword = usernamePassword.getNewPassword();
 
-        Optional<Trainee> trainee = traineeService.findByUsernameAndPassword(usernamePassword.getUsername(),
-                                                                             usernamePassword.getOldPassword());
-        Optional<Trainer> trainer = trainerService.findByUsernameAndPassword(usernamePassword.getUsername(),
-                                                                             usernamePassword.getOldPassword());
-        boolean success = false;
+        controllerAuthentication.performAuthentication(username, oldPassword);
 
-        if (trainee.isPresent()) {
-            traineeService.updatePassword(
-                    trainee.get(),
-                    usernamePassword.getUsername(),
-                    usernamePassword.getOldPassword(),
-                    usernamePassword.getNewPassword());
+        Optional<Trainee> traineeOptional = traineeService.findByUsernameAndPassword(username, oldPassword);
+        Optional<Trainer> trainerOptional = trainerService.findByUsernameAndPassword(username, oldPassword);
 
-            success = true;
-        }
-        if (trainer.isPresent()) {
-            trainerService.updatePassword(
-                    trainer.get(),
-                    usernamePassword.getUsername(),
-                    usernamePassword.getOldPassword(),
-                    usernamePassword.getNewPassword());
+        traineeOptional.ifPresent(trainee -> traineeService.updatePassword(trainee, username, oldPassword, newPassword));
+        trainerOptional.ifPresent(trainer -> trainerService.updatePassword(trainer, username, oldPassword, newPassword));
 
-            success = true;
-        }
+        return ResponseEntity.ok().build();
 
-        if (success) {
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.badRequest().build();
-        }
     }
 }

@@ -4,12 +4,14 @@ import com.epam.labtaskspringcore.model.Trainee;
 import com.epam.labtaskspringcore.repository.TraineeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
 @Slf4j
+@Primary
 @Repository("TRAINEE_DATABASE")
 public class TraineeDAODatabaseImpl implements TraineeDAO {
     private final TraineeRepository traineeRepository;
@@ -60,3 +62,5 @@ public class TraineeDAODatabaseImpl implements TraineeDAO {
         return traineeRepository.findByUsernameWithQuery(username);
     }
 }
+
+

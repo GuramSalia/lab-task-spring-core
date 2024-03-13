@@ -1,5 +1,8 @@
 package com.epam.labtaskspringcore.payloads;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -8,7 +11,11 @@ import lombok.extern.slf4j.Slf4j;
 @Setter
 @Slf4j
 public class UsernamePassword {
+    @NotBlank(message="username not specified")
+    @Size(min = 1, message="username must not be blank")
     String username;
+    @NotBlank(message="password not specified")
+    @Size(min = 1, message="password must not be blank")
     String password;
 
     public UsernamePassword(String username, String password) {
