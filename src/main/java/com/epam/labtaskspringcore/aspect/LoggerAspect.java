@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class LoggerAspect {
 
-    @Around("execution(* com.epam.labtaskspringcore.controller.UserController.login(..))")
-    public void logTransaction(ProceedingJoinPoint joinPoint) {
-
-    }
+//    @Around("execution(* com.epam.labtaskspringcore.controller.UserController.login(..))")
+//    public void logTransaction(ProceedingJoinPoint joinPoint) {
+//
+//    }
 }
