@@ -1,5 +1,6 @@
 package com.epam.labtaskspringcore.controller;
 
+import com.epam.labtaskspringcore.aspect.AuthenticateAspect;
 import com.epam.labtaskspringcore.model.Trainee;
 import com.epam.labtaskspringcore.model.Trainer;
 import com.epam.labtaskspringcore.payloads.PasswordUpdateRequest;
@@ -33,6 +34,7 @@ public class UserController {
         this.controllerAuthentication = controllerAuthentication;
     }
 
+    @AuthenticateAspect
     @PostMapping("/user/login")
     public ResponseEntity<?> login(HttpServletRequest request,
                                    HttpServletResponse response,

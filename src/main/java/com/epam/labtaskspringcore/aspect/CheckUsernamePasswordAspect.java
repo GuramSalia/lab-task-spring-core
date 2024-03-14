@@ -21,7 +21,8 @@ public class CheckUsernamePasswordAspect {
         this.controllerAuthentication = controllerAuthentication;
     }
 
-    @Before("execution(* com.epam.labtaskspringcore.controller.UserController.login(..))")
+    //    @Before("execution(* com.epam.labtaskspringcore.controller.UserController.login(..))")
+    @Before("@annotation(com.epam.labtaskspringcore.aspect.AuthenticateAspect)")
     public void checkUsernamePassword(JoinPoint joinPoint) throws Throwable {
         Object[] args = joinPoint.getArgs();
         boolean isUsernamePasswordInArgs = false;
@@ -29,7 +30,6 @@ public class CheckUsernamePasswordAspect {
         String username = null;
         String password = null;
 
-        // Loop through the arguments to find UsernamePassword object
         for (Object arg : args) {
             if (arg instanceof UsernamePassword) {
                 isUsernamePasswordInArgs = true;
