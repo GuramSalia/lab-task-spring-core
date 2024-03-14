@@ -24,14 +24,12 @@ public class UserController {
 
     private final TraineeService traineeService;
     private final TrainerService trainerService;
-    private final ControllerAuthentication controllerAuthentication;
 
     @Autowired
-    public UserController(TraineeService traineeService, TrainerService trainerService,
-                          ControllerAuthentication controllerAuthentication) {
+    public UserController(TraineeService traineeService, TrainerService trainerService
+                         ) {
         this.traineeService = traineeService;
         this.trainerService = trainerService;
-        this.controllerAuthentication = controllerAuthentication;
     }
 
     @AuthenticateAspect
@@ -40,10 +38,9 @@ public class UserController {
                                    HttpServletResponse response,
                                    @Valid @RequestBody UsernamePassword usernamePassword) {
 
-
         String username = usernamePassword.getUsername();
         String password = usernamePassword.getPassword();
-//        controllerAuthentication.performAuthentication(username, password);
+        //        controllerAuthentication.performAuthentication(username, password);
         log.warn("before response");
         return ResponseEntity.ok().build();
     }
@@ -52,21 +49,22 @@ public class UserController {
     @PutMapping("/user/login")
     public ResponseEntity<?> updatePassword(HttpServletRequest request,
                                             HttpServletResponse response,
-                                            @RequestBody PasswordUpdateRequest usernamePassword) {
+                                            @Valid @RequestBody PasswordUpdateRequest usernamePassword) {
 
         String username = usernamePassword.getUsername();
         String currentPassword = usernamePassword.getPassword();
         String newPassword = usernamePassword.getNewPassword();
 
-//        controllerAuthentication.performAuthentication(username, currentPassword);
+        //        controllerAuthentication.performAuthentication(username, currentPassword);
 
         Optional<Trainee> traineeOptional = traineeService.findByUsernameAndPassword(username, currentPassword);
         Optional<Trainer> trainerOptional = trainerService.findByUsernameAndPassword(username, currentPassword);
 
-        traineeOptional.ifPresent(trainee -> traineeService.updatePassword(trainee, username, currentPassword, newPassword));
-        trainerOptional.ifPresent(trainer -> trainerService.updatePassword(trainer, username, currentPassword, newPassword));
+        traineeOptional.ifPresent(trainee -> traineeService.updatePassword(trainee, username, currentPassword,
+                                                                           newPassword));
+        trainerOptional.ifPresent(trainer -> trainerService.updatePassword(trainer, username, currentPassword,
+                                                                           newPassword));
 
         return ResponseEntity.ok().build();
-
     }
 }

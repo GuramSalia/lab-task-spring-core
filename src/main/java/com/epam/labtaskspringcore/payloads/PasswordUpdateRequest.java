@@ -8,8 +8,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class PasswordUpdateRequest extends UsernamePassword {
-
-    @NotBlank
+    @NotBlank(message = "newPassword must not be blank")
     private String newPassword;
 
     public PasswordUpdateRequest(String username, String password, String newPassword) {
