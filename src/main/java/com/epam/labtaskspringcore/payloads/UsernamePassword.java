@@ -13,10 +13,10 @@ import lombok.extern.slf4j.Slf4j;
 public class UsernamePassword {
     @NotBlank(message="username not specified")
     @Size(min = 1, message="username must not be blank")
-    String username;
+    protected String username;
     @NotBlank(message="password not specified")
     @Size(min = 1, message="password must not be blank")
-    String password;
+    protected String password;
 
     public UsernamePassword(String username, String password) {
         this.username = username;

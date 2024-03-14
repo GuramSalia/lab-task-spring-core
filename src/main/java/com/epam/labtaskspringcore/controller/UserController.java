@@ -48,22 +48,23 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @AuthenticateAspect
     @PutMapping("/user/login")
     public ResponseEntity<?> updatePassword(HttpServletRequest request,
                                             HttpServletResponse response,
                                             @RequestBody PasswordUpdateRequest usernamePassword) {
 
         String username = usernamePassword.getUsername();
-        String oldPassword = usernamePassword.getOldPassword();
+        String currentPassword = usernamePassword.getPassword();
         String newPassword = usernamePassword.getNewPassword();
 
-        controllerAuthentication.performAuthentication(username, oldPassword);
+//        controllerAuthentication.performAuthentication(username, currentPassword);
 
-        Optional<Trainee> traineeOptional = traineeService.findByUsernameAndPassword(username, oldPassword);
-        Optional<Trainer> trainerOptional = trainerService.findByUsernameAndPassword(username, oldPassword);
+        Optional<Trainee> traineeOptional = traineeService.findByUsernameAndPassword(username, currentPassword);
+        Optional<Trainer> trainerOptional = trainerService.findByUsernameAndPassword(username, currentPassword);
 
-        traineeOptional.ifPresent(trainee -> traineeService.updatePassword(trainee, username, oldPassword, newPassword));
-        trainerOptional.ifPresent(trainer -> trainerService.updatePassword(trainer, username, oldPassword, newPassword));
+        traineeOptional.ifPresent(trainee -> traineeService.updatePassword(trainee, username, currentPassword, newPassword));
+        trainerOptional.ifPresent(trainer -> trainerService.updatePassword(trainer, username, currentPassword, newPassword));
 
         return ResponseEntity.ok().build();
 

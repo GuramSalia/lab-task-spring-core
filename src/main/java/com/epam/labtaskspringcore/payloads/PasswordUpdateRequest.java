@@ -1,18 +1,19 @@
 package com.epam.labtaskspringcore.payloads;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
+public class PasswordUpdateRequest extends UsernamePassword {
 
-
-@Data
-public class PasswordUpdateRequest {
-    private String username;
-    private String oldPassword;
+    @NotBlank
     private String newPassword;
 
-    public PasswordUpdateRequest(String username, String oldPassword, String newPassword) {
-        this.username = username;
-        this.oldPassword = oldPassword;
+    public PasswordUpdateRequest(String username, String password, String newPassword) {
+        super(username, password);
         this.newPassword = newPassword;
     }
 }

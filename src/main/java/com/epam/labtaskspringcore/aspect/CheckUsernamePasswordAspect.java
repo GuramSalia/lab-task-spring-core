@@ -25,21 +25,26 @@ public class CheckUsernamePasswordAspect {
     @Before("@annotation(com.epam.labtaskspringcore.aspect.AuthenticateAspect)")
     public void checkUsernamePassword(JoinPoint joinPoint) throws Throwable {
         Object[] args = joinPoint.getArgs();
-        boolean isUsernamePasswordInArgs = false;
+        boolean hasUsernamePassword = false;
         UsernamePassword usernamePassword;
         String username = null;
         String password = null;
 
         for (Object arg : args) {
             if (arg instanceof UsernamePassword) {
-                isUsernamePasswordInArgs = true;
+                hasUsernamePassword = true;
                 usernamePassword = (UsernamePassword) arg;
                 username = usernamePassword.getUsername();
                 password = usernamePassword.getPassword();
+
+                if (username == null || username.isEmpty() || password == null || password.isEmpty()) {
+                    hasUsernamePassword = false;
+                }
+                break;
             }
         }
 
-        if (!isUsernamePasswordInArgs) {
+        if (!hasUsernamePassword) {
             throw new InvalidRequestBodyException("Provide username and password");
         }
 
