@@ -24,4 +24,15 @@ public class ErrorDetails {
         this.message = exMessage;
         this.details = details;
     }
+
+    @Override
+    public String toString() {
+        return "ErrorDetails{" +
+                "correlationId='" + correlationId + '\'' +
+                ", status=" + status +
+                ", localDateTime=" + localDateTime +
+                ", message='" + message + '\'' +
+                ", details='" + details + '\'' +
+                '}';
+    }
 }

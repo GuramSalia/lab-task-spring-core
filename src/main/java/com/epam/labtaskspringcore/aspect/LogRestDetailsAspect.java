@@ -24,14 +24,16 @@ public class LogRestDetailsAspect {
     @AfterReturning(pointcut = "logRestDetailsPointcut()", returning = "response")
     public void logEndpointAndRequestDetails(JoinPoint joinPoint, Object response) {
         String endpointPath = getEndpointPath(joinPoint);
-        log.info("\n\n-\tREST endpoint called: \n-\t{}\n", endpointPath);
+        log.info("\n\n-\tREST endpoint: {}\n", endpointPath);
 
         Object[] args = joinPoint.getArgs();
         HttpServletRequest request = getRequest(args);
         if (request != null) {
-            String signatureShortString = joinPoint.getSignature().toShortString();
-            log.info("\n\n-\tRequest parameters for endpoint {}: \n-\t{}\n", signatureShortString,
-                     Arrays.toString(args));
+            String requestMethod = request.getMethod();
+//            String signatureShortString = joinPoint.getSignature().toShortString();
+            log.info("\n\n-\tRequest method: {}\n", requestMethod);
+            log.info("\n\n-\tRequest URI: {}\n", request.getRequestURI());
+            log.info("\n\n-\tRequest parameters: {}\n", Arrays.toString(args));
         }
 
         if (response instanceof ResponseEntity) {
