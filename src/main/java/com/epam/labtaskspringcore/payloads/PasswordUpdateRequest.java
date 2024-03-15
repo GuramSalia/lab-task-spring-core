@@ -17,4 +17,13 @@ public class PasswordUpdateRequest extends UsernamePassword {
         super(username, password);
         this.newPassword = newPassword;
     }
+
+    @Override
+    public String toString() {
+        return "PasswordUpdateRequest{" +
+                "newPassword='" + newPassword + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
 }

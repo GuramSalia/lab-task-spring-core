@@ -86,4 +86,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         }
         return errorMessage.toString();
     }
+
+    private void logRestDetails() {
+        // REST endpoint called:
+        // Request parameters for endpoint
+        // Response Code:
+        // error Message:
+        // Response Body:
+
+        // call logRestDetails from all methods in GlobalExceptionHandler
+
+    }
+
+
 }

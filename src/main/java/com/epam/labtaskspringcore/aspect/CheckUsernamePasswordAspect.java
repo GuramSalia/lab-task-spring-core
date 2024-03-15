@@ -8,11 +8,14 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Aspect
 @Component
+
 public class CheckUsernamePasswordAspect {
     private final ControllerAuthentication controllerAuthentication;
 
@@ -24,7 +27,7 @@ public class CheckUsernamePasswordAspect {
     //    @Before("execution(* com.epam.labtaskspringcore.controller.UserController.login(..))")
     //    @Before("@annotation(com.epam.labtaskspringcore.aspect.CheckUsernamePassword)")
     @Before("@within(com.epam.labtaskspringcore.aspect.CheckUsernamePassword)")
-    public void checkUsernamePassword(JoinPoint joinPoint) throws Throwable {
+    public void checkUsernamePassword(JoinPoint joinPoint) {
         Object[] args = joinPoint.getArgs();
         boolean hasUsernamePassword = false;
         UsernamePassword usernamePassword;
@@ -46,13 +49,15 @@ public class CheckUsernamePasswordAspect {
         }
 
         if (!hasUsernamePassword) {
+            log.warn("MMMMMMMMMMMMMMM");
             throw new InvalidRequestBodyException("Provide username and password");
         }
 
         log.info("start performing authentication with 'CheckUsernamePasswordAspect'");
-
         controllerAuthentication.performAuthentication(username, password);
     }
+
+
 }
 
 

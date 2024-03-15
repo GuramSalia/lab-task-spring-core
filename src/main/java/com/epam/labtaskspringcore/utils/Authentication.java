@@ -18,11 +18,8 @@ public class Authentication {
         U userInDb;
         try {
             Optional<U> uOptional = t.findByUsernameAndPassword(username, password);
-            log.info(username);
-            log.info(password);
-            log.info(t.getClass().toString());
             if (uOptional.isEmpty()) {
-                log.error("wrong username or password +++---");
+                log.error("wrong username or password");
                 return false;
             }
             userInDb = uOptional.get();

@@ -1,6 +1,7 @@
 package com.epam.labtaskspringcore.controller;
 
 import com.epam.labtaskspringcore.aspect.CheckUsernamePassword;
+import com.epam.labtaskspringcore.aspect.LogRestDetails;
 import com.epam.labtaskspringcore.model.Trainee;
 import com.epam.labtaskspringcore.model.Trainer;
 import com.epam.labtaskspringcore.payloads.PasswordUpdateRequest;
@@ -20,6 +21,7 @@ import java.util.Optional;
 @Slf4j
 @RestController
 @CheckUsernamePassword
+@LogRestDetails
 public class UserController {
 
     private final TraineeService traineeService;
@@ -38,7 +40,7 @@ public class UserController {
                                    HttpServletResponse response,
                                    @Valid @RequestBody UsernamePassword usernamePassword) {
 
-        log.info("POST /user/login called");
+//        log.info("POST /user/login called");
         return ResponseEntity.ok().build();
     }
 
@@ -48,7 +50,7 @@ public class UserController {
                                             HttpServletResponse response,
                                             @Valid @RequestBody PasswordUpdateRequest usernamePassword) {
 
-        log.info("PUT /user/login called");
+//        log.info("PUT /user/login called");
 
         String username = usernamePassword.getUsername();
         String currentPassword = usernamePassword.getPassword();
