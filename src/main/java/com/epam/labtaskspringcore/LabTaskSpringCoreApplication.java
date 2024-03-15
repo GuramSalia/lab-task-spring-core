@@ -246,6 +246,24 @@ public class LabTaskSpringCoreApplication {
             log.info("updated trainee: " + jane);
             log.info("updated trainee trainers: " + jane.getTrainers());
         }
-        log.info("\n\n>>>> END  ==============\n");
+        log.info("\n\n>>>> END  ==============\n\n");
+
+        log.info(" ....... TASK-3 RELATED PART STARTS HERE  .......\n\n");
+
+        Optional<Trainer> trainerTimOptional = trainerServiceWithDatabaseDao.findByUsernameAndPassword("Tim.Smith",
+                                                                                                     "123");
+        if (trainerTimOptional.isPresent()) {
+            Trainer trainerTim = trainerTimOptional.get();
+            log.info("trainerTim: " + trainerTim);
+
+            trainerTim.setUsername("NEW.USERNAME");
+            trainerTimOptional = trainerServiceWithDatabaseDao.update(trainerTim, "Tim.Smith",
+                                                                      "123");
+            if (trainerTimOptional.isPresent()) {
+                trainerTim = trainerTimOptional.get();
+                log.info("updated trainer: " + trainerTim);
+            }
+        }
+
     }
 }

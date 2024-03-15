@@ -92,7 +92,8 @@ public class TrainerService {
 
     // InMemory implementation doesn't require 3 arguments
     public Optional<Trainer> update(Trainer trainer) {
-        trainer.setUsername(usernameGenerator.generateUsername(trainer));
+        //changed due to new requirement: 7. Username cannot be changed
+//        trainer.setUsername(usernameGenerator.generateUsername(trainer));
         return trainerDAO.update(trainer);
     }
 
@@ -110,7 +111,8 @@ public class TrainerService {
         }
 
         try {
-            trainer.setUsername(usernameGenerator.generateUsername(trainer));
+            //changed due to new requirement: 7. Username cannot be changed
+//            trainer.setUsername(usernameGenerator.generateUsername(trainer));
             log.info(">>>> Updating trainer with username: " + trainer.getUsername());
             return trainerDAO.update(trainer);
         } catch (Exception e) {
