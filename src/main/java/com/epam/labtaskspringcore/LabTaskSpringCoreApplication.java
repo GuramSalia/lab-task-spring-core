@@ -295,6 +295,11 @@ public class LabTaskSpringCoreApplication {
             }
         }
 
+        log.info("\n\n swagger at: 'http://localhost:8080/swagger-ui/index.html'\n\n");
+        log.info("\n\n api-docs at: 'http://localhost:8080/v3/api-docs'");
+
         log.info("\n\n>>>> END of TASK-3 RELATED PART  ==============\n\n");
+
+
     }
 }
