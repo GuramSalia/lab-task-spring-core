@@ -29,7 +29,7 @@ public class ControllerAuthentication {
         Optional<Trainee> traineeOptional = traineeService.findByUsernameAndPassword(username, password);
         Optional<Trainer> trainerOptional = trainerService.findByUsernameAndPassword(username, password);
 
-        log.warn("start checking in performAuthentication ++++++");
+        log.info("start checking with 'performAuthentication'");
         if (traineeOptional.isEmpty() && trainerOptional.isEmpty()) {
             throw new UnauthorizedException("username or password is incorrect");
         }

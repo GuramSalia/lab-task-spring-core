@@ -1,0 +1,27 @@
+package com.epam.labtaskspringcore.global;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Getter;
+import lombok.NonNull;
+import org.springframework.http.HttpStatus;
+
+import java.time.LocalDateTime;
+
+@Getter
+public class ErrorDetails {
+    private String correlationId;
+    private final HttpStatus status;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime localDateTime;
+    private String message;
+    private String details;
+
+
+    public ErrorDetails(String correlationId, @NonNull HttpStatus status, @NonNull String exMessage, String details) {
+        this.localDateTime = LocalDateTime.now();
+        this.correlationId = correlationId;
+        this.status = status;
+        this.message = exMessage;
+        this.details = details;
+    }
+}

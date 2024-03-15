@@ -1,7 +1,8 @@
 package com.epam.labtaskspringcore.global;
 
-import com.epam.labtaskspringcore.exception.ErrorDetails;
 import com.epam.labtaskspringcore.exception.UnauthorizedException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -16,17 +18,26 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+
+    private final CorrelationIDHandler correlationIDHandler;
+
+    @Autowired
+    public GlobalExceptionHandler(CorrelationIDHandler correlationIDHandler) {
+        this.correlationIDHandler = correlationIDHandler;
+    }
+
 
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<Object> handleAllException(Exception ex, WebRequest request) {
         ErrorDetails errorDetails = new ErrorDetails(
-                LocalDateTime.now(),
+                correlationIDHandler.getCorrelationId(),
+                HttpStatus.INTERNAL_SERVER_ERROR,
                 ex.getMessage(),
                 request.getDescription(false)
         );
-
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorDetails);
     }
 
@@ -41,7 +52,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         String finalErrorMessage = getErrorMessagesFromFieldErrors(fieldErrors);
 
         ErrorDetails errorDetails = new ErrorDetails(
-                LocalDateTime.now(),
+                correlationIDHandler.getCorrelationId(),
+                HttpStatus.BAD_REQUEST,
                 finalErrorMessage,
                 request.getDescription(false)
         );
@@ -50,9 +62,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(UnauthorizedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ResponseEntity<?> handleUnauthorizedException(UnauthorizedException ex, WebRequest request) {
         ErrorDetails errorDetails = new ErrorDetails(
-                LocalDateTime.now(),
+                correlationIDHandler.getCorrelationId(),
+                HttpStatus.UNAUTHORIZED,
                 ex.getMessage(),
                 request.getDescription(false)
         );

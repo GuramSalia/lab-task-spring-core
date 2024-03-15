@@ -22,7 +22,7 @@ public class CheckUsernamePasswordAspect {
     }
 
     //    @Before("execution(* com.epam.labtaskspringcore.controller.UserController.login(..))")
-    @Before("@annotation(com.epam.labtaskspringcore.aspect.AuthenticateAspect)")
+    @Before("@annotation(com.epam.labtaskspringcore.aspect.CheckUsernamePassword)")
     public void checkUsernamePassword(JoinPoint joinPoint) throws Throwable {
         Object[] args = joinPoint.getArgs();
         boolean hasUsernamePassword = false;
@@ -48,7 +48,7 @@ public class CheckUsernamePasswordAspect {
             throw new InvalidRequestBodyException("Provide username and password");
         }
 
-        log.warn("start authentication");
+        log.info("start performing authentication with 'CheckUsernamePasswordAspect'");
 
         controllerAuthentication.performAuthentication(username, password);
     }
