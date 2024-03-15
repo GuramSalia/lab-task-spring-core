@@ -56,10 +56,10 @@ public class UserController {
         Optional<Trainee> traineeOptional = traineeService.findByUsernameAndPassword(username, currentPassword);
         Optional<Trainer> trainerOptional = trainerService.findByUsernameAndPassword(username, currentPassword);
 
-        traineeOptional.ifPresent(trainee -> traineeService.updatePassword(trainee, username, currentPassword,
-                                                                           newPassword));
-        trainerOptional.ifPresent(trainer -> trainerService.updatePassword(trainer, username, currentPassword,
-                                                                           newPassword));
+        traineeOptional
+                .ifPresent(trainee -> traineeService.updatePassword(trainee, username, currentPassword, newPassword));
+        trainerOptional
+                .ifPresent(trainer -> trainerService.updatePassword(trainer, username, currentPassword, newPassword));
 
         return ResponseEntity.ok().build();
     }

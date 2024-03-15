@@ -63,7 +63,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(UnauthorizedException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ResponseEntity<?> handleUnauthorizedException(UnauthorizedException ex, WebRequest request) {
+    public ResponseEntity<ErrorDetails> handleUnauthorizedException(UnauthorizedException ex, WebRequest request) {
         ErrorDetails errorDetails = new ErrorDetails(
                 correlationIDHandler.getCorrelationId(),
                 HttpStatus.UNAUTHORIZED,

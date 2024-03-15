@@ -9,12 +9,12 @@ import java.time.LocalDateTime;
 
 @Getter
 public class ErrorDetails {
-    private String correlationId;
+    private final String correlationId;
     private final HttpStatus status;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime localDateTime;
-    private String message;
-    private String details;
+    private final LocalDateTime localDateTime;
+    private final String message;
+    private final String details;
 
 
     public ErrorDetails(String correlationId, @NonNull HttpStatus status, @NonNull String exMessage, String details) {
