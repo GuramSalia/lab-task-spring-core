@@ -19,6 +19,7 @@ import java.util.Optional;
 
 @Slf4j
 @RestController
+@CheckUsernamePassword
 public class UserController {
 
     private final TraineeService traineeService;
@@ -31,7 +32,7 @@ public class UserController {
         this.trainerService = trainerService;
     }
 
-    @CheckUsernamePassword
+
     @PostMapping("/user/login")
     public ResponseEntity<?> login(HttpServletRequest request,
                                    HttpServletResponse response,
@@ -41,7 +42,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @CheckUsernamePassword
+
     @PutMapping("/user/login")
     public ResponseEntity<?> updatePassword(HttpServletRequest request,
                                             HttpServletResponse response,

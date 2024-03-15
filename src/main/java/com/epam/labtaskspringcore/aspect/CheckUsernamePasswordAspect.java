@@ -22,7 +22,8 @@ public class CheckUsernamePasswordAspect {
     }
 
     //    @Before("execution(* com.epam.labtaskspringcore.controller.UserController.login(..))")
-    @Before("@annotation(com.epam.labtaskspringcore.aspect.CheckUsernamePassword)")
+    //    @Before("@annotation(com.epam.labtaskspringcore.aspect.CheckUsernamePassword)")
+    @Before("@within(com.epam.labtaskspringcore.aspect.CheckUsernamePassword)")
     public void checkUsernamePassword(JoinPoint joinPoint) throws Throwable {
         Object[] args = joinPoint.getArgs();
         boolean hasUsernamePassword = false;

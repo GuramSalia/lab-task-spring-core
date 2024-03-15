@@ -1,6 +1,5 @@
 package com.epam.labtaskspringcore;
 
-import com.epam.labtaskspringcore.config.InMemoryStorage;
 import com.epam.labtaskspringcore.model.Trainee;
 import com.epam.labtaskspringcore.model.Trainer;
 import com.epam.labtaskspringcore.model.Training;
@@ -38,7 +37,7 @@ public class LabTaskSpringCoreApplication {
                 .getTrainingService("TRAINING_DATABASE", "TRAINER_DATABASE");
 
         Optional<Trainer> optionalTrainer1 = trainerServiceWithDatabaseDao.getById(1, "Tim.Smith", "123");
-        Optional<Trainer> optionalTrainer2 = trainerServiceWithDatabaseDao.getById(2,"Sam.Jones", "123");
+        Optional<Trainer> optionalTrainer2 = trainerServiceWithDatabaseDao.getById(2, "Sam.Jones", "123");
         Optional<Training> optionalTraining1 = trainingServiceWithDatabaseDao.getById(1);
         Optional<Training> optionalTraining2 = trainingServiceWithDatabaseDao.getById(2);
         Optional<Trainee> optionalTrainee1 = traineeServiceWithDatabaseDao.getById(3, "John.Doe", "123");
@@ -57,10 +56,15 @@ public class LabTaskSpringCoreApplication {
         log.info("   .....   With DB - create trainee 3");
         Trainee trainee_3 = new Trainee();
         Helper.setUpTrainee_3(trainee_3);
-        trainee_3.setTrainers(Set.of(optionalTrainer1.get(), optionalTrainer2.get()));
+        if (optionalTrainer1.isPresent() && optionalTrainer2.isPresent()) {
+            trainee_3.setTrainers(Set.of(optionalTrainer1.get(), optionalTrainer2.get()));
+        } else {
+            log.info("optionalTrainer1 or optionalTrainer2 is not present");
+        }
         Optional<Trainee> trainee3SavedOptional = traineeServiceWithDatabaseDao.create(trainee_3);
         trainee3SavedOptional.ifPresent(trainee -> log.info(trainee.getFirstName() + " saved"));
-        log.info("trainee_3 found by id of 5 :" + traineeServiceWithDatabaseDao.getById(5, "Dave.Miller", "123456").toString());
+        String traineeDave = traineeServiceWithDatabaseDao.getById(5, "Dave.Miller", "123456").toString();
+        log.info("trainee_3 found by id of 5 :" + traineeDave);
         log.info("   -----   end  \n");
 
         log.info("   .....   With DB - create trainee 4");
@@ -71,11 +75,16 @@ public class LabTaskSpringCoreApplication {
         log.info("   -----   end  \n");
 
         log.info("   .....   With DB - update trainee_3");
-        Trainee trainee_3Saved = trainee3SavedOptional.get();
-        Helper.updateTrainee_3Saved(trainee_3Saved);
-        trainee3SavedOptional = traineeServiceWithDatabaseDao.update(
-                trainee_3Saved, trainee_3Saved.getUsername(), "123456");
-        trainee3SavedOptional.ifPresent(trainee -> log.info("Updated trainee_3: " + trainee.toString()));
+        if (trainee3SavedOptional.isPresent()) {
+            Trainee trainee_3Saved = trainee3SavedOptional.get();
+            Helper.updateTrainee_3Saved(trainee_3Saved);
+            trainee3SavedOptional = traineeServiceWithDatabaseDao.update(
+                    trainee_3Saved, trainee_3Saved.getUsername(), "123456");
+            trainee3SavedOptional.ifPresent(trainee -> log.info("Updated trainee_3: " + trainee));
+        } else {
+            log.error("trainee3SavedOptional is empty");
+        }
+
         log.info("   -----   end  \n");
 
         log.info("   .....   With DB - getByUsername trainee_3");
@@ -90,24 +99,40 @@ public class LabTaskSpringCoreApplication {
 
         log.info("   .....   With DB - activateActiveTrainee trainee_3");
         log.info("activateActiveTrainee trainee_3: ");
-        boolean activatedActive = traineeServiceWithDatabaseDao
-                .activateTrainee(trainee3SavedOptional.get(), trainee3SavedOptional.get().getUsername(), "2233");
-        log.info("activateActiveTrainee trainee_3: " + activatedActive);
+        if (trainee3SavedOptional.isPresent()) {
+            boolean activatedActive = traineeServiceWithDatabaseDao
+                    .activateTrainee(trainee3SavedOptional.get(), trainee3SavedOptional.get().getUsername(), "2233");
+            log.info("activateActiveTrainee trainee_3: " + activatedActive);
+        } else {
+            log.error("trainee3SavedOptional is empty");
+        }
 
         log.info("deactivateActiveTrainee trainee_3:");
-        boolean deactivatedActive = traineeServiceWithDatabaseDao
-                .deactivateTrainee(trainee3SavedOptional.get(), trainee3SavedOptional.get().getUsername(), "2233");
-        log.info("deactivateActiveTrainee trainee_3: " + deactivatedActive);
+        if (trainee3SavedOptional.isPresent()) {
+            boolean deactivatedActive = traineeServiceWithDatabaseDao
+                    .deactivateTrainee(trainee3SavedOptional.get(), trainee3SavedOptional.get().getUsername(), "2233");
+            log.info("deactivateActiveTrainee trainee_3: " + deactivatedActive);
+        } else {
+            log.error("trainee3SavedOptional is empty");
+        }
 
         log.info("deactivateInactiveTrainee trainee_3:");
-        boolean deactivatedInactive = traineeServiceWithDatabaseDao
-                .deactivateTrainee(trainee3SavedOptional.get(), trainee3SavedOptional.get().getUsername(), "2233");
-        log.info("deactivateInactiveTrainee trainee_3: " + deactivatedInactive);
+        if (trainee3SavedOptional.isPresent()) {
+            boolean deactivatedInactive = traineeServiceWithDatabaseDao
+                    .deactivateTrainee(trainee3SavedOptional.get(), trainee3SavedOptional.get().getUsername(), "2233");
+            log.info("deactivateInactiveTrainee trainee_3: " + deactivatedInactive);
+        } else {
+            log.error("trainee3SavedOptional is empty");
+        }
 
         log.info("activateInactiveTrainee trainee_3:");
-        boolean activatedInactive = traineeServiceWithDatabaseDao
-                .activateTrainee(trainee3SavedOptional.get(), trainee3SavedOptional.get().getUsername(), "2233");
-        log.info("activateInactiveTrainee trainee_3: " + activatedInactive);
+        if (trainee3SavedOptional.isPresent()) {
+            boolean activatedInactive = traineeServiceWithDatabaseDao
+                    .activateTrainee(trainee3SavedOptional.get(), trainee3SavedOptional.get().getUsername(), "2233");
+            log.info("activateInactiveTrainee trainee_3: " + activatedInactive);
+        } else {
+            log.error("trainee3SavedOptional is empty");
+        }
 
         log.info("   .....   With DB - delete trainee_Lucy");
         Trainee lucy = new Trainee();
@@ -124,14 +149,19 @@ public class LabTaskSpringCoreApplication {
 
         log.info(" .....   With DB - update trainer Olivia, new specification YOGA");
         olivia.setSpecialization(YOGA);
-        olivia = trainerServiceWithDatabaseDao.update(olivia, olivia.getUsername(), "123").get();
-        log.info("updated trainer: " + olivia + " with new specialization: " + olivia
-                .getSpecialization());
+        Optional<Trainer> oliviaOptional = trainerServiceWithDatabaseDao.update(olivia, olivia.getUsername(), "123");
+        if (oliviaOptional.isPresent()) {
+            olivia = oliviaOptional.get();
+            log.info("updated trainer: " + olivia + " with new specialization: " + olivia.getSpecialization());
+        }
 
         log.info("updated trainer password: new password '321'");
-        olivia = trainerServiceWithDatabaseDao
-                .updatePassword(olivia, olivia.getUsername(), "123", "321").get();
-        log.info("updated trainer: " + olivia + " with new password: " + olivia.getPassword());
+        oliviaOptional = trainerServiceWithDatabaseDao
+                .updatePassword(olivia, olivia.getUsername(), "123", "321");
+        if (oliviaOptional.isPresent()) {
+            olivia = oliviaOptional.get();
+            log.info("updated trainer: " + olivia + " with new password: " + olivia.getPassword());
+        }
 
         log.info("activate active trainer");
         boolean result = trainerServiceWithDatabaseDao
@@ -170,7 +200,7 @@ public class LabTaskSpringCoreApplication {
         Training training_4 = new Training();
         Helper.setUpTraining_4(training_4, olivia, trainee_3);
         training_4.setTrainingType(YOGA);
-        Optional<Training> training4_Optional = trainingServiceWithDatabaseDao.create(training_4);
+        trainingServiceWithDatabaseDao.create(training_4);
         Optional<Training> optional = trainingServiceWithDatabaseDao.create(training_4);
         Helper.logResultOfTraing4Creation(optional, olivia, training_4);
 
@@ -208,7 +238,7 @@ public class LabTaskSpringCoreApplication {
                 sqlToDate,
                 traineeUsername));
 
-        // in db I have trainers with USER_IDs 1 (Tim.Smith, 123), 2 (Sam.Jones, 123) and 8 (Olivia.Bruno, 321).
+        // in db, I have trainers with USER_IDs 1 (Tim.Smith, 123), 2 (Sam.Jones, 123) and 8 (Olivia.Bruno, 321).
         // Trainee with id 4 (Jane.Smith, 123) has one trainer with USER_ID 1
         // get trainee with id 4 and set trainers containing trainers with USER_ID: 2 and 8
         Trainee jane = null;
@@ -225,7 +255,7 @@ public class LabTaskSpringCoreApplication {
             sam = samOptional.get();
         }
 
-        Optional<Trainer> oliviaOptional = trainerServiceWithDatabaseDao.getByUsername("Olivia.Bruno", "321");
+        oliviaOptional = trainerServiceWithDatabaseDao.getByUsername("Olivia.Bruno", "321");
         if (oliviaOptional.isPresent()) {
             olivia = oliviaOptional.get();
         }
@@ -234,7 +264,7 @@ public class LabTaskSpringCoreApplication {
         log.info("sam: " + sam);
         log.info("olivia: " + olivia);
 
-        Set<Trainer> trainers = new HashSet<Trainer>();
+        Set<Trainer> trainers = new HashSet<>();
         trainers.add(sam);
         trainers.add(olivia);
         assert jane != null;
@@ -251,7 +281,7 @@ public class LabTaskSpringCoreApplication {
         log.info(" ....... TASK-3 RELATED PART STARTS HERE  .......\n\n");
 
         Optional<Trainer> trainerTimOptional = trainerServiceWithDatabaseDao.findByUsernameAndPassword("Tim.Smith",
-                                                                                                     "123");
+                                                                                                       "123");
         if (trainerTimOptional.isPresent()) {
             Trainer trainerTim = trainerTimOptional.get();
             log.info("trainerTim: " + trainerTim);
@@ -265,5 +295,6 @@ public class LabTaskSpringCoreApplication {
             }
         }
 
+        log.info("\n\n>>>> END of TASK-3 RELATED PART  ==============\n\n");
     }
 }
