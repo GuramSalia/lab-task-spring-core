@@ -25,16 +25,16 @@ public class TrainingTypesController {
     private final TrainingTypeService trainingTypeService;
 
     @Autowired
-    public TrainingTypesController(TrainingTypeService trainingTypeService) {this.trainingTypeService =
-            trainingTypeService;}
+    public TrainingTypesController(TrainingTypeService trainingTypeService) {
+        this.trainingTypeService =
+                trainingTypeService;
+    }
 
     @PostMapping("/training-types")
     public ResponseEntity<?> getTrainingTypes(
             HttpServletRequest request,
             HttpServletResponse response,
             @Valid @RequestBody UsernamePassword usernamePassword) {
-        List<TrainingType> trainingTypes = trainingTypeService.getAllTrainingTypes();
-        return ResponseEntity.ok(trainingTypes);
 
         //    a.	Request -no data, what about username and password?
         //    b.	Response
@@ -42,5 +42,7 @@ public class TrainingTypesController {
         //           1.	Training type
         //           2.	Training type Id
 
+        List<TrainingType> trainingTypes = trainingTypeService.getAllTrainingTypes();
+        return ResponseEntity.ok(trainingTypes);
     }
 }

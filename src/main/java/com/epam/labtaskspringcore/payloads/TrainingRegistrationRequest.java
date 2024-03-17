@@ -50,8 +50,7 @@ public class TrainingRegistrationRequest extends UsernamePassword {
     public String toString() {
         return "TrainingRegistrationRequest{" +
                 "username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", trainingName='" + trainingName + '\'' +
+                ", password='*****', trainingName='" + trainingName + '\'' +
                 ", traingDate=" + traingDate +
                 ", trainingDuration=" + trainingDuration +
                 '}';

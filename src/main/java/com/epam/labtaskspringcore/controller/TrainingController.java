@@ -2,12 +2,12 @@ package com.epam.labtaskspringcore.controller;
 
 import com.epam.labtaskspringcore.aspect.CheckUsernamePassword;
 import com.epam.labtaskspringcore.aspect.LogRestDetails;
-import com.epam.labtaskspringcore.payloads.TrainingDTO;
 import com.epam.labtaskspringcore.exception.InvalidRequestBodyException;
 import com.epam.labtaskspringcore.model.Trainee;
 import com.epam.labtaskspringcore.model.Trainer;
 import com.epam.labtaskspringcore.model.Training;
 import com.epam.labtaskspringcore.model.TrainingType;
+import com.epam.labtaskspringcore.payloads.TrainingDTO;
 import com.epam.labtaskspringcore.payloads.TrainingRegistrationRequest;
 import com.epam.labtaskspringcore.payloads.TrainingsByTraineeRequest;
 import com.epam.labtaskspringcore.payloads.TrainingsByTrainerRequest;
@@ -89,14 +89,11 @@ public class TrainingController {
         //        IV.	Training Duration
         //        V.	Trainer Name
 
-
         List<Training> trainings = getTrainingsByTrainee(trainingsByTraineeRequest);
         List<TrainingDTO> trainingDTOs = trainings.stream().map(TrainingDTO::new).toList();
 
         return ResponseEntity.ok().body(trainingDTOs);
     }
-
-
 
     @PostMapping("/training/of-trainer")
     public ResponseEntity<?> getTrainingsByTrainerAndOtherFilters(
@@ -122,8 +119,6 @@ public class TrainingController {
 
         return ResponseEntity.ok().body(trainingDTOs);
     }
-
-
 
     private Training getTraining(TrainingRegistrationRequest trainingRegistrationRequest) {
 
@@ -165,8 +160,6 @@ public class TrainingController {
 
         String trainingTypeString = trainingType == null ? null : String.valueOf(trainingType.getTrainingType());
 
-        log.info("\n%%%% CALL 1 in Controller %%%%%\n" + periodFrom + " periodFrom, \n" + periodTo + " periodTo\n" + traineeUsername + " traineeUsername\n" + trainerUsername + " trainerUsername\n" + trainingTypeString + " trainingTypeString\n");
-
         return trainingService.getTrainingsByTraineeAndOtherFilters(
                 traineeUsername,
                 periodFrom,
@@ -181,15 +174,10 @@ public class TrainingController {
         java.sql.Date periodTo = trainingsByTrainerRequest.getPeriodTo();
         String traineeUsername = trainingsByTrainerRequest.getTraineeUsername();
 
-        log.info("\n%%%% CALL 2 in Controller %%%%%\n" + periodFrom + " periodFrom, \n" + periodTo + " periodTo\n" + trainerUsername + " trainerUsername\n" + traineeUsername + " traineeUsername\n");
-
         return trainingService.getTrainingsByTrainerAndOtherFilters(
                 trainerUsername,
                 periodFrom,
                 periodTo,
-                traineeUsername
-                );
+                traineeUsername);
     }
-
-
 }

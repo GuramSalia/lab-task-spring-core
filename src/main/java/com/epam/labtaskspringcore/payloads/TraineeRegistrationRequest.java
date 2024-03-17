@@ -1,4 +1,32 @@
 package com.epam.labtaskspringcore.payloads;
 
+import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.Date;
+
+@Setter
+@Getter
 public class TraineeRegistrationRequest {
+
+    //     a.	Request
+    //        I.	First Name (required)
+    //        II.	Last Name (required)
+    //        III.	Date of Birth (optional)
+    //        IV.	Address (optional)
+
+    @NotBlank
+    String firstName;
+    @NotBlank
+    String lastName;
+    Date dateOfBirth;
+    String address;
+
+    public TraineeRegistrationRequest(String firstName, String lastName, Date dateOfBirth, String address) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dateOfBirth = dateOfBirth;
+        this.address = address;
+    }
 }
