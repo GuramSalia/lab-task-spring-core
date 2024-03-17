@@ -14,7 +14,10 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
 
@@ -34,23 +37,21 @@ public class UserController {
         this.trainerService = trainerService;
     }
 
-
     @PostMapping("/user/login")
     public ResponseEntity<?> login(HttpServletRequest request,
                                    HttpServletResponse response,
                                    @Valid @RequestBody UsernamePassword usernamePassword) {
 
-//        log.info("POST /user/login called");
+        //        log.info("POST /user/login called");
         return ResponseEntity.ok().build();
     }
-
 
     @PutMapping("/user/login")
     public ResponseEntity<?> updatePassword(HttpServletRequest request,
                                             HttpServletResponse response,
                                             @Valid @RequestBody PasswordUpdateRequest usernamePassword) {
 
-//        log.info("PUT /user/login called");
+        //        log.info("PUT /user/login called");
 
         String username = usernamePassword.getUsername();
         String currentPassword = usernamePassword.getPassword();

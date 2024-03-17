@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Aspect
 @Component
-
 public class CheckUsernamePasswordAspect {
     private final ControllerAuthentication controllerAuthentication;
 
@@ -49,15 +48,12 @@ public class CheckUsernamePasswordAspect {
         }
 
         if (!hasUsernamePassword) {
-            log.warn("MMMMMMMMMMMMMMM");
             throw new InvalidRequestBodyException("Provide username and password");
         }
 
         log.info("start performing authentication with 'CheckUsernamePasswordAspect'");
         controllerAuthentication.performAuthentication(username, password);
     }
-
-
 }
 
 
