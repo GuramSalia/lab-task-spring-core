@@ -1,5 +1,7 @@
 package com.epam.labtaskspringcore.controller;
 
+import com.epam.labtaskspringcore.aspect.CheckUsernamePassword;
+import com.epam.labtaskspringcore.aspect.LogRestDetails;
 import com.epam.labtaskspringcore.payloads.TraineeRegistrationRequest;
 import com.epam.labtaskspringcore.payloads.TraineeUpdateRequest;
 import com.epam.labtaskspringcore.payloads.UsernamePassword;
@@ -8,25 +10,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@CheckUsernamePassword
+@LogRestDetails
 @RestController
 public class TraineeController {
-
-    @PostMapping("/trainee")
-    public ResponseEntity<?> registerTrainee(HttpServletRequest request,
-                                             HttpServletResponse response,
-                                             @RequestBody TraineeRegistrationRequest traineeRegistrationRequest) {
-
-        //     a.	Request
-        //        I.	First Name (required)
-        //        II.	Last Name (required)
-        //        III.	Date of Birth (optional)
-        //        IV.	Address (optional)
-        //     b.	Response
-        //        I.	Username
-        //        II.	Password
-
-        return null;
-    }
 
     @GetMapping("/trainee")
     public ResponseEntity<?> getTrainee(HttpServletRequest request,

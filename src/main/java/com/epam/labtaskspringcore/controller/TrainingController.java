@@ -1,5 +1,6 @@
 package com.epam.labtaskspringcore.controller;
 
+import com.epam.labtaskspringcore.aspect.LogRestDetails;
 import com.epam.labtaskspringcore.payloads.TrainingRegistrationRequest;
 import com.epam.labtaskspringcore.payloads.TrainingsByTrainee;
 import com.epam.labtaskspringcore.payloads.TrainingsByTrainer;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@LogRestDetails
 @RestController
 public class TrainingController {
 

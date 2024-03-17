@@ -7,4 +7,6 @@ I tried how I would have worked with filters. It would work with some restrictio
 3. question: I have an aspect on class level. when I create trainer/trainee I don't need one of the aspects. maybe I will create a separate controller 'CreateUserController', which will not apply @CheckUsernamePassword Aspect;
 
 
-4. I can commit current state and move to implementing controllers.
+4. remove code from main.
+
+5.
