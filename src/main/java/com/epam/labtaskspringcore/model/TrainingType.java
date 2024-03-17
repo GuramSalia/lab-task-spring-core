@@ -26,7 +26,7 @@ public class TrainingType {
     @Setter
     @Enumerated(EnumType.STRING)
     @Column(name = "TRAINING_TYPE_NAME")
-    @JsonProperty(value = "training-type")
+    @JsonProperty(value = "training_type")
     private TrainingTypeEnum trainingType;
 
 
@@ -38,7 +38,10 @@ public class TrainingType {
 
     @Override
     public String toString() {
-        return "TrainingType{id="+ trainingTypeId + ", training type=" + trainingType + '}';
+        return "TrainingType{" +
+                "id=" + trainingTypeId +
+                ", training_type=" + trainingType +
+                '}';
     }
 
     @Override

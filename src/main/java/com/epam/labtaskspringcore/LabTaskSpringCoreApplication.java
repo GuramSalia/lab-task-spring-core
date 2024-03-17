@@ -225,12 +225,21 @@ public class LabTaskSpringCoreApplication {
         java.sql.Date sqlFromDate = new java.sql.Date(fromDate.getTime());
         java.sql.Date sqlToDate = new java.sql.Date(toDate.getTime());
 
-        log.info("trainee with username:  \n\n" + trainingServiceWithDatabaseDao.getTrainingsByTraineeAndOtherFilters(
+        log.info("\n\n\n ++++++++++++++++ \ntrainee with username:  \n\n" + trainingServiceWithDatabaseDao.getTrainingsByTraineeAndOtherFilters(
                 traineeUsername,
                 sqlFromDate,
                 sqlToDate,
                 trainerUsername,
-                "CARDIO"));
+                "CARDIO")
+                );
+
+        log.info("\n\n\n ++++++++++++++++ \ntrainee with username:  \n\n" + trainingServiceWithDatabaseDao.getTrainingsByTraineeAndOtherFilters(
+                         traineeUsername,
+                         sqlFromDate,
+                         sqlToDate,
+                         trainerUsername,
+                         "CARDIO")
+                );
 
         log.info("trainer with username:  \n\n" + trainingServiceWithDatabaseDao.getTrainingsByTrainerAndOtherFilters(
                 trainerUsername,

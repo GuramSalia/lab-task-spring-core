@@ -93,7 +93,7 @@ public class TrainerService {
     // InMemory implementation doesn't require 3 arguments
     public Optional<Trainer> update(Trainer trainer) {
         //changed due to new requirement: 7. Username cannot be changed
-//        trainer.setUsername(usernameGenerator.generateUsername(trainer));
+        //        trainer.setUsername(usernameGenerator.generateUsername(trainer));
         return trainerDAO.update(trainer);
     }
 
@@ -112,7 +112,7 @@ public class TrainerService {
 
         try {
             //changed due to new requirement: 7. Username cannot be changed
-//            trainer.setUsername(usernameGenerator.generateUsername(trainer));
+            //            trainer.setUsername(usernameGenerator.generateUsername(trainer));
             log.info(">>>> Updating trainer with username: " + trainer.getUsername());
             return trainerDAO.update(trainer);
         } catch (Exception e) {
@@ -126,6 +126,20 @@ public class TrainerService {
         if (!authentication.isAuthenticated(trainerDAO, username, password)) {
             return Optional.empty();
         }
+
+        Optional<Trainer> trainerOptional = trainerDAO.findByUsername(username);
+        if (trainerOptional.isEmpty()) {
+            log.error("invalid username or password");
+            return Optional.empty();
+        }
+
+        Trainer trainer = trainerOptional.get();
+
+        log.info(">>>> Getting trainer using getByUsername: " + username);
+        return trainerOptional;
+    }
+
+    public Optional<Trainer> getByUsername(String username) {
 
         Optional<Trainer> trainerOptional = trainerDAO.findByUsername(username);
         if (trainerOptional.isEmpty()) {

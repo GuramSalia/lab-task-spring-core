@@ -78,7 +78,7 @@ public class TraineeService {
     // InMemory implementation doesn't require 3 arguments
     public Optional<Trainee> update(Trainee trainee) {
         //changed due to new requirement: 7. Username cannot be changed
-//        trainee.setUsername(usernameGenerator.generateUsername(trainee));
+        //        trainee.setUsername(usernameGenerator.generateUsername(trainee));
         return traineeDAO.update(trainee);
     }
 
@@ -101,7 +101,7 @@ public class TraineeService {
         }
         try {
             //changed due to new requirement: 7. Username cannot be changed
-//            trainee.setUsername(usernameGenerator.generateUsername(trainee));
+            //            trainee.setUsername(usernameGenerator.generateUsername(trainee));
             log.info(">>>> Updating trainee with username: " + trainee.getUsername());
             return traineeDAO.update(trainee);
         } catch (Exception e) {
@@ -115,6 +115,14 @@ public class TraineeService {
         if (!authentication.isAuthenticated(traineeDAO, username, password)) {
             return Optional.empty();
         }
+
+        Optional<Trainee> traineeOptional = traineeDAO.findByUsername(username);
+
+        log.info(">>>> Getting trainee using getByUsername: : " + username);
+        return traineeOptional;
+    }
+
+    public Optional<Trainee> getByUsername(String username) {
 
         Optional<Trainee> traineeOptional = traineeDAO.findByUsername(username);
 
@@ -205,8 +213,8 @@ public class TraineeService {
 
         try {
             log.info(">>>> Deleting trainee with username: " + username);
-//            traineeDAO.delete(trainee);
-//            return true;
+            //            traineeDAO.delete(trainee);
+            //            return true;
             return traineeDAO.delete(trainee);
         } catch (Exception e) {
             log.error("couldn't delete the trainee");

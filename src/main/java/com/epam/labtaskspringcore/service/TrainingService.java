@@ -90,8 +90,11 @@ public class TrainingService {
             Date endDate,
             String trainerUsername,
             String trainingTypeName) {
-        return trainingDAO.getTrainingsByTraineeAndOtherFilters(
+        List<Training> trainingsByTrainee = trainingDAO.getTrainingsByTraineeAndOtherFilters(
                 traineeUsername, startDate, endDate, trainerUsername, trainingTypeName);
+        log.info("\n\n>>>> Getting trainings by trainee: " + trainingsByTrainee.toString());
+        log.info("\n\n" + trainingDAO.getClass());
+        return trainingsByTrainee;
     }
 
     public List<Training> getTrainingsByTrainerAndOtherFilters(

@@ -36,6 +36,8 @@ public class TraineeController {
         //           3.	Trainer Last Name
         //           4.	Trainer Specialization (Training type reference)
 
+
+
         return null;
     }
 
@@ -54,7 +56,7 @@ public class TraineeController {
         //        V.	Address (optional)
         //        VI.	Is Active (required)
         //    b.	Response
-        //        I.	Username
+        //        I.	Username ++
         //        II.	First Name
         //        III.	Last Name
         //        IV.	Date of Birth
