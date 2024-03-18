@@ -59,9 +59,9 @@ public class TraineeController {
         String password = usernamePassword.getPassword();
 
         Optional<Trainee> traineeOptional = traineeService.findByUsernameAndPassword(username, password);
-        //        if (traineeOptional.isEmpty()) {
-        //            throw new InvalidRequestBodyException("Could not find trainee");
-        //        }
+        if (traineeOptional.isEmpty()) {
+            throw new InvalidRequestBodyException("Could not find trainee");
+        }
 
         Trainee trainee = traineeOptional.get();
         TraineeDTOWithTrainersList traineeDTO = getTraineeDTOWithTrainersList(trainee);
@@ -101,9 +101,9 @@ public class TraineeController {
         String password = traineeUpdateRequest.getPassword();
         Optional<Trainee> traineeOptional = traineeService.findByUsernameAndPassword(username, password);
 
-        //        if (traineeOptional.isEmpty()) {
-        //            throw new InvalidRequestBodyException("username or password is invalid");
-        //        }
+        if (traineeOptional.isEmpty()) {
+            throw new InvalidRequestBodyException("username or password is invalid");
+        }
 
         Trainee trainee = traineeOptional.get();
         TraineeDTOUpdated traineeDTO = getTraineeDTOUpdated(traineeUpdateRequest, trainee);
@@ -151,9 +151,9 @@ public class TraineeController {
         List<String> trainerUsernames = traineeUpdateTrainersListRequest.getTrainerUsernames();
 
         Optional<Trainee> traineeOptional = traineeService.findByUsernameAndPassword(username, password);
-        //        if (traineeOptional.isEmpty()) {
-        //            throw new InvalidRequestBodyException("username or password is invalid");
-        //        }
+        if (traineeOptional.isEmpty()) {
+            throw new InvalidRequestBodyException("username or password is invalid");
+        }
 
         Trainee trainee = traineeOptional.get();
         List<TrainerDTOForTrainersList> trainerListDTO = getTrainerListDTO(trainerUsernames, trainee);
@@ -175,9 +175,9 @@ public class TraineeController {
         String username = usernamePassword.getUsername();
 
         Optional<Trainee> traineeOptional = traineeService.getByUsername(username);
-        //        if (traineeOptional.isEmpty()) {
-        //            throw new InvalidRequestBodyException("Could not find trainee");
-        //        }
+        if (traineeOptional.isEmpty()) {
+            throw new InvalidRequestBodyException("Could not find trainee");
+        }
         Trainee trainee = traineeOptional.get();
         trainee.setIsActive(true);
         traineeService.update(trainee);
@@ -198,9 +198,9 @@ public class TraineeController {
         String username = usernamePassword.getUsername();
 
         Optional<Trainee> traineeOptional = traineeService.getByUsername(username);
-        //        if (traineeOptional.isEmpty()) {
-        //            throw new InvalidRequestBodyException("Could not find trainee");
-        //        }
+        if (traineeOptional.isEmpty()) {
+            throw new InvalidRequestBodyException("Could not find trainee");
+        }
         Trainee trainee = traineeOptional.get();
         trainee.setIsActive(false);
         traineeService.update(trainee);
@@ -214,6 +214,7 @@ public class TraineeController {
         traineeDTO.setDateOfBirth(trainee.getDob());
         traineeDTO.setAddress(trainee.getAddress());
         traineeDTO.setActive(trainee.getIsActive());
+
         List<TrainerDTOForTrainersList> trainerList = trainee
                 .getTrainers()
                 .stream()
@@ -225,6 +226,8 @@ public class TraineeController {
                     trainerDTOForTrainersList.setSpecialization(trainer.getSpecialization());
                     return trainerDTOForTrainersList;
                 }).toList();
+
+
         traineeDTO.setTrainers(trainerList);
         return traineeDTO;
     }
