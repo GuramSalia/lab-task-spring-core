@@ -27,6 +27,6 @@ public class UsernamePassword {
     public String toString() {
         return "UsernamePassword{" +
                 "username='" + username + '\'' +
-                ", password='*****'}";
+                ", password=*****}";
     }
 }
