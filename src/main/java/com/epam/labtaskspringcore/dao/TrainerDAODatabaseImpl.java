@@ -51,7 +51,7 @@ public class TrainerDAODatabaseImpl implements TrainerDAO {
     }
 
     @Override
-    public List<Integer>  findUnassignedTrainersByTraineeUsername(String traineeUsername) {
+    public List<Integer> findIdsOfUnassignedTrainersByTraineeUsername(String traineeUsername) {
         return trainerRepository.findIdsOfUnassignedTrainersByTraineeUsername(traineeUsername);
     }
 

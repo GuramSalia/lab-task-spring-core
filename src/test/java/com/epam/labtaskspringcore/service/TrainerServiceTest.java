@@ -179,7 +179,7 @@ class TrainerServiceTest {
     @Test
     void TestFindUnassignedTrainersByTraineeUsernameInTrainerService() {
         when(authentication.isAuthenticated(traineeDAO, "Tim.Doe", "123")).thenReturn(true);
-        when(trainerDAO.findUnassignedTrainersByTraineeUsername("Tim.Doe")).thenReturn(List.of(10, 20));
+        when(trainerDAO.findIdsOfUnassignedTrainersByTraineeUsername("Tim.Doe")).thenReturn(List.of(10, 20));
         when(trainerDAO.getById(10)).thenReturn(Optional.of(trainer1));
         when(trainerDAO.getById(20)).thenReturn(Optional.of(trainer2));
         List<Trainer> trainers = new ArrayList<Trainer>();

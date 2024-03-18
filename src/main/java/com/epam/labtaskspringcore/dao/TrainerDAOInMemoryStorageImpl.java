@@ -66,7 +66,7 @@ public class TrainerDAOInMemoryStorageImpl implements TrainerDAO {
     }
 
     @Override
-    public List<Integer> findUnassignedTrainersByTraineeUsername(String traineeUsername) {
+    public List<Integer> findIdsOfUnassignedTrainersByTraineeUsername(String traineeUsername) {
         log.info("'findUnassignedTrainersByTraineeUsername' method is not implemented in TrainerDaoInMemoryStorageImpl");
         return null;
     }

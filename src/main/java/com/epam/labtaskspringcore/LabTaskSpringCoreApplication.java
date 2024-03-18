@@ -27,7 +27,7 @@ public class LabTaskSpringCoreApplication {
         TrainingType PILATES = trainingTypeService.getTrainingType(TrainingType.TrainingTypeEnum.PILATES);
         TrainingType YOGA = trainingTypeService.getTrainingType(TrainingType.TrainingTypeEnum.YOGA);
 
-        log.info(" ....... TASK-2 RELATED PART STARTS HERE  .......\n\n");
+        log.info(" \n\n....... TASK-2 RELATED PART STARTS HERE  .......\n\n");
 
         TraineeService traineeServiceWithDatabaseDao = BeanProvider
                 .getTraineeService("TRAINEE_DATABASE");
@@ -209,10 +209,10 @@ public class LabTaskSpringCoreApplication {
 
         log.info("\n\n>>>> START with JPQL  ==============\n");
 
-        log.info("list of trainers:\n\n"
+        log.info("\nlist of trainers:\n\n"
                          + trainerServiceWithDatabaseDao.findUnassignedTrainersByTraineeUsername("John.Doe", "123"));
 
-        log.info("trainee with username:\n\n"
+        log.info("\ntrainee with username:\n\n"
                          + traineeServiceWithDatabaseDao.findByUsernameWithQuery("John.Doe", "123"));
 
         String traineeUsername = "John.Doe";

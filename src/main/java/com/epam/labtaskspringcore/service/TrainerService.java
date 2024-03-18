@@ -225,7 +225,7 @@ public class TrainerService {
             return null;
         }
 
-        List<Integer> ids = trainerDAO.findUnassignedTrainersByTraineeUsername(traineeUsername);
+        List<Integer> ids = trainerDAO.findIdsOfUnassignedTrainersByTraineeUsername(traineeUsername);
         List<Trainer> trainers = new ArrayList<>();
         for (Integer id : ids) {
             Optional<Trainer> trainerOptional = trainerDAO.getById(id);
