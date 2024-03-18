@@ -8,19 +8,10 @@ import java.sql.Date;
 @Getter
 public class TrainingsByTraineeRequest extends UsernamePassword {
 
-    //    a.	Request
-    //        I.	Username (required)
-    //        I.    Password (required)
-    //        II.	Period From (optional)
-    //        III.	Period To (optional)
-    //        IV.	Trainer Name (optional)
-    //        V.	Training Type (optional)
-
     Date periodFrom;
     Date periodTo;
     String trainerUsername;
     TrainingType trainingType;
-
 
     public TrainingsByTraineeRequest(
             String username,

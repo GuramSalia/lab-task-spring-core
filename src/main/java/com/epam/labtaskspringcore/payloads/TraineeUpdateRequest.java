@@ -1,7 +1,6 @@
 package com.epam.labtaskspringcore.payloads;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,16 +9,6 @@ import java.util.Date;
 @Getter
 @Setter
 public class TraineeUpdateRequest extends UsernamePassword {
-
-    //    a.	Request
-    //        I.	Username (required)
-    //        II.    Password (required)
-    //        III.    First Name (required)
-    //        III.	Last Name (required)
-    //        IV.	Date of Birth (optional)
-    //        V.	Address (optional)
-    //        VI.	Is Active (required)
-
 
     @NotBlank
     private String firstName;
@@ -44,6 +33,4 @@ public class TraineeUpdateRequest extends UsernamePassword {
         this.address = address;
         this.isActive = isActive;
     }
-
-
 }

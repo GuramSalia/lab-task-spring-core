@@ -14,8 +14,6 @@ import com.epam.labtaskspringcore.payloads.TrainingsByTrainerRequest;
 import com.epam.labtaskspringcore.service.TraineeService;
 import com.epam.labtaskspringcore.service.TrainerService;
 import com.epam.labtaskspringcore.service.TrainingService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,45 +47,22 @@ public class TrainingController {
 
     @PostMapping("/training")
     public ResponseEntity<?> registerTraining(
-            HttpServletRequest request,
-            HttpServletResponse response,
             @Valid @RequestBody TrainingRegistrationRequest trainingRegistrationRequest) {
 
-        //   a.	Request
-        //        I added username and password as requested
-        //        I.	Trainee username (required)
-        //        II.	Trainer username (required)
-        //        III.	Training Name (required)
-        //        IV.	Training Date (required)
-        //        V.	Training Duration (required)
-        //    b.	Response
-        //        I.	200 OK
-
         Training training = getTraining(trainingRegistrationRequest);
-        trainingService.create(training);
-
-        return ResponseEntity.ok().build();
+        Optional<Training> createdTrainingOptional = trainingService.create(training);
+        if (createdTrainingOptional.isEmpty()) {
+            throw new InvalidRequestBodyException("training not created");
+        } else {
+            return ResponseEntity.ok().build();
+        }
     }
 
+    // requirement: 12.	Get Trainee Trainings List (GET method);
+    // But we cannot submit body with get method.
     @PostMapping("/training/of-trainee")
     public ResponseEntity<?> getTrainingsByTraineeAndOtherFilters(
-            HttpServletRequest request,
-            HttpServletResponse response,
             @Valid @RequestBody TrainingsByTraineeRequest trainingsByTraineeRequest) {
-
-        //    a.	Request
-        //        I.    Password (required)
-        //        I.	Username (required)
-        //        II.	Period From (optional)
-        //        III.	Period To (optional)
-        //        IV.	Trainer Name (optional)
-        //        V.	Training Type (optional)
-        //    b.	Response
-        //        I.	Training Name
-        //        II.	Training Date
-        //        III.	Training Type
-        //        IV.	Training Duration
-        //        V.	Trainer Name
 
         List<Training> trainings = getTrainingsByTrainee(trainingsByTraineeRequest);
         List<TrainingDTO> trainingDTOs = trainings.stream().map(TrainingDTO::new).toList();
@@ -95,24 +70,11 @@ public class TrainingController {
         return ResponseEntity.ok().body(trainingDTOs);
     }
 
+    // requirement: 13.	Get Trainer Trainings List (GET method);
+    // But we cannot submit body with get method.
     @PostMapping("/training/of-trainer")
     public ResponseEntity<?> getTrainingsByTrainerAndOtherFilters(
-            HttpServletRequest request,
-            HttpServletResponse response,
             @Valid @RequestBody TrainingsByTrainerRequest trainingsByTrainerRequest) {
-
-        //    a.	Request
-        //        I.	Username (required)
-        //        II.   Password (required)
-        //        II.	Period From (optional)
-        //        III.	Period To (optional)
-        //        IV.	Trainee Name (optional)
-        //    b.	Response
-        //        I.	Training Name
-        //        II.	Training Date
-        //        III.	Training Type
-        //        IV.	Training Duration
-        //        V.	Trainee Name
 
         List<Training> trainings = getTrainingsByTrainer(trainingsByTrainerRequest);
         List<TrainingDTO> trainingDTOs = trainings.stream().map(TrainingDTO::new).toList();
@@ -138,10 +100,11 @@ public class TrainingController {
             throw new InvalidRequestBodyException("no such trainer");
         } else {
             training.setTrainer(trainerOptional.get());
+            training.setTrainingType(trainerOptional.get().getSpecialization());
         }
 
         String trainingName = trainingRegistrationRequest.getTrainingName();
-        Date trainingDate = trainingRegistrationRequest.getTraingDate();
+        Date trainingDate = trainingRegistrationRequest.getTrainingDate();
         int trainingDuration = trainingRegistrationRequest.getTrainingDuration();
 
         training.setTrainingName(trainingName);

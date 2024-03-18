@@ -8,8 +8,6 @@ import com.epam.labtaskspringcore.payloads.PasswordUpdateRequest;
 import com.epam.labtaskspringcore.payloads.UsernamePassword;
 import com.epam.labtaskspringcore.service.TraineeService;
 import com.epam.labtaskspringcore.service.TrainerService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,20 +36,12 @@ public class UserController {
     }
 
     @PostMapping("/user/login")
-    public ResponseEntity<?> login(HttpServletRequest request,
-                                   HttpServletResponse response,
-                                   @Valid @RequestBody UsernamePassword usernamePassword) {
-
-        //        log.info("POST /user/login called");
+    public ResponseEntity<?> login(@Valid @RequestBody UsernamePassword usernamePassword) {
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/user/login")
-    public ResponseEntity<?> updatePassword(HttpServletRequest request,
-                                            HttpServletResponse response,
-                                            @Valid @RequestBody PasswordUpdateRequest usernamePassword) {
-
-        //        log.info("PUT /user/login called");
+    public ResponseEntity<?> updatePassword(@Valid @RequestBody PasswordUpdateRequest usernamePassword) {
 
         String username = usernamePassword.getUsername();
         String currentPassword = usernamePassword.getPassword();

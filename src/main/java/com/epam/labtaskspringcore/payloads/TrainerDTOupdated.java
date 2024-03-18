@@ -12,17 +12,6 @@ import java.util.Set;
 @Setter
 public class TrainerDTOupdated {
 
-    //    b.	Response
-    //        I.	Username
-    //        II.	First Name
-    //        III.	Last Name
-    //        IV.	Specialization (Training type reference)
-    //        V.	Is Active
-    //        VI.	Trainees List
-    //           1.	Trainee Username
-    //           2.	Trainee First Name
-    //           3.	Trainee Last Name
-
     private String username;
     @NotBlank
     private String firstName;

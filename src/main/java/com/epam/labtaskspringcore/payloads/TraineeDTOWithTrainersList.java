@@ -10,18 +10,6 @@ import java.util.List;
 @Setter
 public class TraineeDTOWithTrainersList {
 
-    //     b.	Response
-    //        I.	First Name
-    //        II.	Last Name
-    //        III.	Date of Birth
-    //        IV.	Address
-    //        V.	Is Active
-    //        VI.	Trainers List
-    //           1.	Trainer Username
-    //           2.	Trainer First Name
-    //           3.	Trainer Last Name
-    //           4.	Trainer Specialization (Training type reference)
-
     private String firstName;
     private String lastName;
     private Date dateOfBirth;

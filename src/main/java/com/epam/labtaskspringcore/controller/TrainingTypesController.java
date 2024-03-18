@@ -30,17 +30,9 @@ public class TrainingTypesController {
                 trainingTypeService;
     }
 
+    // modify to GET method when I can authorize based on session
     @PostMapping("/training-types")
-    public ResponseEntity<?> getTrainingTypes(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            @Valid @RequestBody UsernamePassword usernamePassword) {
-
-        //    a.	Request -no data, what about username and password?
-        //    b.	Response
-        //        I.	Training types
-        //           1.	Training type
-        //           2.	Training type Id
+    public ResponseEntity<?> getTrainingTypes(@Valid @RequestBody UsernamePassword usernamePassword) {
 
         List<TrainingType> trainingTypes = trainingTypeService.getAllTrainingTypes();
         return ResponseEntity.ok(trainingTypes);

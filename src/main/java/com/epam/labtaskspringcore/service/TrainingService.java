@@ -69,6 +69,10 @@ public class TrainingService {
             trainerSpecialization = optionalTrainer.get().getSpecialization();
         }
 
+        // Is no longer the requirement since TASK3-REST, have to create training with just a trainer.
+        // maybe we should give the training the same trainer Training Type?
+
+
         if (areMismatchingTrainingTypes(trainingType, trainerSpecialization)) {
             log.error("cannot create training, because the trainer has a different specialization");
             return Optional.empty();

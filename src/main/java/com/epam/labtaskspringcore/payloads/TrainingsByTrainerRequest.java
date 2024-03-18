@@ -1,7 +1,5 @@
 package com.epam.labtaskspringcore.payloads;
 
-import com.epam.labtaskspringcore.model.TrainingType;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,12 +7,11 @@ import java.sql.Date;
 
 @Getter
 @Setter
-public class TrainingsByTrainerRequest extends UsernamePassword{
+public class TrainingsByTrainerRequest extends UsernamePassword {
 
     Date periodFrom;
     Date periodTo;
     String traineeUsername;
-
 
     public TrainingsByTrainerRequest(
             String username,
@@ -26,7 +23,6 @@ public class TrainingsByTrainerRequest extends UsernamePassword{
         this.periodFrom = periodFrom;
         this.periodTo = periodTo;
         this.traineeUsername = traineeUsername;
-
     }
 
     @Override

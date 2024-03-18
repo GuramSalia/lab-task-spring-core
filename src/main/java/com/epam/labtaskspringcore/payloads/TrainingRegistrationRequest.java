@@ -12,13 +12,6 @@ import java.util.Date;
 @Slf4j
 public class TrainingRegistrationRequest extends UsernamePassword {
 
-    //   a.	Request
-    //        I.	Trainee username (required)
-    //        II.	Trainer username (required)
-    //        III.	Training Name (required)
-    //        IV.	Training Date (required)
-    //        V.	Training Duration (required)
-
     @NotBlank(message = "trainee username must not be empty")
     String traineeUsername;
     @NotBlank(message = "trainer username must not be empty")
@@ -26,7 +19,7 @@ public class TrainingRegistrationRequest extends UsernamePassword {
     @NotBlank(message = "training name must not be empty")
     String trainingName;
     @NotNull(message = "training date must not be empty")
-    Date traingDate;
+    Date trainingDate;
     @PositiveOrZero(message = "training duration must not be empty or negative")
     int trainingDuration;
 
@@ -36,13 +29,13 @@ public class TrainingRegistrationRequest extends UsernamePassword {
             String traineeUsername,
             String trainerUsername,
             String trainingName,
-            Date traingDate,
-                int trainingDuration) {
+            Date trainingDate,
+            int trainingDuration) {
         super(username, password);
         this.traineeUsername = traineeUsername;
         this.trainerUsername = trainerUsername;
         this.trainingName = trainingName;
-        this.traingDate = traingDate;
+        this.trainingDate = trainingDate;
         this.trainingDuration = trainingDuration;
     }
 
@@ -51,7 +44,7 @@ public class TrainingRegistrationRequest extends UsernamePassword {
         return "TrainingRegistrationRequest{" +
                 "username='" + username + '\'' +
                 ", password='*****', trainingName='" + trainingName + '\'' +
-                ", traingDate=" + traingDate +
+                ", trainingDate=" + trainingDate +
                 ", trainingDuration=" + trainingDuration +
                 '}';
     }

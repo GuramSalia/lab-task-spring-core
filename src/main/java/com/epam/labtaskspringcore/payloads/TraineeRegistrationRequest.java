@@ -10,12 +10,6 @@ import java.util.Date;
 @Getter
 public class TraineeRegistrationRequest {
 
-    //     a.	Request
-    //        I.	First Name (required)
-    //        II.	Last Name (required)
-    //        III.	Date of Birth (optional)
-    //        IV.	Address (optional)
-
     @NotBlank
     String firstName;
     @NotBlank

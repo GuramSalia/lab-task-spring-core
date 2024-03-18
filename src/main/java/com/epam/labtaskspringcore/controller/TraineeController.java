@@ -33,27 +33,9 @@ public class TraineeController {
         this.trainerService = trainerService;
     }
 
+    // modify to GET method when I can authorize based on session
     @PostMapping("/trainee-get")
-    public ResponseEntity<?> getTrainee(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            @RequestBody UsernamePassword usernamePassword) {
-
-        //     a.	Request
-        //        I.	Username (required)
-        //        II.    Password (required)
-        //
-        //     b.	Response
-        //        I.	First Name
-        //        II.	Last Name
-        //        III.	Date of Birth
-        //        IV.	Address
-        //        V.	Is Active
-        //        VI.	Trainers List
-        //           1.	Trainer Username
-        //           2.	Trainer First Name
-        //           3.	Trainer Last Name
-        //           4.	Trainer Specialization (Training type reference)
+    public ResponseEntity<?> getTrainee(@Valid @RequestBody UsernamePassword usernamePassword) {
 
         String username = usernamePassword.getUsername();
         String password = usernamePassword.getPassword();
@@ -70,32 +52,7 @@ public class TraineeController {
     }
 
     @PutMapping("/trainee")
-    public ResponseEntity<?> updateTrainee(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            @Valid @RequestBody TraineeUpdateRequest traineeUpdateRequest) {
-
-        //    a.	Request
-        //        I.	Username (required)
-        //        II.    Password (required)
-        //        III.    First Name (required)
-        //        II.	First Name (required)
-        //        III.	Last Name (required)
-        //        IV.	Date of Birth (optional)
-        //        V.	Address (optional)
-        //        VI.	Is Active (required)
-        //    b.	Response
-        //        I.	Username
-        //        II.	First Name
-        //        III.	Last Name
-        //        IV.	Date of Birth
-        //        V.	Address
-        //        VI.	Is Active
-        //        VII.	Trainers List
-        //            1.	Trainer Username
-        //            2.	Trainer First Name
-        //            3.	Trainer Last Name
-        //            4.	Trainer Specialization (Training type reference)
+    public ResponseEntity<?> updateTrainee(@Valid @RequestBody TraineeUpdateRequest traineeUpdateRequest) {
 
         String username = traineeUpdateRequest.getUsername();
         String password = traineeUpdateRequest.getPassword();
@@ -111,16 +68,9 @@ public class TraineeController {
         return ResponseEntity.ok(traineeDTO);
     }
 
+    // modify to GET method when I can authorize based on session
     @PostMapping("/trainee-delete")
-    public ResponseEntity<?> deleteTrainee(HttpServletRequest request,
-                                           HttpServletResponse response,
-                                           @RequestBody UsernamePassword usernamePassword) {
-
-        //     a.	Request
-        //        I.	Username (required)
-        //        II.    Password (required)
-        //     b.	Response
-        //        I.	200 OK
+    public ResponseEntity<?> deleteTrainee(@Valid @RequestBody UsernamePassword usernamePassword) {
 
         String username = usernamePassword.getUsername();
         String password = usernamePassword.getPassword();
@@ -130,21 +80,7 @@ public class TraineeController {
 
     @PutMapping("/trainee/update-trainers-list")
     public ResponseEntity<?> updateTrainersList(
-            HttpServletRequest request,
-            HttpServletResponse response,
             @Valid @RequestBody TraineeUpdateTrainersListRequest traineeUpdateTrainersListRequest) {
-
-        //    a.	Request
-        //        I.	Trainee Username
-        //        II.   Trainee Password
-        //        III.	Trainers List (required)
-        //                1.	Trainer Username (required)
-        //    b.	Response
-        //      I.	Trainers List
-        //        1.	Trainer Username
-        //        2.	Trainer First Name
-        //        3.	Trainer Last Name
-        //        4.	Trainer Specialization (Training type reference)
 
         String username = traineeUpdateTrainersListRequest.getUsername();
         String password = traineeUpdateTrainersListRequest.getPassword();
@@ -162,16 +98,7 @@ public class TraineeController {
     }
 
     @PatchMapping("/trainee/activate")
-    public ResponseEntity<?> activateTrainee(HttpServletRequest request,
-                                             HttpServletResponse response,
-                                             @RequestBody UsernamePassword usernamePassword) {
-
-        //     a.	Request
-        //        I.	Username (required)
-        //        II.    Password (required)
-        //     b.	Response
-        //        I.	200 OK
-
+    public ResponseEntity<?> activateTrainee(@Valid @RequestBody UsernamePassword usernamePassword) {
         String username = usernamePassword.getUsername();
 
         Optional<Trainee> traineeOptional = traineeService.getByUsername(username);
@@ -185,15 +112,7 @@ public class TraineeController {
     }
 
     @PatchMapping("/trainee/deactivate")
-    public ResponseEntity<?> deactivateTrainee(HttpServletRequest request,
-                                               HttpServletResponse response,
-                                               @RequestBody UsernamePassword usernamePassword) {
-
-        //     a.	Request
-        //        I.	Username (required)
-        //        II.    Password (required)
-        //     b.	Response
-        //        I.	200 OK
+    public ResponseEntity<?> deactivateTrainee(@Valid @RequestBody UsernamePassword usernamePassword) {
 
         String username = usernamePassword.getUsername();
 
@@ -226,7 +145,6 @@ public class TraineeController {
                     trainerDTOForTrainersList.setSpecialization(trainer.getSpecialization());
                     return trainerDTOForTrainersList;
                 }).toList();
-
 
         traineeDTO.setTrainers(trainerList);
         return traineeDTO;

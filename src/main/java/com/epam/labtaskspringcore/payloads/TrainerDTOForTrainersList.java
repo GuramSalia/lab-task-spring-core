@@ -8,11 +8,6 @@ import lombok.Setter;
 @Setter
 public class TrainerDTOForTrainersList {
 
-    //1.	Trainer Username
-    //2.	Trainer First Name
-    //3.	Trainer Last Name
-    //4.	Trainer Specialization (Training type reference)
-
     private String username;
     private String firstName;
     private String lastName;

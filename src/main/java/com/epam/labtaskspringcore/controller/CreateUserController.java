@@ -10,11 +10,8 @@ import com.epam.labtaskspringcore.payloads.UsernamePassword;
 import com.epam.labtaskspringcore.service.TraineeService;
 import com.epam.labtaskspringcore.service.TrainerService;
 import com.epam.labtaskspringcore.service.TrainingTypeService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,19 +39,7 @@ public class CreateUserController {
     }
 
     @PostMapping("/trainee")
-    public ResponseEntity<?> registerTrainee(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            @Valid @RequestBody TraineeRegistrationRequest traineeRegistrationRequest) {
-
-        //     a.	Request
-        //        I.	First Name (required)
-        //        II.	Last Name (required)
-        //        III.	Date of Birth (optional)
-        //        IV.	Address (optional)
-        //     b.	Response
-        //        I.	Username
-        //        II.	Password
+    public ResponseEntity<?> registerTrainee(@Valid @RequestBody TraineeRegistrationRequest traineeRegistrationRequest) {
 
         Trainee newTrainee = getTrainee(traineeRegistrationRequest);
         Optional<Trainee> traineeOptional = traineeService.create(newTrainee);
@@ -79,18 +64,7 @@ public class CreateUserController {
     }
 
     @PostMapping("/trainer")
-    public ResponseEntity<?> registerTrainer(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            @RequestBody TrainerRegistrationRequest trainerRegistrationRequest) {
-
-        //    a.	Request
-        //        I.	First Name (required)
-        //        II.	Last Name (required)
-        //        III.	Specialization (required) (Training type reference)
-        //    b.	Response
-        //        I.	Username
-        //        II.	Password
+    public ResponseEntity<?> registerTrainer(@Valid @RequestBody TrainerRegistrationRequest trainerRegistrationRequest) {
 
         Optional<Trainer> trainerOptional = getTrainer(trainerRegistrationRequest);
 
@@ -102,8 +76,6 @@ public class CreateUserController {
         } else {
             throw new RuntimeException("Couldn't create trainer");
         }
-
-
     }
 
     private Optional<Trainer> getTrainer(TrainerRegistrationRequest trainerRegistrationRequest) {
@@ -118,7 +90,7 @@ public class CreateUserController {
                 trainingTypeService.getTrainingType(typeEnum);
         newTrainer.setSpecialization(specialization);
         newTrainer.setIsActive(true);
-        Optional<Trainer> trainerOptional = trainerService.create(newTrainer);
-        return trainerOptional;
+
+        return trainerService.create(newTrainer);
     }
 }

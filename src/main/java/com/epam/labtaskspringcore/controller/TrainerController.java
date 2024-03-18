@@ -6,8 +6,6 @@ import com.epam.labtaskspringcore.model.Trainee;
 import com.epam.labtaskspringcore.model.Trainer;
 import com.epam.labtaskspringcore.payloads.*;
 import com.epam.labtaskspringcore.service.TrainerService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -28,23 +26,9 @@ public class TrainerController {
         this.trainerService = trainerService;
     }
 
+    // modify to GET method when I can authorize based on session
     @PostMapping("/trainer-get")
-    public ResponseEntity<?> getTrainer(HttpServletRequest request,
-                                        HttpServletResponse response,
-                                        @RequestBody UsernamePassword usernamePassword) {
-
-        //     a.	Request
-        //        I.	Username (required)
-        //        II.   Password (required)
-        //     b.	Response
-        //        I.	First Name
-        //        II.	Last Name
-        //        III.	Specialization (Training type reference)
-        //        IV.	Is Active
-        //        V.	Trainees List
-        //           1.	Trainee Username
-        //           2.	Trainee First Name
-        //           3.	Trainee Last Name
+    public ResponseEntity<?> getTrainer(@Valid @RequestBody UsernamePassword usernamePassword) {
 
         String username = usernamePassword.getUsername();
         Optional<Trainer> trainerOptional = trainerService.getByUsername(username);
@@ -54,11 +38,69 @@ public class TrainerController {
         }
         Trainer trainer = trainerOptional.get();
 
-        return getTrainerDTOWithTraineeListResponseEntity(trainer);
+        TrainerDTOWithTraineeList trainerDTO = getTrainerDTOWithTraineeList(trainer);
+        return ResponseEntity.ok().body(trainerDTO);
     }
 
-    private static ResponseEntity<TrainerDTOWithTraineeList> getTrainerDTOWithTraineeListResponseEntity(
-            Trainer trainer) {
+    @PutMapping("/trainer")
+    public ResponseEntity<?> updateTrainer(@Valid @RequestBody TrainerUpdateRequest trainerUpdateRequest) {
+
+        String username = trainerUpdateRequest.getUsername();
+        Optional<Trainer> trainerOptional = trainerService.getByUsername(username);
+        if (trainerOptional.isEmpty()) {
+            throw new IllegalArgumentException("no trainer found");
+        }
+
+        Trainer trainer = trainerOptional.get();
+        TrainerDTOupdated trainerDTOupdated = getTrainerDTOupdated(trainerUpdateRequest, trainer);
+
+        return ResponseEntity.ok().body(trainerDTOupdated);
+    }
+
+    // modify to GET method when I can authorize based on session
+    @PostMapping("/trainers/get-not-assigned-to-trainee")
+    public ResponseEntity<?> getNotAssignedTrainers(@Valid @RequestBody UsernamePassword usernamePassword) {
+
+        String username = usernamePassword.getUsername();
+        String password = usernamePassword.getPassword();
+        List<Trainer> trainerList = trainerService.findUnassignedTrainersByTraineeUsername(username, password);
+
+        List<TrainerDTOForTrainersList> trainerDTOs = getTrainerDTOForTrainersLists(trainerList);
+
+        return ResponseEntity.ok().body(trainerDTOs);
+    }
+
+    @PatchMapping("/trainer/activate")
+    public ResponseEntity<?> activateTrainer(@Valid @RequestBody UsernamePassword usernamePassword) {
+
+        String username = usernamePassword.getUsername();
+        Optional<Trainer> trainerOptional = trainerService.getByUsername(username);
+        if (trainerOptional.isEmpty()) {
+            throw new IllegalArgumentException("no trainer found");
+        }
+        Trainer trainer = trainerOptional.get();
+        trainer.setIsActive(true);
+        trainerService.update(trainer);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/trainer/deactivate")
+    public ResponseEntity<?> deactivateTrainer(@Valid @RequestBody UsernamePassword usernamePassword) {
+
+        String username = usernamePassword.getUsername();
+        Optional<Trainer> trainerOptional = trainerService.getByUsername(username);
+        if (trainerOptional.isEmpty()) {
+            throw new IllegalArgumentException("no trainer found");
+        }
+        Trainer trainer = trainerOptional.get();
+        trainer.setIsActive(false);
+        trainerService.update(trainer);
+
+        return ResponseEntity.ok().build();
+    }
+
+    private TrainerDTOWithTraineeList getTrainerDTOWithTraineeList(Trainer trainer) {
 
         TrainerDTOWithTraineeList trainerDTO = new TrainerDTOWithTraineeList();
         trainerDTO.setFirstName(trainer.getFirstName());
@@ -68,7 +110,6 @@ public class TrainerController {
 
         List<TraineeDTOForTraineesList> trainees;
 
-        // ++++++++++++++++++++++++++++++++++
         if (trainer.getTrainees() != null) {
             trainees = trainer
                     .getTrainees()
@@ -87,43 +128,7 @@ public class TrainerController {
         Set<TraineeDTOForTraineesList> traineesSet = new HashSet<>(trainees);
         trainerDTO.setTrainees(traineesSet);
 
-        return ResponseEntity.ok().body(trainerDTO);
-    }
-
-    @PutMapping("/trainer")
-    public ResponseEntity<?> updateTrainer(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            @Valid @RequestBody TrainerUpdateRequest trainerUpdateRequest) {
-
-        //   a.	Request
-        //        I.	Username (required)
-        //        II.   Password (required)
-        //        III.  First Name (required)
-        //        III.	Last Name (required)
-        //        IV.	Specialization (read only) (Training type reference)
-        //        V.	Is Active (required)
-        //    b.	Response
-        //        I.	Username
-        //        II.	First Name
-        //        III.	Last Name
-        //        IV.	Specialization (Training type reference)
-        //        V.	Is Active
-        //        VI.	Trainees List
-        //           1.	Trainee Username
-        //           2.	Trainee First Name
-        //           3.	Trainee Last Name
-
-        String username = trainerUpdateRequest.getUsername();
-        Optional<Trainer> trainerOptional = trainerService.getByUsername(username);
-        if (trainerOptional.isEmpty()) {
-            throw new IllegalArgumentException("no trainer found");
-        }
-
-        Trainer trainer = trainerOptional.get();
-        TrainerDTOupdated trainerDTOupdated = getTrainerDTOupdated(trainerUpdateRequest, trainer);
-
-        return ResponseEntity.ok().body(trainerDTOupdated);
+        return trainerDTO;
     }
 
     private TrainerDTOupdated getTrainerDTOupdated(TrainerUpdateRequest trainerUpdateRequest, Trainer trainer) {
@@ -147,7 +152,6 @@ public class TrainerController {
         Set<Trainee> traineeSet = trainer.getTrainees();
         Set<TraineeDTOForTraineesList> traineeDTOList = null;
 
-        // ++++++++++++++++++++++++++++++++++++++++
         if (traineeSet != null) {
             traineeDTOList = traineeSet
                     .stream()
@@ -163,36 +167,7 @@ public class TrainerController {
         return trainerDTOupdated;
     }
 
-    @PostMapping("/trainers/get-not-assigned-to-trainee")
-    public ResponseEntity<?> getNotAssignedTrainers(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            @RequestBody UsernamePassword usernamePassword) {
-
-        //    a.	Request
-        //        I.	Username (required)
-        //        II.   Password (required)
-        //    b.	Response
-        //        I.	Trainer Username
-        //        II.	Trainer First Name
-        //        III.	Trainer Last Name
-        //        IV.	Trainer Specialization (Training type reference)
-
-        String username = usernamePassword.getUsername();
-        String password = usernamePassword.getPassword();
-        List<Trainer> trainerList = trainerService.findUnassignedTrainersByTraineeUsername(username, password);
-
-        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        List<TrainerDTOForTrainersList> trainerDTOs = null;
-        log.warn("trainerList" + trainerList.toString());
-        if (trainerList != null) {
-            trainerDTOs = getTrainerDTOForTrainersLists(trainerList);
-        }
-
-        return ResponseEntity.ok().body(trainerDTOs);
-    }
-
-    private static List<TrainerDTOForTrainersList> getTrainerDTOForTrainersLists(List<Trainer> trainerList) {
+    private List<TrainerDTOForTrainersList> getTrainerDTOForTrainersLists(List<Trainer> trainerList) {
         return trainerList
                 .stream()
                 .map(trainer -> {
@@ -203,51 +178,5 @@ public class TrainerController {
                     trainerDTO.setSpecialization(trainer.getSpecialization());
                     return trainerDTO;
                 }).toList();
-    }
-
-    @PatchMapping("/trainer/activate")
-    public ResponseEntity<?> activateTrainer(HttpServletRequest request,
-                                             HttpServletResponse response,
-                                             @RequestBody UsernamePassword usernamePassword) {
-
-        //     a.	Request
-        //        I.	Username (required)
-        //        II.    Password (required)
-        //     b.	Response
-        //        I.	200 OK
-
-        String username = usernamePassword.getUsername();
-        Optional<Trainer> trainerOptional = trainerService.getByUsername(username);
-        if (trainerOptional.isEmpty()) {
-            throw new IllegalArgumentException("no trainer found");
-        }
-        Trainer trainer = trainerOptional.get();
-        trainer.setIsActive(true);
-        trainerService.update(trainer);
-
-        return ResponseEntity.ok().build();
-    }
-
-    @PatchMapping("/trainer/deactivate")
-    public ResponseEntity<?> deactivateTrainer(HttpServletRequest request,
-                                               HttpServletResponse response,
-                                               @RequestBody UsernamePassword usernamePassword) {
-
-        //     a.	Request
-        //        I.	Username (required)
-        //        II.    Password (required)
-        //     b.	Response
-        //        I.	200 OK
-
-        String username = usernamePassword.getUsername();
-        Optional<Trainer> trainerOptional = trainerService.getByUsername(username);
-        if (trainerOptional.isEmpty()) {
-            throw new IllegalArgumentException("no trainer found");
-        }
-        Trainer trainer = trainerOptional.get();
-        trainer.setIsActive(false);
-        trainerService.update(trainer);
-
-        return ResponseEntity.ok().build();
     }
 }

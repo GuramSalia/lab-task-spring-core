@@ -8,15 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class TrainerUpdateRequest extends UsernamePassword{
-
-    //   a.	Request
-    //        I.	Username (required)
-    //        II.   Password (required)
-    //        III.  First Name (required)
-    //        III.	Last Name (required)
-    //        IV.	Specialization (read only) (Training type reference)
-    //        V.	Is Active (required)
+public class TrainerUpdateRequest extends UsernamePassword {
 
     @NotBlank
     private String firstName;
@@ -25,7 +17,6 @@ public class TrainerUpdateRequest extends UsernamePassword{
     private TrainingType specialization;
     @NotNull
     private Boolean isActive;
-
 
     public TrainerUpdateRequest(
             String username,
@@ -40,9 +31,4 @@ public class TrainerUpdateRequest extends UsernamePassword{
         this.specialization = specialization;
         this.isActive = isActive;
     }
-
-
-
-
-
 }
