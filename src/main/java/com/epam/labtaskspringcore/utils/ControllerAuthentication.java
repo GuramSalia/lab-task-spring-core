@@ -1,6 +1,5 @@
 package com.epam.labtaskspringcore.utils;
 
-import com.epam.labtaskspringcore.exception.UnauthorizedException;
 import com.epam.labtaskspringcore.model.Trainee;
 import com.epam.labtaskspringcore.model.Trainer;
 import com.epam.labtaskspringcore.service.TraineeService;
@@ -8,8 +7,6 @@ import com.epam.labtaskspringcore.service.TrainerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.Optional;
 
 @Slf4j
 @Component
@@ -26,12 +23,9 @@ public class ControllerAuthentication {
 
     public void performAuthentication(String username, String password) {
 
-        Optional<Trainee> traineeOptional = traineeService.findByUsernameAndPassword(username, password);
-        Optional<Trainer> trainerOptional = trainerService.findByUsernameAndPassword(username, password);
+        Trainee trainee = traineeService.findByUsernameAndPassword(username, password);
+        Trainer trainer = trainerService.findByUsernameAndPassword(username, password);
 
         log.info("start checking with 'performAuthentication'");
-        if (traineeOptional.isEmpty() && trainerOptional.isEmpty()) {
-            throw new UnauthorizedException("username or password is incorrect");
-        }
     }
 }

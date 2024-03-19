@@ -6,7 +6,7 @@ import com.epam.labtaskspringcore.model.Training;
 import com.epam.labtaskspringcore.model.TrainingType;
 import com.epam.labtaskspringcore.service.TrainerService;
 import com.epam.labtaskspringcore.service.TrainingService;
-import com.epam.labtaskspringcore.service.UserService;
+import com.epam.labtaskspringcore.service.UserValidatorService;
 import com.epam.labtaskspringcore.utils.Authentication;
 import com.epam.labtaskspringcore.utils.UsernameGenerator;
 import org.junit.jupiter.api.AfterEach;
@@ -26,7 +26,7 @@ class TrainingDAOInMemoryStorageImplTest {
     TrainerDAO trainerDAO;
     TrainingDAO trainingDAO;
     Authentication authentication;
-    UserService userService;
+    UserValidatorService userValidatorService;
     TrainerService trainerService;
     TrainingService trainingService;
     UsernameGenerator usernameGenerator;
@@ -46,7 +46,7 @@ class TrainingDAOInMemoryStorageImplTest {
         trainingDAO = new TrainingDAOInMemoryStorageImpl(storage);
         usernameGenerator = new UsernameGenerator(trainerDAO, traineeDAO);
         authentication = new Authentication();
-        userService = new UserService();
+        userValidatorService = new UserValidatorService();
 
         // new way of creating trainerService
         Map<String, TrainerDAO> trainerDAOMap = new HashMap<>();
@@ -55,7 +55,7 @@ class TrainingDAOInMemoryStorageImplTest {
         traineeDAOMap.put("TRAINEE_IN_MEMORY", traineeDAO);
         trainerService = new TrainerService(
                 trainerDAOMap, traineeDAOMap, authentication,
-                userService, usernameGenerator);
+                userValidatorService, usernameGenerator);
         trainerService.setTrainerDAO(trainerDAO);
 
         // new way of creating trainingService

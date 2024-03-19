@@ -42,15 +42,10 @@ public class CreateUserController {
     public ResponseEntity<?> registerTrainee(@Valid @RequestBody TraineeRegistrationRequest traineeRegistrationRequest) {
 
         Trainee newTrainee = getTrainee(traineeRegistrationRequest);
-        Optional<Trainee> traineeOptional = traineeService.create(newTrainee);
+        Trainee trainee = traineeService.create(newTrainee);
 
-        if (traineeOptional.isPresent()) {
-            Trainee trainee = traineeOptional.get();
-            UsernamePassword usernamePassword = new UsernamePassword(trainee.getUsername(), trainee.getPassword());
-            return ResponseEntity.status(HttpStatus.CREATED).body(usernamePassword);
-        } else {
-            throw new RuntimeException("Couldn't create trainee");
-        }
+        UsernamePassword usernamePassword = new UsernamePassword(trainee.getUsername(), trainee.getPassword());
+        return ResponseEntity.status(HttpStatus.CREATED).body(usernamePassword);
     }
 
     private static Trainee getTrainee(TraineeRegistrationRequest traineeRegistrationRequest) {
@@ -66,19 +61,14 @@ public class CreateUserController {
     @PostMapping("/trainer")
     public ResponseEntity<?> registerTrainer(@Valid @RequestBody TrainerRegistrationRequest trainerRegistrationRequest) {
 
-        Optional<Trainer> trainerOptional = getTrainer(trainerRegistrationRequest);
+        Trainer newTrainer = getTrainer(trainerRegistrationRequest);
+        Trainer trainer = trainerService.create(newTrainer);
 
-        if (trainerOptional.isPresent()) {
-
-            Trainer trainer = trainerOptional.get();
-            UsernamePassword usernamePassword = new UsernamePassword(trainer.getUsername(), trainer.getPassword());
-            return ResponseEntity.status(HttpStatus.CREATED).body(usernamePassword);
-        } else {
-            throw new RuntimeException("Couldn't create trainer");
-        }
+        UsernamePassword usernamePassword = new UsernamePassword(trainer.getUsername(), trainer.getPassword());
+        return ResponseEntity.status(HttpStatus.CREATED).body(usernamePassword);
     }
 
-    private Optional<Trainer> getTrainer(TrainerRegistrationRequest trainerRegistrationRequest) {
+    private Trainer getTrainer(TrainerRegistrationRequest trainerRegistrationRequest) {
         Trainer newTrainer = new Trainer();
         newTrainer.setFirstName(trainerRegistrationRequest.getFirstName());
         newTrainer.setLastName(trainerRegistrationRequest.getLastName());
@@ -86,11 +76,10 @@ public class CreateUserController {
         TrainingType.TrainingTypeEnum typeEnum =
                 TrainingType.TrainingTypeEnum.valueOf(trainerRegistrationRequest.getSpecialization());
 
-        TrainingType specialization =
-                trainingTypeService.getTrainingType(typeEnum);
+        TrainingType specialization = trainingTypeService.getTrainingType(typeEnum);
         newTrainer.setSpecialization(specialization);
         newTrainer.setIsActive(true);
 
-        return trainerService.create(newTrainer);
+        return newTrainer;
     }
 }

@@ -2,6 +2,10 @@ package com.epam.labtaskspringcore.service;
 
 import com.epam.labtaskspringcore.dao.TraineeDAO;
 import com.epam.labtaskspringcore.dao.TrainerDAO;
+import com.epam.labtaskspringcore.exception.UnauthorizedException;
+import com.epam.labtaskspringcore.exception.UserNotCreatedException;
+import com.epam.labtaskspringcore.exception.UserNotFoundException;
+import com.epam.labtaskspringcore.exception.UserNotUpdatedException;
 import com.epam.labtaskspringcore.model.Trainer;
 import com.epam.labtaskspringcore.utils.Authentication;
 import com.epam.labtaskspringcore.utils.RandomPasswordGenerator;
@@ -25,7 +29,7 @@ public class TrainerService {
     @Setter
     private Authentication authentication;
     @Setter
-    private UserService userService;
+    private UserValidatorService userValidatorService;
 
     private final UsernameGenerator usernameGenerator;
 
@@ -38,12 +42,12 @@ public class TrainerService {
     @Autowired
     public TrainerService(
             Map<String, TrainerDAO> trainerDAOMap,
-            Map<String, TraineeDAO> traineeDAOMap, Authentication authentication, UserService userService,
+            Map<String, TraineeDAO> traineeDAOMap, Authentication authentication, UserValidatorService userValidatorService,
             UsernameGenerator usernameGenerator) {
         this.trainerDAOMap = trainerDAOMap;
         this.traineeDAOMap = traineeDAOMap;
         this.authentication = authentication;
-        this.userService = userService;
+        this.userValidatorService = userValidatorService;
         this.usernameGenerator = usernameGenerator;
     }
 
@@ -55,12 +59,26 @@ public class TrainerService {
         this.traineeDAO = traineeDAOMap.get(nameOfDao);
     }
 
-    public Optional<Trainer> getById(int id, String username, String password) {
+    public Trainer getById(int id, String username, String password) {
         if (!authentication.isAuthenticated(trainerDAO, username, password)) {
-            return Optional.empty();
+            throw new UnauthorizedException("no trainer with such username or password");
         }
         log.info(">>>> Getting trainer with id: " + id);
-        return trainerDAO.getById(id);
+        Optional<Trainer> trainerOptional = trainerDAO.getById(id);
+        if (trainerOptional.isEmpty()) {
+            throw new UserNotFoundException("no such trainer");
+        }
+        return trainerOptional.get();
+    }
+
+    private Trainer getById(int id) {
+
+        log.info(">>>> Getting trainer with id: " + id);
+        Optional<Trainer> trainerOptional = trainerDAO.getById(id);
+        if (trainerOptional.isEmpty()) {
+            throw new UserNotFoundException("no such trainer");
+        }
+        return trainerOptional.get();
     }
 
     public List<Trainer> getTrainers() {
@@ -69,115 +87,105 @@ public class TrainerService {
     }
 
     @Transactional
-    public Optional<Trainer> create(Trainer trainer) {
-
-        try {
-            trainer.setUsername(usernameGenerator.generateUsername(trainer));
-            if (trainer.getPassword() == null) {
-                trainer.setPassword(RandomPasswordGenerator.generateRandomPassword());
-            }
-            log.info(">>>> Creating trainer with username: " + trainer.getUsername());
-
-            if (userService.isInvalidUser(trainer)) {
-                log.error("invalid customer");
-                return Optional.empty();
-            }
-
-            return trainerDAO.create(trainer);
-        } catch (Exception e) {
-            log.error("error creating customer", e);
-            return Optional.empty();
+    public Trainer create(Trainer trainer) {
+        trainer.setUsername(usernameGenerator.generateUsername(trainer));
+        if (trainer.getPassword() == null) {
+            trainer.setPassword(RandomPasswordGenerator.generateRandomPassword());
         }
+        log.info(">>>> Creating trainer with username: " + trainer.getUsername());
+        if (userValidatorService.isInvalidUser(trainer)) {
+            log.error("invalid customer");
+            throw new IllegalStateException("invalid user");
+        }
+        Optional<Trainer> trainerOptional = trainerDAO.create(trainer);
+        if (trainerOptional.isEmpty()) {
+            throw new UserNotCreatedException("no such trainer");
+        }
+        return trainerOptional.get();
     }
 
     // InMemory implementation doesn't require 3 arguments
-    public Optional<Trainer> update(Trainer trainer) {
+    public Trainer update(Trainer trainer) {
         //changed due to new requirement: 7. Username cannot be changed
         //        trainer.setUsername(usernameGenerator.generateUsername(trainer));
-        return trainerDAO.update(trainer);
+        Optional<Trainer> trainerOptional = trainerDAO.update(trainer);
+        if (trainerOptional.isEmpty()) {
+            throw new UserNotUpdatedException("error updating trainer");
+        }
+        return trainerOptional.get();
     }
 
     @Transactional
-    public Optional<Trainer> update(Trainer trainer, String username, String password) {
+    public Trainer update(Trainer trainer, String username, String password) {
 
         if (!authentication.isAuthenticated(trainerDAO, username, password)) {
             log.error("invalid username ^^^");
-            return Optional.empty();
+            throw new UnauthorizedException("no trainer with such username or password");
         }
 
-        if (userService.isInvalidUser(trainer)) {
+        if (userValidatorService.isInvalidUser(trainer)) {
             log.info("invalid user :::");
-            return Optional.empty();
+            throw new IllegalStateException("invalid user");
         }
 
-        try {
-            //changed due to new requirement: 7. Username cannot be changed
-            //            trainer.setUsername(usernameGenerator.generateUsername(trainer));
-            log.info(">>>> Updating trainer with username: " + trainer.getUsername());
-            return trainerDAO.update(trainer);
-        } catch (Exception e) {
-            log.error("error updating trainer", e);
-            return Optional.empty();
+        //changed due to new requirement: 7. Username cannot be changed
+        //            trainer.setUsername(usernameGenerator.generateUsername(trainer));
+        log.info(">>>> Updating trainer with username: " + trainer.getUsername());
+        Optional<Trainer> trainerOptional = trainerDAO.update(trainer);
+        if (trainerOptional.isEmpty()) {
+            throw new UserNotUpdatedException("error updating trainer");
         }
+        return trainerOptional.get();
     }
 
-    public Optional<Trainer> getByUsername(String username, String password) {
+    public Trainer findByUsernameAndPassword(String username, String password) {
 
         if (!authentication.isAuthenticated(trainerDAO, username, password)) {
-            return Optional.empty();
+            throw new UnauthorizedException("no trainer with such username or password");
         }
 
+        log.info(">>>> Getting trainer using getByUsername: " + username);
         Optional<Trainer> trainerOptional = trainerDAO.findByUsername(username);
         if (trainerOptional.isEmpty()) {
             log.error("invalid username or password");
-            return Optional.empty();
+            throw new UserNotFoundException("no such trainer");
         }
 
-        Trainer trainer = trainerOptional.get();
-
-        log.info(">>>> Getting trainer using getByUsername: " + username);
-        return trainerOptional;
+        return trainerOptional.get();
     }
 
-    public Optional<Trainer> getByUsername(String username) {
-
+    public Trainer findByUsername(String username) {
+        log.info(">>>> Getting trainer using getByUsername: " + username);
         Optional<Trainer> trainerOptional = trainerDAO.findByUsername(username);
         if (trainerOptional.isEmpty()) {
             log.error("invalid username or password");
-            return Optional.empty();
+            throw new UserNotFoundException("no such trainer");
         }
 
-        Trainer trainer = trainerOptional.get();
-
-        log.info(">>>> Getting trainer using getByUsername: " + username);
-        return trainerOptional;
+        return trainerOptional.get();
     }
 
     @Transactional
-    public Optional<Trainer> updatePassword(Trainer trainer, String username, String currentPassword,
-                                            String newPassword) {
+    public Trainer updatePassword(
+            Trainer trainer, String username, String currentPassword, String newPassword) {
 
         if (!authentication.isAuthenticated(trainerDAO, username, currentPassword)) {
-            return Optional.empty();
+            throw new UnauthorizedException("no trainer with such username or password");
         }
 
-        if (userService.isInvalidUser(trainer)) {
-            return Optional.empty();
+        if (userValidatorService.isInvalidUser(trainer)) {
+            throw new IllegalStateException("invalid user");
         }
 
-        try {
-            trainer.setPassword(newPassword);
-            return trainerDAO.update(trainer);
-        } catch (Exception e) {
-            return Optional.empty();
-        }
+        trainer.setPassword(newPassword);
+        return update(trainer);
     }
 
     @Transactional
     public boolean activateTrainer(Trainer trainer, String username, String password) {
 
         if (!authentication.isAuthenticated(trainerDAO, username, password)) {
-            return false;
+            throw new UnauthorizedException("no trainer with such username or password");
         }
 
         if (trainer.getIsActive()) {
@@ -185,22 +193,17 @@ public class TrainerService {
             return false;
         }
 
-        try {
-            trainer.setIsActive(true);
-            trainerDAO.update(trainer);
-            log.info("trainer is active");
-            return true;
-        } catch (Exception e) {
-            log.error("couldn't activate the trainer", e);
-            return false;
-        }
+        trainer.setIsActive(true);
+        update(trainer);
+        log.info("trainer is active");
+        return true;
     }
 
     @Transactional
     public boolean deactivateTrainer(Trainer trainer, String username, String password) {
 
         if (!authentication.isAuthenticated(trainerDAO, username, password)) {
-            return false;
+            throw new UnauthorizedException("no trainer with such username or password");
         }
 
         if (!trainer.getIsActive()) {
@@ -208,34 +211,35 @@ public class TrainerService {
             return false;
         }
 
-        try {
-            trainer.setIsActive(false);
-            trainerDAO.update(trainer);
-            log.info("trainer is deactivated");
-            return true;
-        } catch (Exception e) {
-            log.error("couldn't deactivate the trainer");
-            return false;
-        }
+        trainer.setIsActive(false);
+        update(trainer);
+        log.info("trainer is deactivated");
+        return true;
     }
 
     public List<Trainer> findUnassignedTrainersByTraineeUsername(String traineeUsername, String password) {
 
         if (!authentication.isAuthenticated(traineeDAO, traineeUsername, password)) {
-            return null;
+            throw new UnauthorizedException("no trainee with such username or password");
         }
 
         List<Integer> ids = trainerDAO.findIdsOfUnassignedTrainersByTraineeUsername(traineeUsername);
         List<Trainer> trainers = new ArrayList<>();
         for (Integer id : ids) {
-            Optional<Trainer> trainerOptional = trainerDAO.getById(id);
-            trainerOptional.ifPresent(trainers::add);
+            Trainer trainer = getById(id);
+            trainers.add(trainer);
         }
 
         return trainers;
     }
 
-    public Optional<Trainer> findByUsernameAndPassword(String username, String password) {
-        return trainerDAO.findByUsernameAndPassword(username, password);
-    }
+//    public Trainer findByUsernameAndPassword(String username, String password) {
+//
+//        Optional<Trainer> trainerOptional = trainerDAO.findByUsernameAndPassword(username, password);
+//        if (trainerOptional.isEmpty()) {
+//            throw new UnauthorizedException("wrong username or password");
+//        }
+//
+//        return trainerOptional.get();
+//    }
 }

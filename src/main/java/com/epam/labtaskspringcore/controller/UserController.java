@@ -2,6 +2,7 @@ package com.epam.labtaskspringcore.controller;
 
 import com.epam.labtaskspringcore.aspect.CheckUsernamePassword;
 import com.epam.labtaskspringcore.aspect.LogRestDetails;
+import com.epam.labtaskspringcore.exception.UserNotFoundException;
 import com.epam.labtaskspringcore.model.Trainee;
 import com.epam.labtaskspringcore.model.Trainer;
 import com.epam.labtaskspringcore.payloads.PasswordUpdateRequest;
@@ -17,8 +18,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Optional;
-
 @Slf4j
 @RestController
 @CheckUsernamePassword
@@ -29,8 +28,7 @@ public class UserController {
     private final TrainerService trainerService;
 
     @Autowired
-    public UserController(TraineeService traineeService, TrainerService trainerService
-                         ) {
+    public UserController(TraineeService traineeService, TrainerService trainerService ) {
         this.traineeService = traineeService;
         this.trainerService = trainerService;
     }
@@ -47,13 +45,32 @@ public class UserController {
         String currentPassword = usernamePassword.getPassword();
         String newPassword = usernamePassword.getNewPassword();
 
-        Optional<Trainee> traineeOptional = traineeService.findByUsernameAndPassword(username, currentPassword);
-        Optional<Trainer> trainerOptional = trainerService.findByUsernameAndPassword(username, currentPassword);
+        Trainee trainee = null;
+        Trainer trainer = null;
 
-        traineeOptional
-                .ifPresent(trainee -> traineeService.updatePassword(trainee, username, currentPassword, newPassword));
-        trainerOptional
-                .ifPresent(trainer -> trainerService.updatePassword(trainer, username, currentPassword, newPassword));
+        boolean isIdentified = false;
+
+        try {
+            trainee = traineeService.findByUsernameAndPassword(username, currentPassword);
+            trainer = trainerService.findByUsernameAndPassword(username, currentPassword);
+
+            if (trainee != null) {
+                traineeService.updatePassword(trainee, username, currentPassword, newPassword);
+                isIdentified = true;
+            }
+
+            if (trainer != null) {
+                trainerService.updatePassword(trainer, username, currentPassword, newPassword);
+                isIdentified = true;
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+
+        if (!isIdentified) {
+            throw new UserNotFoundException("no such user");
+        }
+
 
         return ResponseEntity.ok().build();
     }

@@ -85,9 +85,9 @@ public class TrainingController {
     private Training getTraining(TrainingRegistrationRequest trainingRegistrationRequest) {
 
         String traineeUsername = trainingRegistrationRequest.getTraineeUsername();
-        Optional<Trainee> traineeOptional = traineeService.getByUsername(traineeUsername);
+        Optional<Trainee> traineeOptional = Optional.ofNullable(traineeService.findByUsername(traineeUsername));
         String trainerUsername = trainingRegistrationRequest.getTrainerUsername();
-        Optional<Trainer> trainerOptional = trainerService.getByUsername(trainerUsername);
+        Optional<Trainer> trainerOptional = Optional.ofNullable(trainerService.findByUsername(trainerUsername));
 
         Training training = new Training();
         if (traineeOptional.isEmpty()) {

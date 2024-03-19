@@ -2,21 +2,17 @@ package com.epam.labtaskspringcore.controller;
 
 import com.epam.labtaskspringcore.aspect.CheckUsernamePassword;
 import com.epam.labtaskspringcore.aspect.LogRestDetails;
-import com.epam.labtaskspringcore.exception.InvalidRequestBodyException;
 import com.epam.labtaskspringcore.model.Trainee;
 import com.epam.labtaskspringcore.model.Trainer;
 import com.epam.labtaskspringcore.payloads.*;
 import com.epam.labtaskspringcore.service.TraineeService;
 import com.epam.labtaskspringcore.service.TrainerService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @CheckUsernamePassword
@@ -36,42 +32,25 @@ public class TraineeController {
     // modify to GET method when I can authorize based on session
     @PostMapping("/trainee-get")
     public ResponseEntity<?> getTrainee(@Valid @RequestBody UsernamePassword usernamePassword) {
-
         String username = usernamePassword.getUsername();
         String password = usernamePassword.getPassword();
-
-        Optional<Trainee> traineeOptional = traineeService.findByUsernameAndPassword(username, password);
-        if (traineeOptional.isEmpty()) {
-            throw new InvalidRequestBodyException("Could not find trainee");
-        }
-
-        Trainee trainee = traineeOptional.get();
+        Trainee trainee = traineeService.findByUsernameAndPassword(username, password);
         TraineeDTOWithTrainersList traineeDTO = getTraineeDTOWithTrainersList(trainee);
-
         return ResponseEntity.ok(traineeDTO);
     }
 
     @PutMapping("/trainee")
     public ResponseEntity<?> updateTrainee(@Valid @RequestBody TraineeUpdateRequest traineeUpdateRequest) {
-
         String username = traineeUpdateRequest.getUsername();
         String password = traineeUpdateRequest.getPassword();
-        Optional<Trainee> traineeOptional = traineeService.findByUsernameAndPassword(username, password);
-
-        if (traineeOptional.isEmpty()) {
-            throw new InvalidRequestBodyException("username or password is invalid");
-        }
-
-        Trainee trainee = traineeOptional.get();
+        Trainee trainee = traineeService.findByUsernameAndPassword(username, password);
         TraineeDTOUpdated traineeDTO = getTraineeDTOUpdated(traineeUpdateRequest, trainee);
-
         return ResponseEntity.ok(traineeDTO);
     }
 
     // modify to GET method when I can authorize based on session
     @PostMapping("/trainee-delete")
     public ResponseEntity<?> deleteTrainee(@Valid @RequestBody UsernamePassword usernamePassword) {
-
         String username = usernamePassword.getUsername();
         String password = usernamePassword.getPassword();
         traineeService.delete(username, password);
@@ -85,27 +64,16 @@ public class TraineeController {
         String username = traineeUpdateTrainersListRequest.getUsername();
         String password = traineeUpdateTrainersListRequest.getPassword();
         List<String> trainerUsernames = traineeUpdateTrainersListRequest.getTrainerUsernames();
-
-        Optional<Trainee> traineeOptional = traineeService.findByUsernameAndPassword(username, password);
-        if (traineeOptional.isEmpty()) {
-            throw new InvalidRequestBodyException("username or password is invalid");
-        }
-
-        Trainee trainee = traineeOptional.get();
+        Trainee trainee = traineeService.findByUsernameAndPassword(username, password);
         List<TrainerDTOForTrainersList> trainerListDTO = getTrainerListDTO(trainerUsernames, trainee);
-
         return ResponseEntity.ok().body(trainerListDTO);
     }
 
     @PatchMapping("/trainee/activate")
     public ResponseEntity<?> activateTrainee(@Valid @RequestBody UsernamePassword usernamePassword) {
         String username = usernamePassword.getUsername();
-
-        Optional<Trainee> traineeOptional = traineeService.getByUsername(username);
-        if (traineeOptional.isEmpty()) {
-            throw new InvalidRequestBodyException("Could not find trainee");
-        }
-        Trainee trainee = traineeOptional.get();
+        String password = usernamePassword.getPassword();
+        Trainee trainee = traineeService.findByUsernameAndPassword(username, password);
         trainee.setIsActive(true);
         traineeService.update(trainee);
         return ResponseEntity.ok().build();
@@ -113,14 +81,9 @@ public class TraineeController {
 
     @PatchMapping("/trainee/deactivate")
     public ResponseEntity<?> deactivateTrainee(@Valid @RequestBody UsernamePassword usernamePassword) {
-
         String username = usernamePassword.getUsername();
-
-        Optional<Trainee> traineeOptional = traineeService.getByUsername(username);
-        if (traineeOptional.isEmpty()) {
-            throw new InvalidRequestBodyException("Could not find trainee");
-        }
-        Trainee trainee = traineeOptional.get();
+        String password = usernamePassword.getPassword();
+        Trainee trainee = traineeService.findByUsernameAndPassword(username, password);
         trainee.setIsActive(false);
         traineeService.update(trainee);
         return ResponseEntity.ok().build();
@@ -157,11 +120,8 @@ public class TraineeController {
         trainee.setAddress(traineeUpdateRequest.getAddress());
         trainee.setIsActive(traineeUpdateRequest.getIsActive());
 
-        Optional<Trainee> updatedTraineeOptional = traineeService.update(trainee);
-        if (updatedTraineeOptional.isEmpty()) {
-            throw new RuntimeException("Could not update trainee");
-        }
-        Trainee updatedTrainee = updatedTraineeOptional.get();
+        Trainee updatedTrainee = traineeService.update(trainee);
+
         TraineeDTOUpdated traineeDTO = new TraineeDTOUpdated();
         traineeDTO.setUsername(updatedTrainee.getUsername());
         traineeDTO.setFirstName(updatedTrainee.getFirstName());
@@ -192,13 +152,7 @@ public class TraineeController {
 
         List<Trainer> trainers = trainerUsernames
                 .stream()
-                .map(trainerUsername -> {
-                    Optional<Trainer> trainerOptional = trainerService.getByUsername(trainerUsername);
-                    if (trainerOptional.isEmpty()) {
-                        throw new InvalidRequestBodyException("Could not find trainer");
-                    }
-                    return trainerOptional.get();
-                }).toList();
+                .map(trainerService::findByUsername).toList();
         Set<Trainer> trainerSet = new HashSet<Trainer>(trainers);
         trainee.setTrainers(trainerSet);
         traineeService.update(trainee);

@@ -31,7 +31,7 @@ public class TrainerController {
     public ResponseEntity<?> getTrainer(@Valid @RequestBody UsernamePassword usernamePassword) {
 
         String username = usernamePassword.getUsername();
-        Optional<Trainer> trainerOptional = trainerService.getByUsername(username);
+        Optional<Trainer> trainerOptional = Optional.ofNullable(trainerService.findByUsername(username));
 
         if (trainerOptional.isEmpty()) {
             throw new IllegalArgumentException("no trainer found");
@@ -46,7 +46,7 @@ public class TrainerController {
     public ResponseEntity<?> updateTrainer(@Valid @RequestBody TrainerUpdateRequest trainerUpdateRequest) {
 
         String username = trainerUpdateRequest.getUsername();
-        Optional<Trainer> trainerOptional = trainerService.getByUsername(username);
+        Optional<Trainer> trainerOptional = Optional.ofNullable(trainerService.findByUsername(username));
         if (trainerOptional.isEmpty()) {
             throw new IllegalArgumentException("no trainer found");
         }
@@ -74,7 +74,7 @@ public class TrainerController {
     public ResponseEntity<?> activateTrainer(@Valid @RequestBody UsernamePassword usernamePassword) {
 
         String username = usernamePassword.getUsername();
-        Optional<Trainer> trainerOptional = trainerService.getByUsername(username);
+        Optional<Trainer> trainerOptional = Optional.ofNullable(trainerService.findByUsername(username));
         if (trainerOptional.isEmpty()) {
             throw new IllegalArgumentException("no trainer found");
         }
@@ -89,7 +89,7 @@ public class TrainerController {
     public ResponseEntity<?> deactivateTrainer(@Valid @RequestBody UsernamePassword usernamePassword) {
 
         String username = usernamePassword.getUsername();
-        Optional<Trainer> trainerOptional = trainerService.getByUsername(username);
+        Optional<Trainer> trainerOptional = Optional.ofNullable(trainerService.findByUsername(username));
         if (trainerOptional.isEmpty()) {
             throw new IllegalArgumentException("no trainer found");
         }
@@ -137,7 +137,7 @@ public class TrainerController {
         trainer.setSpecialization(trainerUpdateRequest.getSpecialization());
         trainer.setIsActive(trainerUpdateRequest.getIsActive());
 
-        Optional<Trainer> updatedTrainerOptional = trainerService.update(trainer);
+        Optional<Trainer> updatedTrainerOptional = Optional.ofNullable(trainerService.update(trainer));
         if (updatedTrainerOptional.isEmpty()) {
             throw new IllegalArgumentException("no trainer updated");
         }

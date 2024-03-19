@@ -1,6 +1,6 @@
 package com.epam.labtaskspringcore.global;
 
-import com.epam.labtaskspringcore.exception.UnauthorizedException;
+import com.epam.labtaskspringcore.exception.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -66,6 +66,66 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         );
 
         ResponseEntity<ErrorDetails> body = ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorDetails);
+        logRestDetails(body);
+        return body;
+    }
+
+    @ExceptionHandler(UserNotCreatedException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<ErrorDetails> handleUserNotCreatedException(UserNotCreatedException ex, WebRequest request) {
+        ErrorDetails errorDetails = new ErrorDetails(
+                correlationIDHandler.getCorrelationId(),
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                ex.getMessage(),
+                request.getDescription(false)
+        );
+
+        ResponseEntity<ErrorDetails> body = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorDetails);
+        logRestDetails(body);
+        return body;
+    }
+
+    @ExceptionHandler(UserNotUpdatedException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<ErrorDetails> handleUserNotUpdatedException(UserNotUpdatedException ex, WebRequest request) {
+        ErrorDetails errorDetails = new ErrorDetails(
+                correlationIDHandler.getCorrelationId(),
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                ex.getMessage(),
+                request.getDescription(false)
+        );
+
+        ResponseEntity<ErrorDetails> body = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorDetails);
+        logRestDetails(body);
+        return body;
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<ErrorDetails> handleUserNotFoundException(UserNotFoundException ex, WebRequest request) {
+        ErrorDetails errorDetails = new ErrorDetails(
+                correlationIDHandler.getCorrelationId(),
+                HttpStatus.NOT_FOUND,
+                ex.getMessage(),
+                request.getDescription(false)
+        );
+
+        ResponseEntity<ErrorDetails> body = ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorDetails);
+        logRestDetails(body);
+        return body;
+    }
+
+    @ExceptionHandler(UserNotDeletedException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<ErrorDetails> handleUserNotDeletedException(UserNotDeletedException ex, WebRequest request) {
+        ErrorDetails errorDetails = new ErrorDetails(
+                correlationIDHandler.getCorrelationId(),
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                ex.getMessage(),
+                request.getDescription(false)
+        );
+
+        ResponseEntity<ErrorDetails> body = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorDetails);
         logRestDetails(body);
         return body;
     }

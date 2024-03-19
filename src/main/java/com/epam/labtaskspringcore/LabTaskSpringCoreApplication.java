@@ -36,12 +36,12 @@ public class LabTaskSpringCoreApplication {
         TrainingService trainingServiceWithDatabaseDao = BeanProvider
                 .getTrainingService("TRAINING_DATABASE", "TRAINER_DATABASE");
 
-        Optional<Trainer> optionalTrainer1 = trainerServiceWithDatabaseDao.getById(1, "Tim.Smith", "123");
-        Optional<Trainer> optionalTrainer2 = trainerServiceWithDatabaseDao.getById(2, "Sam.Jones", "123");
+        Optional<Trainer> optionalTrainer1 = Optional.ofNullable(trainerServiceWithDatabaseDao.getById(1, "Tim.Smith", "123"));
+        Optional<Trainer> optionalTrainer2 = Optional.ofNullable(trainerServiceWithDatabaseDao.getById(2, "Sam.Jones", "123"));
         Optional<Training> optionalTraining1 = trainingServiceWithDatabaseDao.getById(1);
         Optional<Training> optionalTraining2 = trainingServiceWithDatabaseDao.getById(2);
-        Optional<Trainee> optionalTrainee1 = traineeServiceWithDatabaseDao.getById(3, "John.Doe", "123");
-        Optional<Trainee> optionalTrainee2 = traineeServiceWithDatabaseDao.getById(4, "Jane.Smith", "123");
+        Optional<Trainee> optionalTrainee1 = Optional.ofNullable(traineeServiceWithDatabaseDao.getById(3, "John.Doe", "123"));
+        Optional<Trainee> optionalTrainee2 = Optional.ofNullable(traineeServiceWithDatabaseDao.getById(4, "Jane.Smith", "123"));
 
         log.info("list of TRAINEES from DB: \n");
         optionalTrainee1.ifPresent(trainee -> log.info(trainee.toString()));
@@ -61,7 +61,7 @@ public class LabTaskSpringCoreApplication {
         } else {
             log.info("optionalTrainer1 or optionalTrainer2 is not present");
         }
-        Optional<Trainee> trainee3SavedOptional = traineeServiceWithDatabaseDao.create(trainee_3);
+        Optional<Trainee> trainee3SavedOptional = Optional.ofNullable(traineeServiceWithDatabaseDao.create(trainee_3));
         trainee3SavedOptional.ifPresent(trainee -> log.info(trainee.getFirstName() + " saved"));
         String traineeDave = traineeServiceWithDatabaseDao.getById(5, "Dave.Miller", "123456").toString();
         log.info("trainee_3 found by id of 5 :" + traineeDave);
@@ -70,7 +70,7 @@ public class LabTaskSpringCoreApplication {
         log.info("   .....   With DB - create trainee 4");
         Trainee trainee_4 = new Trainee();
         Helper.setUpTrainee_4(trainee_4);
-        Optional<Trainee> trainee4SavedOptional = traineeServiceWithDatabaseDao.create(trainee_4);
+        Optional<Trainee> trainee4SavedOptional = Optional.ofNullable(traineeServiceWithDatabaseDao.create(trainee_4));
         trainee4SavedOptional.ifPresent(trainee -> log.info(trainee.toString()));
         log.info("   -----   end  \n");
 
@@ -78,8 +78,8 @@ public class LabTaskSpringCoreApplication {
         if (trainee3SavedOptional.isPresent()) {
             Trainee trainee_3Saved = trainee3SavedOptional.get();
             Helper.updateTrainee_3Saved(trainee_3Saved);
-            trainee3SavedOptional = traineeServiceWithDatabaseDao.update(
-                    trainee_3Saved, trainee_3Saved.getUsername(), "123456");
+            trainee3SavedOptional = Optional.ofNullable(traineeServiceWithDatabaseDao.update(
+                    trainee_3Saved, trainee_3Saved.getUsername(), "123456"));
             trainee3SavedOptional.ifPresent(trainee -> log.info("Updated trainee_3: " + trainee));
         } else {
             log.error("trainee3SavedOptional is empty");
@@ -88,7 +88,7 @@ public class LabTaskSpringCoreApplication {
         log.info("   -----   end  \n");
 
         log.info("   .....   With DB - getByUsername trainee_3");
-        trainee3SavedOptional = traineeServiceWithDatabaseDao.getByUsername("John.Doe1", "1122");
+        trainee3SavedOptional = Optional.ofNullable(traineeServiceWithDatabaseDao.findByUsernameAndPassword("Dave.Miller", "1122"));
         trainee3SavedOptional.ifPresent(trainee -> log.info(trainee.toString()));
         log.info("   -----   end  \n");
 
@@ -149,15 +149,15 @@ public class LabTaskSpringCoreApplication {
 
         log.info(" .....   With DB - update trainer Olivia, new specification YOGA");
         olivia.setSpecialization(YOGA);
-        Optional<Trainer> oliviaOptional = trainerServiceWithDatabaseDao.update(olivia, olivia.getUsername(), "123");
+        Optional<Trainer> oliviaOptional = Optional.ofNullable(trainerServiceWithDatabaseDao.update(olivia, olivia.getUsername(), "123"));
         if (oliviaOptional.isPresent()) {
             olivia = oliviaOptional.get();
             log.info("updated trainer: " + olivia + " with new specialization: " + olivia.getSpecialization());
         }
 
         log.info("updated trainer password: new password '321'");
-        oliviaOptional = trainerServiceWithDatabaseDao
-                .updatePassword(olivia, olivia.getUsername(), "123", "321");
+        oliviaOptional = Optional.ofNullable(trainerServiceWithDatabaseDao
+                                                     .updatePassword(olivia, olivia.getUsername(), "123", "321"));
         if (oliviaOptional.isPresent()) {
             olivia = oliviaOptional.get();
             log.info("updated trainer: " + olivia + " with new password: " + olivia.getPassword());
@@ -185,7 +185,7 @@ public class LabTaskSpringCoreApplication {
 
         log.info("create training with trainer of the same type");
 
-        Optional<Trainee> trainee_3Optional = traineeServiceWithDatabaseDao.getByUsername("John.Doe1", "2233");
+        Optional<Trainee> trainee_3Optional = Optional.ofNullable(traineeServiceWithDatabaseDao.findByUsernameAndPassword("Dave.Miller", "2233"));
         if (trainee_3Optional.isPresent()) {
             trainee_3 = trainee_3Optional.get();
         }
@@ -205,7 +205,7 @@ public class LabTaskSpringCoreApplication {
         Helper.logResultOfTraing4Creation(optional, olivia, training_4);
 
         log.info("deleting trainee cascades to deleting training");
-        traineeServiceWithDatabaseDao.delete("John.Doe1", "2233");
+        traineeServiceWithDatabaseDao.delete("Dave.Miller", "2233");
 
         log.info("\n\n>>>> START with JPQL  ==============\n");
 
@@ -226,11 +226,11 @@ public class LabTaskSpringCoreApplication {
         java.sql.Date sqlToDate = new java.sql.Date(toDate.getTime());
 
         log.info("\n\n\n ++++++++++++++++ \ntrainee with username:  \n\n" + trainingServiceWithDatabaseDao.getTrainingsByTraineeAndOtherFilters(
-                traineeUsername,
-                sqlFromDate,
-                sqlToDate,
-                trainerUsername,
-                "CARDIO")
+                         traineeUsername,
+                         sqlFromDate,
+                         sqlToDate,
+                         trainerUsername,
+                         "CARDIO")
                 );
 
         log.info("\n\n\n ++++++++++++++++ \ntrainee with username:  \n\n" + trainingServiceWithDatabaseDao.getTrainingsByTraineeAndOtherFilters(
@@ -254,17 +254,17 @@ public class LabTaskSpringCoreApplication {
         Trainer sam = null;
         olivia = null;
 
-        Optional<Trainee> janeOptional = traineeServiceWithDatabaseDao.getByUsername("Jane.Smith", "123");
+        Optional<Trainee> janeOptional = Optional.ofNullable(traineeServiceWithDatabaseDao.findByUsernameAndPassword("Jane.Smith", "123"));
         if (janeOptional.isPresent()) {
             jane = janeOptional.get();
         }
 
-        Optional<Trainer> samOptional = trainerServiceWithDatabaseDao.getByUsername("Sam.Jones", "123");
+        Optional<Trainer> samOptional = Optional.ofNullable(trainerServiceWithDatabaseDao.findByUsernameAndPassword("Sam.Jones", "123"));
         if (samOptional.isPresent()) {
             sam = samOptional.get();
         }
 
-        oliviaOptional = trainerServiceWithDatabaseDao.getByUsername("Olivia.Bruno", "321");
+        oliviaOptional = Optional.ofNullable(trainerServiceWithDatabaseDao.findByUsernameAndPassword("Olivia.Bruno", "321"));
         if (oliviaOptional.isPresent()) {
             olivia = oliviaOptional.get();
         }
@@ -279,7 +279,8 @@ public class LabTaskSpringCoreApplication {
         assert jane != null;
         jane.setTrainers(trainers);
 
-        Optional<Trainee> updatedJaneOptional = traineeServiceWithDatabaseDao.update(jane, jane.getUsername(), "123");
+        Optional<Trainee> updatedJaneOptional = Optional.ofNullable(traineeServiceWithDatabaseDao.update(
+                jane, jane.getUsername(), "123"));
         if (updatedJaneOptional.isPresent()) {
             jane = updatedJaneOptional.get();
             log.info("updated trainee: " + jane);
@@ -289,15 +290,15 @@ public class LabTaskSpringCoreApplication {
 
         log.info(" ....... TASK-3 RELATED PART STARTS HERE  .......\n\n");
 
-        Optional<Trainer> trainerTimOptional = trainerServiceWithDatabaseDao.findByUsernameAndPassword("Tim.Smith",
-                                                                                                       "123");
+        Optional<Trainer> trainerTimOptional = Optional.ofNullable(
+                trainerServiceWithDatabaseDao.findByUsernameAndPassword("Tim.Smith", "123"));
         if (trainerTimOptional.isPresent()) {
             Trainer trainerTim = trainerTimOptional.get();
             log.info("trainerTim: " + trainerTim);
 
             trainerTim.setUsername("NEW.USERNAME");
-            trainerTimOptional = trainerServiceWithDatabaseDao.update(trainerTim, "Tim.Smith",
-                                                                      "123");
+            trainerTimOptional = Optional.ofNullable(trainerServiceWithDatabaseDao.update(trainerTim, "Tim.Smith",
+                                                                                          "123"));
             if (trainerTimOptional.isPresent()) {
                 trainerTim = trainerTimOptional.get();
                 log.info("updated trainer: " + trainerTim);
@@ -308,7 +309,5 @@ public class LabTaskSpringCoreApplication {
         log.info("\n\n api-docs at: 'http://localhost:8080/v3/api-docs'");
 
         log.info("\n\n>>>> END of TASK-3 RELATED PART  ==============\n\n");
-
-
     }
 }
