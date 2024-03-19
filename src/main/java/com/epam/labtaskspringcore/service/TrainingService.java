@@ -24,7 +24,9 @@ public class TrainingService {
     private final Map<String, TrainerDAO> trainerDAOMap;
 
     @Autowired
-    public TrainingService(Map<String, TrainingDAO> trainingDAOMap, Map<String, TrainerDAO> trainerDAOMap) {
+    public TrainingService(
+            Map<String, TrainingDAO> trainingDAOMap,
+            Map<String, TrainerDAO> trainerDAOMap) {
         this.trainingDAOMap = trainingDAOMap;
         this.trainerDAOMap = trainerDAOMap;
     }

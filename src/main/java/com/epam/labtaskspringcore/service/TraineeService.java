@@ -32,8 +32,11 @@ public class TraineeService {
     private TraineeDAO traineeDAO;
 
     @Autowired
-    public TraineeService(Map<String, TraineeDAO> traineeDAOMap, Authentication authentication,
-                          UserValidatorService userValidatorService, UsernameGenerator usernameGenerator) {
+    public TraineeService(
+            Map<String, TraineeDAO> traineeDAOMap,
+            Authentication authentication,
+            UserValidatorService userValidatorService,
+            UsernameGenerator usernameGenerator) {
         this.traineeDAOMap = traineeDAOMap;
         this.authentication = authentication;
         this.userValidatorService = userValidatorService;
@@ -186,6 +189,7 @@ public class TraineeService {
     @Transactional
     public Optional<Trainee> updatePassword(Trainee trainee, String username, String currentPassword, String
             newPassword) {
+        log.info(">>>> Updating trainee with username: " + trainee.getUsername());
 
         if (!authentication.isAuthenticated(traineeDAO, username, currentPassword)) {
             throw new UnauthorizedException("no trainee with such username or password");

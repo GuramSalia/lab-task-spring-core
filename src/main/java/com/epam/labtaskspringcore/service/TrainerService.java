@@ -30,9 +30,7 @@ public class TrainerService {
     private Authentication authentication;
     @Setter
     private UserValidatorService userValidatorService;
-
     private final UsernameGenerator usernameGenerator;
-
     @Setter
     private TrainerDAO trainerDAO;
 
@@ -42,7 +40,9 @@ public class TrainerService {
     @Autowired
     public TrainerService(
             Map<String, TrainerDAO> trainerDAOMap,
-            Map<String, TraineeDAO> traineeDAOMap, Authentication authentication, UserValidatorService userValidatorService,
+            Map<String, TraineeDAO> traineeDAOMap,
+            Authentication authentication,
+            UserValidatorService userValidatorService,
             UsernameGenerator usernameGenerator) {
         this.trainerDAOMap = trainerDAOMap;
         this.traineeDAOMap = traineeDAOMap;
@@ -167,8 +167,11 @@ public class TrainerService {
 
     @Transactional
     public Trainer updatePassword(
-            Trainer trainer, String username, String currentPassword, String newPassword) {
-
+            Trainer trainer,
+            String username,
+            String currentPassword,
+            String newPassword) {
+        log.info(">>>> Updating trainer with username: " + trainer.getUsername());
         if (!authentication.isAuthenticated(trainerDAO, username, currentPassword)) {
             throw new UnauthorizedException("no trainer with such username or password");
         }
@@ -178,6 +181,7 @@ public class TrainerService {
         }
 
         trainer.setPassword(newPassword);
+
         return update(trainer);
     }
 

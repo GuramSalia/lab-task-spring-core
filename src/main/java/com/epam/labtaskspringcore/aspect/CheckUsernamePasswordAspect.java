@@ -2,6 +2,7 @@ package com.epam.labtaskspringcore.aspect;
 
 import com.epam.labtaskspringcore.exception.InvalidRequestBodyException;
 import com.epam.labtaskspringcore.payloads.UsernamePassword;
+import com.epam.labtaskspringcore.service.UserService;
 import com.epam.labtaskspringcore.utils.ControllerAuthentication;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -16,11 +17,11 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 public class CheckUsernamePasswordAspect {
-    private final ControllerAuthentication controllerAuthentication;
+    private final UserService userService;
 
     @Autowired
-    public CheckUsernamePasswordAspect(ControllerAuthentication controllerAuthentication) {
-        this.controllerAuthentication = controllerAuthentication;
+    public CheckUsernamePasswordAspect(UserService userService) {
+        this.userService = userService;
     }
 
     //    @Before("execution(* com.epam.labtaskspringcore.controller.UserController.login(..))")
@@ -52,7 +53,7 @@ public class CheckUsernamePasswordAspect {
         }
 
         log.info("start performing authentication with 'CheckUsernamePasswordAspect'");
-        controllerAuthentication.performAuthentication(username, password);
+        userService.performAuthentication(username, password);
     }
 }
 
