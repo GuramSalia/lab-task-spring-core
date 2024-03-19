@@ -10,6 +10,9 @@ import com.epam.labtaskspringcore.payloads.UsernamePassword;
 import com.epam.labtaskspringcore.service.TraineeService;
 import com.epam.labtaskspringcore.service.TrainerService;
 import com.epam.labtaskspringcore.service.TrainingTypeService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -38,7 +41,12 @@ public class CreateUserController {
         this.trainingTypeService = trainingTypeService;
     }
 
+
     @PostMapping("/trainee")
+    @Operation(summary = "Create Trainee")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Trainee Registered")
+    })
     public ResponseEntity<?> registerTrainee(@Valid @RequestBody TraineeRegistrationRequest traineeRegistrationRequest) {
 
         Trainee newTrainee = getTrainee(traineeRegistrationRequest);
@@ -58,7 +66,12 @@ public class CreateUserController {
         return newTrainee;
     }
 
+
     @PostMapping("/trainer")
+    @Operation(summary = "Create Trainer")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Trainee Registered")
+    })
     public ResponseEntity<?> registerTrainer(@Valid @RequestBody TrainerRegistrationRequest trainerRegistrationRequest) {
 
         Trainer newTrainer = getTrainer(trainerRegistrationRequest);

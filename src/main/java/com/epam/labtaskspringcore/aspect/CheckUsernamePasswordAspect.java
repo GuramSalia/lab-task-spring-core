@@ -3,14 +3,11 @@ package com.epam.labtaskspringcore.aspect;
 import com.epam.labtaskspringcore.exception.InvalidRequestBodyException;
 import com.epam.labtaskspringcore.payloads.UsernamePassword;
 import com.epam.labtaskspringcore.service.UserService;
-import com.epam.labtaskspringcore.utils.ControllerAuthentication;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 @Slf4j

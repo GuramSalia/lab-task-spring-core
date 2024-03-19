@@ -5,6 +5,9 @@ import com.epam.labtaskspringcore.aspect.LogRestDetails;
 import com.epam.labtaskspringcore.model.TrainingType;
 import com.epam.labtaskspringcore.payloads.UsernamePassword;
 import com.epam.labtaskspringcore.service.TrainingTypeService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -32,6 +35,10 @@ public class TrainingTypesController {
 
     // modify to GET method when I can authorize based on session
     @PostMapping("/training-types")
+    @Operation(summary = "get training types")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Trainee activated successfully")
+    })
     public ResponseEntity<?> getTrainingTypes(@Valid @RequestBody UsernamePassword usernamePassword) {
 
         List<TrainingType> trainingTypes = trainingTypeService.getAllTrainingTypes();

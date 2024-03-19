@@ -2,7 +2,8 @@ package com.epam.labtaskspringcore.service;
 
 import com.epam.labtaskspringcore.dao.TrainerDAO;
 import com.epam.labtaskspringcore.dao.TrainingDAO;
-import com.epam.labtaskspringcore.model.Trainee;
+import com.epam.labtaskspringcore.exception.TrainingNotCreatedException;
+import com.epam.labtaskspringcore.exception.TrainingNotFoundException;
 import com.epam.labtaskspringcore.model.Trainer;
 import com.epam.labtaskspringcore.model.Training;
 import com.epam.labtaskspringcore.model.TrainingType;
@@ -45,13 +46,19 @@ public class TrainingService {
         this.trainerDAO = trainerDAOMap.get(nameOfDao);
     }
 
-    public Optional<Training> getById(int id) {
+    public Training getById(int id) {
         log.info(">>>> Getting training with id: " + id);
-        return trainingDAO.getById(id);
+
+        Optional<Training> trainingOptional = trainingDAO.getById(id);
+        if (trainingOptional.isEmpty()) {
+            log.error("Cannot get training with id: " + id);
+            throw new TrainingNotFoundException("training not found");
+        }
+        return trainingOptional.get();
     }
 
     @Transactional
-    public Optional<Training> create(Training training) {
+    public Training create(Training training) {
 
         TrainingType trainingType = training.getTrainingType();
         TrainingType trainerSpecialization;
@@ -59,35 +66,34 @@ public class TrainingService {
 
         if (optionalTrainer.isEmpty()) {
             log.info("There is no such trainer as indicated by training");
-            trainerSpecialization = null;
-        } else {
-
-            Optional<Trainer> trainerFromDb = trainerDAO.findByUsername(optionalTrainer.get().getUsername());
-            if (trainerFromDb.isEmpty()) {
-                log.error("Cannot create training, because the trainer does not exist");
-                return Optional.empty();
-            }
-
-            trainerSpecialization = optionalTrainer.get().getSpecialization();
+            throw new TrainingNotCreatedException("no trainer indicated by training");
         }
+
+        Optional<Trainer> trainerFromDb = trainerDAO.findByUsername(optionalTrainer.get().getUsername());
+        if (trainerFromDb.isEmpty()) {
+            log.error("Cannot create training, because the trainer does not exist");
+            throw new TrainingNotCreatedException("There is no such trainer as indicated by training");
+        }
+
+        trainerSpecialization = optionalTrainer.get().getSpecialization();
 
         // Is no longer the requirement since TASK3-REST, have to create training with just a trainer.
         // maybe we should give the training the same trainer Training Type?
 
-
         if (areMismatchingTrainingTypes(trainingType, trainerSpecialization)) {
             log.error("cannot create training, because the trainer has a different specialization");
-            return Optional.empty();
+            throw new TrainingNotCreatedException("cannot create training, because the trainer has a different " +
+                                                          "specialization");
         }
 
-        try {
-            trainingDAO.create(training);
-            log.info(">>>> Creating training: " + training.getTrainingName());
-            return trainingDAO.getById(training.getTrainingId());
-        } catch (Exception e) {
-            log.error("something went wrong", e);
-            return Optional.empty();
+        Optional<Training> trainingOptional = trainingDAO.create(training);
+        if (trainingOptional.isEmpty()) {
+            log.error("Cannot create training");
+            throw new TrainingNotCreatedException("Cannot create training");
         }
+
+        log.info(">>>> Creating training: " + training.getTrainingName());
+        return trainingOptional.get();
     }
 
     public List<Training> getTrainingsByTraineeAndOtherFilters(

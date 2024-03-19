@@ -1,7 +1,7 @@
 package com.epam.labtaskspringcore.exception;
 
-public class UserNotCreatedException extends RuntimeException{
-    public UserNotCreatedException(String message) {
+public class TrainingNotCreatedException extends RuntimeException{
+    public TrainingNotCreatedException(String message) {
         super(message);
     }
 }

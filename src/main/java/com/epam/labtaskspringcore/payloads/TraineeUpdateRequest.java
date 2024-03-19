@@ -10,9 +10,9 @@ import java.util.Date;
 @Setter
 public class TraineeUpdateRequest extends UsernamePassword {
 
-    @NotBlank
+    @NotBlank(message = "first name must not be blank")
     private String firstName;
-    @NotBlank
+    @NotBlank(message = "last name must not be blank")
     private String lastName;
     private Date dateOfBirth;
     private String address;

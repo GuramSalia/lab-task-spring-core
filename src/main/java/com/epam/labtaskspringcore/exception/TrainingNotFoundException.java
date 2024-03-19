@@ -1,7 +1,7 @@
 package com.epam.labtaskspringcore.exception;
 
-public class UserNotFoundException extends RuntimeException{
-    public UserNotFoundException(String message) {
+public class TrainingNotFoundException extends RuntimeException{
+    public TrainingNotFoundException(String message) {
         super(message);
     }
 }

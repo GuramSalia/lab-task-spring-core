@@ -7,7 +7,11 @@ import com.epam.labtaskspringcore.model.Trainer;
 import com.epam.labtaskspringcore.payloads.*;
 import com.epam.labtaskspringcore.service.TraineeService;
 import com.epam.labtaskspringcore.service.TrainerService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +34,12 @@ public class TraineeController {
     }
 
     // modify to GET method when I can authorize based on session
+
     @PostMapping("/trainee-get")
+    @Operation(summary = "Get Trainee")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Trainee retrieved successfully")
+    })
     public ResponseEntity<?> getTrainee(@Valid @RequestBody UsernamePassword usernamePassword) {
         String username = usernamePassword.getUsername();
         String password = usernamePassword.getPassword();
@@ -39,7 +48,12 @@ public class TraineeController {
         return ResponseEntity.ok(traineeDTO);
     }
 
+
     @PutMapping("/trainee")
+    @Operation(summary = "Update Trainee")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Trainee updated successfully")
+    })
     public ResponseEntity<?> updateTrainee(@Valid @RequestBody TraineeUpdateRequest traineeUpdateRequest) {
         String username = traineeUpdateRequest.getUsername();
         String password = traineeUpdateRequest.getPassword();
@@ -49,15 +63,24 @@ public class TraineeController {
     }
 
     // modify to GET method when I can authorize based on session
+
     @PostMapping("/trainee-delete")
+    @Operation(summary = "Delete Trainee")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Trainee deleted successfully")
+    })
     public ResponseEntity<?> deleteTrainee(@Valid @RequestBody UsernamePassword usernamePassword) {
         String username = usernamePassword.getUsername();
         String password = usernamePassword.getPassword();
         traineeService.delete(username, password);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatusCode.valueOf(204)).build();
     }
 
     @PutMapping("/trainee/update-trainers-list")
+    @Operation(summary = "Update Trainee's Trainers List")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Trainers list updated successfully")
+    })
     public ResponseEntity<?> updateTrainersList(
             @Valid @RequestBody TraineeUpdateTrainersListRequest traineeUpdateTrainersListRequest) {
 
@@ -70,23 +93,31 @@ public class TraineeController {
     }
 
     @PatchMapping("/trainee/activate")
+    @Operation(summary = "Activate Trainee")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Trainee activated successfully")
+    })
     public ResponseEntity<?> activateTrainee(@Valid @RequestBody UsernamePassword usernamePassword) {
         String username = usernamePassword.getUsername();
         String password = usernamePassword.getPassword();
         Trainee trainee = traineeService.findByUsernameAndPassword(username, password);
         trainee.setIsActive(true);
         traineeService.update(trainee);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatusCode.valueOf(204)).build();
     }
 
     @PatchMapping("/trainee/deactivate")
+    @Operation(summary = "Deactivate Trainee")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Trainee deactivated successfully")
+    })
     public ResponseEntity<?> deactivateTrainee(@Valid @RequestBody UsernamePassword usernamePassword) {
         String username = usernamePassword.getUsername();
         String password = usernamePassword.getPassword();
         Trainee trainee = traineeService.findByUsernameAndPassword(username, password);
         trainee.setIsActive(false);
         traineeService.update(trainee);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatusCode.valueOf(204)).build();
     }
 
     private static TraineeDTOWithTrainersList getTraineeDTOWithTrainersList(Trainee trainee) {

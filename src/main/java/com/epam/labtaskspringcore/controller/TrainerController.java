@@ -6,8 +6,12 @@ import com.epam.labtaskspringcore.model.Trainee;
 import com.epam.labtaskspringcore.model.Trainer;
 import com.epam.labtaskspringcore.payloads.*;
 import com.epam.labtaskspringcore.service.TrainerService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +32,10 @@ public class TrainerController {
 
     // modify to GET method when I can authorize based on session
     @PostMapping("/trainer-get")
+    @Operation(summary = "Get Trainer")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved trainer")
+    })
     public ResponseEntity<?> getTrainer(@Valid @RequestBody UsernamePassword usernamePassword) {
 
         String username = usernamePassword.getUsername();
@@ -43,6 +51,10 @@ public class TrainerController {
     }
 
     @PutMapping("/trainer")
+    @Operation(summary = "Update Trainer")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Trainer updated successfully")
+    })
     public ResponseEntity<?> updateTrainer(@Valid @RequestBody TrainerUpdateRequest trainerUpdateRequest) {
 
         String username = trainerUpdateRequest.getUsername();
@@ -59,6 +71,10 @@ public class TrainerController {
 
     // modify to GET method when I can authorize based on session
     @PostMapping("/trainers/get-not-assigned-to-trainee")
+    @Operation(summary = "Get Trainers Not Assigned to Trainee")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved trainers")
+    })
     public ResponseEntity<?> getNotAssignedTrainers(@Valid @RequestBody UsernamePassword usernamePassword) {
 
         String username = usernamePassword.getUsername();
@@ -71,33 +87,29 @@ public class TrainerController {
     }
 
     @PatchMapping("/trainer/activate")
+    @Operation(summary = "Activate Trainer")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Trainer activated successfully")
+    })
     public ResponseEntity<?> activateTrainer(@Valid @RequestBody UsernamePassword usernamePassword) {
-
         String username = usernamePassword.getUsername();
-        Optional<Trainer> trainerOptional = Optional.ofNullable(trainerService.findByUsername(username));
-        if (trainerOptional.isEmpty()) {
-            throw new IllegalArgumentException("no trainer found");
-        }
-        Trainer trainer = trainerOptional.get();
+        Trainer trainer = trainerService.findByUsername(username);
         trainer.setIsActive(true);
         trainerService.update(trainer);
-
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatusCode.valueOf(204)).build();
     }
 
     @PatchMapping("/trainer/deactivate")
+    @Operation(summary = "Deactivate Trainer")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Trainer deactivated successfully")
+    })
     public ResponseEntity<?> deactivateTrainer(@Valid @RequestBody UsernamePassword usernamePassword) {
-
         String username = usernamePassword.getUsername();
-        Optional<Trainer> trainerOptional = Optional.ofNullable(trainerService.findByUsername(username));
-        if (trainerOptional.isEmpty()) {
-            throw new IllegalArgumentException("no trainer found");
-        }
-        Trainer trainer = trainerOptional.get();
+        Trainer trainer = trainerService.findByUsername(username);
         trainer.setIsActive(false);
         trainerService.update(trainer);
-
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatusCode.valueOf(204)).build();
     }
 
     private TrainerDTOWithTraineeList getTrainerDTOWithTraineeList(Trainer trainer) {

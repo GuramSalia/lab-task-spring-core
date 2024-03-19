@@ -38,8 +38,8 @@ public class LabTaskSpringCoreApplication {
 
         Optional<Trainer> optionalTrainer1 = Optional.ofNullable(trainerServiceWithDatabaseDao.getById(1, "Tim.Smith", "123"));
         Optional<Trainer> optionalTrainer2 = Optional.ofNullable(trainerServiceWithDatabaseDao.getById(2, "Sam.Jones", "123"));
-        Optional<Training> optionalTraining1 = trainingServiceWithDatabaseDao.getById(1);
-        Optional<Training> optionalTraining2 = trainingServiceWithDatabaseDao.getById(2);
+        Optional<Training> optionalTraining1 = Optional.ofNullable(trainingServiceWithDatabaseDao.getById(1));
+        Optional<Training> optionalTraining2 = Optional.ofNullable(trainingServiceWithDatabaseDao.getById(2));
         Optional<Trainee> optionalTrainee1 = Optional.ofNullable(traineeServiceWithDatabaseDao.getById(3, "John.Doe", "123"));
         Optional<Trainee> optionalTrainee2 = Optional.ofNullable(traineeServiceWithDatabaseDao.getById(4, "Jane.Smith", "123"));
 
@@ -193,15 +193,15 @@ public class LabTaskSpringCoreApplication {
         Training training_3 = new Training();
         Helper.setUpTraining_3(training_3, olivia, trainee_3);
         training_3.setTrainingType(PILATES);
-        Optional<Training> training3_Optional = trainingServiceWithDatabaseDao.create(training_3);
-        Helper.logResultOfTraing3Creation(training3_Optional, olivia, training_3);
+//        Optional<Training> training3_Optional = Optional.ofNullable(trainingServiceWithDatabaseDao.create(training_3));
+//        Helper.logResultOfTraing3Creation(training3_Optional, olivia, training_3);
 
         log.info("create training with trainer of the different training type");
         Training training_4 = new Training();
         Helper.setUpTraining_4(training_4, olivia, trainee_3);
         training_4.setTrainingType(YOGA);
         trainingServiceWithDatabaseDao.create(training_4);
-        Optional<Training> optional = trainingServiceWithDatabaseDao.create(training_4);
+        Optional<Training> optional = Optional.ofNullable(trainingServiceWithDatabaseDao.create(training_4));
         Helper.logResultOfTraing4Creation(optional, olivia, training_4);
 
         log.info("deleting trainee cascades to deleting training");
