@@ -5,7 +5,7 @@ import com.epam.labtaskspringcore.model.Trainer;
 import com.epam.labtaskspringcore.model.TrainingType;
 import com.epam.labtaskspringcore.service.TraineeService;
 import com.epam.labtaskspringcore.service.TrainerService;
-import com.epam.labtaskspringcore.service.UserService;
+import com.epam.labtaskspringcore.service.UserValidatorService;
 import com.epam.labtaskspringcore.utils.Authentication;
 import com.epam.labtaskspringcore.utils.UsernameGenerator;
 import org.junit.jupiter.api.AfterEach;
@@ -26,7 +26,7 @@ class TrainerDAOInMemoryStorageImplTest {
     TrainerService trainerService;
     TraineeService traineeService;
     Authentication authentication;
-    UserService userService;
+    UserValidatorService userValidatorService;
     UsernameGenerator usernameGenerator;
     Trainer trainer1;
     Trainer trainer2;
@@ -40,18 +40,18 @@ class TrainerDAOInMemoryStorageImplTest {
         trainerDAO = new TrainerDAOInMemoryStorageImpl(storage);
         usernameGenerator = new UsernameGenerator(trainerDAO, traineeDAO);
         authentication = new Authentication();
-        userService = new UserService();
+        userValidatorService = new UserValidatorService();
 
         // new way of creating traineeService
         Map<String, TraineeDAO> traineeDAOMap = new HashMap<>();
         traineeDAOMap.put("IN_MEMORY", traineeDAO);
-        traineeService = new TraineeService(traineeDAOMap, authentication, userService, usernameGenerator);
+        traineeService = new TraineeService(traineeDAOMap, authentication, userValidatorService, usernameGenerator);
         traineeService.setTraineeDAO(traineeDAO);
 
         // new way of creating trainerService
         Map<String, TrainerDAO> trainerDAOMap = new HashMap<>();
         trainerDAOMap.put("TRAINER_IN_MEMORY", trainerDAO);
-        trainerService = new TrainerService(trainerDAOMap, traineeDAOMap, authentication, userService,
+        trainerService = new TrainerService(trainerDAOMap, traineeDAOMap, authentication, userValidatorService,
                                             usernameGenerator);
         trainerService.setTrainerDAO(trainerDAO);
 

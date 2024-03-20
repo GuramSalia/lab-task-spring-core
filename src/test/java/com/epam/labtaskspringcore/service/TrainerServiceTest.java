@@ -31,7 +31,7 @@ class TrainerServiceTest {
     Authentication authentication;
 
     @Mock
-    private UserService userService;
+    private UserValidatorService userValidatorService;
 
     TrainerService trainerService;
 
@@ -57,9 +57,9 @@ class TrainerServiceTest {
         Map<String, TraineeDAO> traineeDAOMap = new HashMap<>();
         Map<String, TrainerDAO> trainerDAOMap = new HashMap<>();
         trainerDAOMap.put("TRAINER_IN_MEMORY", trainerDAO);
-        userService = new UserService();
+        userValidatorService = new UserValidatorService();
         trainerService = new TrainerService(
-                trainerDAOMap, traineeDAOMap, authentication, userService, usernameGenerator);
+                trainerDAOMap, traineeDAOMap, authentication, userValidatorService, usernameGenerator);
         trainerService.setTraineeDAO(traineeDAO);
         trainerService.setTrainerDAO(trainerDAO);
     }
@@ -70,7 +70,7 @@ class TrainerServiceTest {
         when(usernameGenerator.generateUsername(trainer1)).thenReturn("John.Doe");
         when(trainerDAO.create(trainer1)).thenReturn(Optional.of(trainer1));
         when(trainerDAO.getById(10)).thenReturn(Optional.of(trainer1));
-        Optional<Trainer> result = trainerService.create(trainer1);
+        Optional<Trainer> result = Optional.ofNullable(trainerService.create(trainer1));
         assertEquals(
                 result,
                 trainerDAO.getById(10),
@@ -142,7 +142,7 @@ class TrainerServiceTest {
     void TestGetByUsernameInTrainerService() {
         when(authentication.isAuthenticated(trainerDAO, "John.Doe", "123")).thenReturn(true);
         when(trainerDAO.findByUsername("John.Doe")).thenReturn(Optional.of(trainer1));
-        Optional<Trainer> result = trainerService.getByUsername("John.Doe", "123");
+        Optional<Trainer> result = Optional.ofNullable(trainerService.findByUsernameAndPassword("John.Doe", "123"));
         assertEquals(result, Optional.of(trainer1), "trainers should be returned");
     }
 
@@ -151,7 +151,7 @@ class TrainerServiceTest {
         trainer1.setUsername("John.Doe");
         when(authentication.isAuthenticated(trainerDAO, "John.Doe", "123")).thenReturn(true);
         when(trainerDAO.update(trainer1)).thenReturn(Optional.of(trainer1));
-        Optional<Trainer> result = trainerService.updatePassword(trainer1, "John.Doe", "123", "321");
+        Optional<Trainer> result = Optional.ofNullable(trainerService.updatePassword(trainer1, "John.Doe", "123", "321"));
         assertEquals(result, Optional.of(trainer1), "trainers should be returned");
     }
 
@@ -179,7 +179,7 @@ class TrainerServiceTest {
     @Test
     void TestFindUnassignedTrainersByTraineeUsernameInTrainerService() {
         when(authentication.isAuthenticated(traineeDAO, "Tim.Doe", "123")).thenReturn(true);
-        when(trainerDAO.findUnassignedTrainersByTraineeUsername("Tim.Doe")).thenReturn(List.of(10, 20));
+        when(trainerDAO.findIdsOfUnassignedTrainersByTraineeUsername("Tim.Doe")).thenReturn(List.of(10, 20));
         when(trainerDAO.getById(10)).thenReturn(Optional.of(trainer1));
         when(trainerDAO.getById(20)).thenReturn(Optional.of(trainer2));
         List<Trainer> trainers = new ArrayList<Trainer>();

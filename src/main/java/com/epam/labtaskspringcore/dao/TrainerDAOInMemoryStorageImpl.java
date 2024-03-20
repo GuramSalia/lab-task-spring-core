@@ -15,7 +15,6 @@ import java.util.Optional;
 
 @Slf4j
 @Repository("TRAINER_IN_MEMORY")
-@Primary
 public class TrainerDAOInMemoryStorageImpl implements TrainerDAO {
     private final Map<Integer, Trainer> trainers;
 
@@ -67,7 +66,7 @@ public class TrainerDAOInMemoryStorageImpl implements TrainerDAO {
     }
 
     @Override
-    public List<Integer> findUnassignedTrainersByTraineeUsername(String traineeUsername) {
+    public List<Integer> findIdsOfUnassignedTrainersByTraineeUsername(String traineeUsername) {
         log.info("'findUnassignedTrainersByTraineeUsername' method is not implemented in TrainerDaoInMemoryStorageImpl");
         return null;
     }

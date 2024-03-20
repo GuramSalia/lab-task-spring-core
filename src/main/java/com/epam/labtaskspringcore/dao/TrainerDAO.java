@@ -19,5 +19,5 @@ public interface TrainerDAO extends ImplementsFindByUsernameAndPassword {
 
     public Optional<Trainer> findByUsernameAndPassword(String username, String password);
 
-    public List<Integer> findUnassignedTrainersByTraineeUsername(String traineeUsername);
+    public List<Integer> findIdsOfUnassignedTrainersByTraineeUsername(String traineeUsername);
 }

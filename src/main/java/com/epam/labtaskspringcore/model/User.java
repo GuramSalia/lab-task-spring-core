@@ -32,4 +32,12 @@ public abstract class User {
 
     @Column(name = "IS_ACTIVE")
     private Boolean isActive;
+
+    public void setUsername(String username) {
+        if (this.username == null) {
+            this.username = username;
+        } else {
+            log.warn("username cannot be changed");
+        }
+    }
 }

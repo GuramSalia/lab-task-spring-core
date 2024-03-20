@@ -72,6 +72,6 @@ class TrainerDAODatabaseImplTest {
     @Test
     void findUnassignedTrainersByTraineeUsername() {
         when(trainerRepository.findIdsOfUnassignedTrainersByTraineeUsername("Sam.Smith")).thenReturn(List.of(1, 2));
-        assertEquals(trainerDB.findUnassignedTrainersByTraineeUsername("Sam.Smith"), List.of(1, 2));
+        assertEquals(trainerDB.findIdsOfUnassignedTrainersByTraineeUsername("Sam.Smith"), List.of(1, 2));
     }
 }

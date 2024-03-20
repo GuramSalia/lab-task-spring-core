@@ -11,7 +11,6 @@ import java.util.*;
 
 @Slf4j
 @Repository("TRAINING_IN_MEMORY")
-@Primary
 public class TrainingDAOInMemoryStorageImpl implements TrainingDAO {
     private final Map<Integer, Training> trainings;
 

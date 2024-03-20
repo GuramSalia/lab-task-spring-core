@@ -1,6 +1,8 @@
 package com.epam.labtaskspringcore.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Objects;
@@ -8,6 +10,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "TRAINING_TYPES")
 @Setter
+@Getter
 public class TrainingType {
 
     public enum TrainingTypeEnum {
@@ -17,11 +20,13 @@ public class TrainingType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "TRAINING_TYPE_ID")
+    @JsonProperty(value = "id")
     private int trainingTypeId;
 
     @Setter
     @Enumerated(EnumType.STRING)
     @Column(name = "TRAINING_TYPE_NAME")
+    @JsonProperty(value = "training_type")
     private TrainingTypeEnum trainingType;
 
 
@@ -33,7 +38,10 @@ public class TrainingType {
 
     @Override
     public String toString() {
-        return "TrainingType{" + "trainingType=" + trainingType + '}';
+        return "TrainingType{" +
+                "id=" + trainingTypeId +
+                ", training_type=" + trainingType +
+                '}';
     }
 
     @Override

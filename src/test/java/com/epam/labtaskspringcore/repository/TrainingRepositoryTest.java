@@ -34,23 +34,34 @@ class TrainingRepositoryTest {
 
     @Test
     void findIdsByTraineeAndTrainerAndType() {
+        String traineeUsername = "Jane.Smith";
+        java.sql.Date from = sqlDateFrom;
+        java.sql.Date to = sqlDateTo;
+        String trainerUsername = "Sam.Jones";
+        String trainingTypeName = "STRENGTH";
+
         List<Integer> trainingIds = trainingRepository.findIdsByTraineeAndTrainerAndType(
-                "Jane.Smith",
-                sqlDateFrom,
-                sqlDateTo,
-                "Sam.Jones",
-                "STRENGTH");
+                traineeUsername,
+                null,
+                null,
+                null,
+                null);
 
         assertEquals(List.of(2),trainingIds,  "training should be returned");
     }
 
     @Test
     void findIdsByTrainerAndTrainerAndType() {
+        String traineeUsername = "Jane.Smith";
+        java.sql.Date from = sqlDateFrom;
+        java.sql.Date to = sqlDateTo;
+        String trainerUsername = "Sam.Jones";
+        String trainingTypeName = "STRENGTH";
         List<Integer> trainingIds = trainingRepository.findIdsByTrainerAndTrainerAndType(
-                "Sam.Jones",
-                sqlDateFrom,
-                sqlDateTo,
-                "Jane.Smith");
+                trainerUsername,
+                null,
+                null,
+                null);
 
         assertEquals(List.of(2),trainingIds,  "training should be returned");
     }

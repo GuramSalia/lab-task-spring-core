@@ -29,7 +29,7 @@ class TraineeServiceTest {
     private UsernameGenerator usernameGenerator;
 
     @Mock
-    private UserService userService;
+    private UserValidatorService userValidatorService;
 
     @Mock
     private Authentication authentication;
@@ -58,7 +58,7 @@ class TraineeServiceTest {
         Map<String, TraineeDAO> traineeDAOMap = new HashMap<>();
         traineeDAOMap.put("IN_MEMORY", traineeDAO);
 
-        traineeService = new TraineeService(traineeDAOMap, authentication, userService,
+        traineeService = new TraineeService(traineeDAOMap, authentication, userValidatorService,
                                             usernameGenerator);
 
         traineeService.setTraineeDAO(traineeDAO);
@@ -72,7 +72,7 @@ class TraineeServiceTest {
         when(traineeDAO.create(trainee1)).thenReturn(Optional.of(trainee1));
         when(traineeDAO.getById(10)).thenReturn(Optional.of(trainee1));
         log.info("2....");
-        Optional<Trainee> result = traineeService.create(trainee1);
+        Optional<Trainee> result = Optional.ofNullable(traineeService.create(trainee1));
         log.info("3....");
         assertEquals(
                 result,
@@ -85,7 +85,7 @@ class TraineeServiceTest {
         when(usernameGenerator.generateUsername(trainee1)).thenReturn("John.Doe");
         when(traineeDAO.update(trainee1)).thenReturn(Optional.of(trainee1));
         when(traineeDAO.getById(10)).thenReturn(Optional.of(trainee1));
-        Optional<Trainee> result = traineeService.update(trainee1);
+        Optional<Trainee> result = Optional.ofNullable(traineeService.update(trainee1));
         assertEquals(
                 result,
                 traineeDAO.getById(10),
@@ -103,7 +103,7 @@ class TraineeServiceTest {
         when(usernameGenerator.generateUsername(trainee1)).thenReturn("John.Doe");
         when(traineeDAO.update(trainee1)).thenReturn(Optional.of(trainee1));
         when(traineeDAO.getById(10)).thenReturn(Optional.of(trainee1));
-        Optional<Trainee> result = traineeService.update(trainee1);
+        Optional<Trainee> result = Optional.ofNullable(traineeService.update(trainee1));
 
         traineeService.update(trainee1, "John.Doe", "123");
         assertEquals(
@@ -164,7 +164,7 @@ class TraineeServiceTest {
     void TestGetByUsernameInTraineeService() {
         when(authentication.isAuthenticated(traineeDAO, "John.Doe", "123")).thenReturn(true);
         when(traineeDAO.findByUsername("John.Doe")).thenReturn(Optional.of(trainee1));
-        Optional<Trainee> result = traineeService.getByUsername("John.Doe", "123");
+        Optional<Trainee> result = Optional.ofNullable(traineeService.findByUsernameAndPassword("John.Doe", "123"));
         assertEquals(result, Optional.of(trainee1), "trainees should be returned");
     }
 
