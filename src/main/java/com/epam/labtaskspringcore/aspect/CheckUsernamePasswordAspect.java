@@ -1,7 +1,7 @@
 package com.epam.labtaskspringcore.aspect;
 
 import com.epam.labtaskspringcore.exception.InvalidRequestBodyException;
-import com.epam.labtaskspringcore.payloads.UsernamePassword;
+import com.epam.labtaskspringcore.api.UsernamePassword;
 import com.epam.labtaskspringcore.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;

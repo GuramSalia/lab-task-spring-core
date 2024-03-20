@@ -1,4 +1,4 @@
-package com.epam.labtaskspringcore.payloads;
+package com.epam.labtaskspringcore.api;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

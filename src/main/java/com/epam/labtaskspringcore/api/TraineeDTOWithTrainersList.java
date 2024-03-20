@@ -1,4 +1,4 @@
-package com.epam.labtaskspringcore.payloads;
+package com.epam.labtaskspringcore.api;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -6,27 +6,25 @@ import lombok.Setter;
 import java.util.Date;
 import java.util.List;
 
-@Setter
 @Getter
-public class TraineeDTOUpdated {
+@Setter
+public class TraineeDTOWithTrainersList {
 
-    private String username;
     private String firstName;
     private String lastName;
     private Date dateOfBirth;
     private String address;
-    private Boolean isActive;
+    private boolean isActive;
     private List<TrainerDTOForTrainersList> trainers;
 
-    public TraineeDTOUpdated(
-            String username,
+    public TraineeDTOWithTrainersList(
             String firstName,
             String lastName,
             Date dateOfBirth,
             String address,
             boolean isActive,
             List<TrainerDTOForTrainersList> trainers) {
-        this.username = username;
+
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
@@ -35,6 +33,13 @@ public class TraineeDTOUpdated {
         this.trainers = trainers;
     }
 
-    public TraineeDTOUpdated() {
+    public TraineeDTOWithTrainersList() {
+    }
+
+    @Override
+    public String toString() {
+        return "TraineeDTOWithTrainersList{" +
+                "trainers=" + trainers +
+                "} " + super.toString();
     }
 }

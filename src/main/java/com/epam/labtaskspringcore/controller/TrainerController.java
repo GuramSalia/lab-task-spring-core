@@ -4,7 +4,7 @@ import com.epam.labtaskspringcore.aspect.CheckUsernamePassword;
 import com.epam.labtaskspringcore.aspect.LogRestDetails;
 import com.epam.labtaskspringcore.model.Trainee;
 import com.epam.labtaskspringcore.model.Trainer;
-import com.epam.labtaskspringcore.payloads.*;
+import com.epam.labtaskspringcore.api.*;
 import com.epam.labtaskspringcore.service.TrainerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -30,8 +30,8 @@ public class TrainerController {
         this.trainerService = trainerService;
     }
 
-    // modify to GET method when I can authorize based on session
-    @PostMapping("/trainer-get")
+
+    @GetMapping("/trainer-get")
     @Operation(summary = "Get Trainer")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved trainer")
@@ -69,8 +69,8 @@ public class TrainerController {
         return ResponseEntity.ok().body(trainerDTOupdated);
     }
 
-    // modify to GET method when I can authorize based on session
-    @PostMapping("/trainers/get-not-assigned-to-trainee")
+
+    @GetMapping("/trainers/get-not-assigned-to-trainee")
     @Operation(summary = "Get Trainers Not Assigned to Trainee")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved trainers")

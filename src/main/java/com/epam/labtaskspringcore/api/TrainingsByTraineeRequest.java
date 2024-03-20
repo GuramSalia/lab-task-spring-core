@@ -1,4 +1,4 @@
-package com.epam.labtaskspringcore.payloads;
+package com.epam.labtaskspringcore.api;
 
 import com.epam.labtaskspringcore.model.TrainingType;
 import lombok.Getter;

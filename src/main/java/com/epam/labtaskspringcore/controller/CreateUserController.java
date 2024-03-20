@@ -4,9 +4,9 @@ import com.epam.labtaskspringcore.aspect.LogRestDetails;
 import com.epam.labtaskspringcore.model.Trainee;
 import com.epam.labtaskspringcore.model.Trainer;
 import com.epam.labtaskspringcore.model.TrainingType;
-import com.epam.labtaskspringcore.payloads.TraineeRegistrationRequest;
-import com.epam.labtaskspringcore.payloads.TrainerRegistrationRequest;
-import com.epam.labtaskspringcore.payloads.UsernamePassword;
+import com.epam.labtaskspringcore.api.TraineeRegistrationRequest;
+import com.epam.labtaskspringcore.api.TrainerRegistrationRequest;
+import com.epam.labtaskspringcore.api.UsernamePassword;
 import com.epam.labtaskspringcore.service.TraineeService;
 import com.epam.labtaskspringcore.service.TrainerService;
 import com.epam.labtaskspringcore.service.TrainingTypeService;
@@ -20,8 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Optional;
 
 @Slf4j
 @LogRestDetails

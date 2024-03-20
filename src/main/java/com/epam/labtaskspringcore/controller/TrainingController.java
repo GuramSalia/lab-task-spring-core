@@ -2,15 +2,14 @@ package com.epam.labtaskspringcore.controller;
 
 import com.epam.labtaskspringcore.aspect.CheckUsernamePassword;
 import com.epam.labtaskspringcore.aspect.LogRestDetails;
-import com.epam.labtaskspringcore.exception.InvalidRequestBodyException;
 import com.epam.labtaskspringcore.model.Trainee;
 import com.epam.labtaskspringcore.model.Trainer;
 import com.epam.labtaskspringcore.model.Training;
 import com.epam.labtaskspringcore.model.TrainingType;
-import com.epam.labtaskspringcore.payloads.TrainingDTO;
-import com.epam.labtaskspringcore.payloads.TrainingRegistrationRequest;
-import com.epam.labtaskspringcore.payloads.TrainingsByTraineeRequest;
-import com.epam.labtaskspringcore.payloads.TrainingsByTrainerRequest;
+import com.epam.labtaskspringcore.api.TrainingDTO;
+import com.epam.labtaskspringcore.api.TrainingRegistrationRequest;
+import com.epam.labtaskspringcore.api.TrainingsByTraineeRequest;
+import com.epam.labtaskspringcore.api.TrainingsByTrainerRequest;
 import com.epam.labtaskspringcore.service.TraineeService;
 import com.epam.labtaskspringcore.service.TrainerService;
 import com.epam.labtaskspringcore.service.TrainingService;
@@ -22,13 +21,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @LogRestDetails
@@ -62,9 +61,8 @@ public class TrainingController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    // requirement: 12.	Get Trainee Trainings List (GET method);
-    // But we cannot submit body with get method.
-    @PostMapping("/training/of-trainee")
+
+    @GetMapping("/trainings/of-trainee")
     @Operation(summary = "Get Trainings by Trainee and optionally by period from, period to, trainer name, training " +
             "type")
     @ApiResponses(value = {
@@ -79,9 +77,8 @@ public class TrainingController {
         return ResponseEntity.ok().body(trainingDTOs);
     }
 
-    // requirement: 13.	Get Trainer Trainings List (GET method);
-    // But we cannot submit body with get method.
-    @PostMapping("/training/of-trainer")
+
+    @GetMapping("/trainings/of-trainer")
     @Operation(summary = "Get Trainings by Trainer and optionally by period from, period to, trainee name")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved trainings")

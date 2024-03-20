@@ -1,4 +1,4 @@
-package com.epam.labtaskspringcore.payloads;
+package com.epam.labtaskspringcore.api;
 
 import lombok.Getter;
 import lombok.Setter;

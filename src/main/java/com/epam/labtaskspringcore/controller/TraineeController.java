@@ -4,7 +4,7 @@ import com.epam.labtaskspringcore.aspect.CheckUsernamePassword;
 import com.epam.labtaskspringcore.aspect.LogRestDetails;
 import com.epam.labtaskspringcore.model.Trainee;
 import com.epam.labtaskspringcore.model.Trainer;
-import com.epam.labtaskspringcore.payloads.*;
+import com.epam.labtaskspringcore.api.*;
 import com.epam.labtaskspringcore.service.TraineeService;
 import com.epam.labtaskspringcore.service.TrainerService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,9 +33,9 @@ public class TraineeController {
         this.trainerService = trainerService;
     }
 
-    // modify to GET method when I can authorize based on session
 
-    @PostMapping("/trainee-get")
+
+    @GetMapping("/trainee-get")
     @Operation(summary = "Get Trainee")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Trainee retrieved successfully")
@@ -62,9 +62,9 @@ public class TraineeController {
         return ResponseEntity.ok(traineeDTO);
     }
 
-    // modify to GET method when I can authorize based on session
 
-    @PostMapping("/trainee-delete")
+
+    @DeleteMapping("/trainee-delete")
     @Operation(summary = "Delete Trainee")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Trainee deleted successfully")

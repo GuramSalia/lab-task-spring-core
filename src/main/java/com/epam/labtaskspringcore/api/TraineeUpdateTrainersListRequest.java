@@ -1,4 +1,4 @@
-package com.epam.labtaskspringcore.payloads;
+package com.epam.labtaskspringcore.api;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
