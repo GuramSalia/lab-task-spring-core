@@ -1,11 +1,13 @@
 package com.epam.labtaskspringcore.dao;
 
 import com.epam.labtaskspringcore.config.InMemoryStorage;
+import com.epam.labtaskspringcore.model.Trainee;
 import com.epam.labtaskspringcore.model.Trainer;
 import com.epam.labtaskspringcore.model.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
+@Profile("dev_in_memory")
 @Repository("TRAINER_IN_MEMORY")
 public class TrainerDAOInMemoryStorageImpl implements TrainerDAO {
     private final Map<Integer, Trainer> trainers;
@@ -55,21 +58,29 @@ public class TrainerDAOInMemoryStorageImpl implements TrainerDAO {
 
     @Override
     public Optional<Trainer> findByUsername(String username) {
-        log.info("'findByUsername' method is not implemented in TrainerDaoInMemoryStorageImpl");
+        log.info("'findByUsername' from TrainerDaoInMemoryStorageImpl");
+        for (Trainer currentTrainer : trainers.values()) {
+            if (currentTrainer.getUsername().equals(username)) {
+                return Optional.of(currentTrainer);
+            }
+        }
         return Optional.empty();
     }
 
     @Override
     public Optional<Trainer> findByUsernameAndPassword(String username, String password) {
-        log.info("'findByUsernameAndPassword' method is not implemented in TrainerDaoInMemoryStorageImpl");
+        log.info("'findByUsernameAndPassword' from TrainerDaoInMemoryStorageImpl");
+        for (Trainer currentTrainer : trainers.values()) {
+            if (currentTrainer.getUsername().equals(username) && currentTrainer.getPassword().equals(password)) {
+                return Optional.of(currentTrainer);
+            }
+        }
         return Optional.empty();
     }
 
     @Override
     public List<Integer> findIdsOfUnassignedTrainersByTraineeUsername(String traineeUsername) {
-        log.info("'findUnassignedTrainersByTraineeUsername' method is not implemented in TrainerDaoInMemoryStorageImpl");
+        log.info("'findUnassignedTrainersByTraineeUsername' method from TrainerDaoInMemoryStorageImpl");
         return null;
     }
-
-
 }

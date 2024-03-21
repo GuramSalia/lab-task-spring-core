@@ -40,7 +40,7 @@ public class TraineeController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Trainee retrieved successfully")
     })
-    public ResponseEntity<?> getTrainee(@Valid @RequestBody UsernamePassword usernamePassword) {
+    public ResponseEntity<TraineeDTOWithTrainersList> getTrainee(@Valid @RequestBody UsernamePassword usernamePassword) {
         String username = usernamePassword.getUsername();
         String password = usernamePassword.getPassword();
         Trainee trainee = traineeService.findByUsernameAndPassword(username, password);
@@ -54,7 +54,7 @@ public class TraineeController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Trainee updated successfully")
     })
-    public ResponseEntity<?> updateTrainee(@Valid @RequestBody TraineeUpdateRequest traineeUpdateRequest) {
+    public ResponseEntity<TraineeDTOUpdated> updateTrainee(@Valid @RequestBody TraineeUpdateRequest traineeUpdateRequest) {
         String username = traineeUpdateRequest.getUsername();
         String password = traineeUpdateRequest.getPassword();
         Trainee trainee = traineeService.findByUsernameAndPassword(username, password);
@@ -69,7 +69,7 @@ public class TraineeController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Trainee deleted successfully")
     })
-    public ResponseEntity<?> deleteTrainee(@Valid @RequestBody UsernamePassword usernamePassword) {
+    public ResponseEntity<Void> deleteTrainee(@Valid @RequestBody UsernamePassword usernamePassword) {
         String username = usernamePassword.getUsername();
         String password = usernamePassword.getPassword();
         traineeService.delete(username, password);
@@ -81,7 +81,7 @@ public class TraineeController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Trainers list updated successfully")
     })
-    public ResponseEntity<?> updateTrainersList(
+    public ResponseEntity<List<TrainerDTOForTrainersList>> updateTrainersList(
             @Valid @RequestBody TraineeUpdateTrainersListRequest traineeUpdateTrainersListRequest) {
 
         String username = traineeUpdateTrainersListRequest.getUsername();
@@ -97,7 +97,7 @@ public class TraineeController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Trainee activated successfully")
     })
-    public ResponseEntity<?> activateTrainee(@Valid @RequestBody UsernamePassword usernamePassword) {
+    public ResponseEntity<Void> activateTrainee(@Valid @RequestBody UsernamePassword usernamePassword) {
         String username = usernamePassword.getUsername();
         String password = usernamePassword.getPassword();
         Trainee trainee = traineeService.findByUsernameAndPassword(username, password);
@@ -111,7 +111,7 @@ public class TraineeController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Trainee deactivated successfully")
     })
-    public ResponseEntity<?> deactivateTrainee(@Valid @RequestBody UsernamePassword usernamePassword) {
+    public ResponseEntity<Void> deactivateTrainee(@Valid @RequestBody UsernamePassword usernamePassword) {
         String username = usernamePassword.getUsername();
         String password = usernamePassword.getPassword();
         Trainee trainee = traineeService.findByUsernameAndPassword(username, password);

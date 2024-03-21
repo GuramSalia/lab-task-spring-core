@@ -3,16 +3,21 @@ package com.epam.labtaskspringcore.aspect;
 import com.epam.labtaskspringcore.exception.InvalidRequestBodyException;
 import com.epam.labtaskspringcore.api.UsernamePassword;
 import com.epam.labtaskspringcore.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
 
 @Slf4j
 @Aspect
 @Component
+@Order(1)
 public class CheckUsernamePasswordAspect {
     private final UserService userService;
 
@@ -51,6 +56,15 @@ public class CheckUsernamePasswordAspect {
 
         log.info("start performing authentication with 'CheckUsernamePasswordAspect'");
         userService.performAuthentication(username, password);
+    }
+
+    private HttpServletRequest getRequest(Object[] args) {
+        for (Object arg : args) {
+            if (arg instanceof HttpServletRequest) {
+                return (HttpServletRequest) arg;
+            }
+        }
+        return null;
     }
 }
 

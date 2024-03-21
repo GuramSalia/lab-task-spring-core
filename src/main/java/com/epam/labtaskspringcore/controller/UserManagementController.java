@@ -33,7 +33,7 @@ public class UserManagementController {
             @ApiResponse(responseCode = "204", description = "No Content")
     })
     @GetMapping("/user/login")
-    public ResponseEntity<?> login(@Valid @RequestBody UsernamePassword usernamePassword) {
+    public ResponseEntity<Void> login(@Valid @RequestBody UsernamePassword usernamePassword) {
         return ResponseEntity.status(HttpStatusCode.valueOf(204)).build();
     }
 
@@ -42,7 +42,7 @@ public class UserManagementController {
             @ApiResponse(responseCode = "204", description = "No Content")
     })
     @PutMapping("/user/login")
-    public ResponseEntity<?> updatePassword(@Valid @RequestBody PasswordUpdateRequest usernamePassword) {
+    public ResponseEntity<Void> updatePassword(@Valid @RequestBody PasswordUpdateRequest usernamePassword) {
         String username = usernamePassword.getUsername();
         String currentPassword = usernamePassword.getPassword();
         String newPassword = usernamePassword.getNewPassword();

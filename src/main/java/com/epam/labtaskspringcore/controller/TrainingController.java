@@ -68,7 +68,7 @@ public class TrainingController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved trainings")
     })
-    public ResponseEntity<?> getTrainingsByTraineeAndOtherFilters(
+    public ResponseEntity<List<TrainingDTO>> getTrainingsByTraineeAndOtherFilters(
             @Valid @RequestBody TrainingsByTraineeRequest trainingsByTraineeRequest) {
 
         List<Training> trainings = getTrainingsByTrainee(trainingsByTraineeRequest);
@@ -83,7 +83,7 @@ public class TrainingController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved trainings")
     })
-    public ResponseEntity<?> getTrainingsByTrainerAndOtherFilters(
+    public ResponseEntity<List<TrainingDTO>> getTrainingsByTrainerAndOtherFilters(
             @Valid @RequestBody TrainingsByTrainerRequest trainingsByTrainerRequest) {
 
         List<Training> trainings = getTrainingsByTrainer(trainingsByTrainerRequest);

@@ -5,7 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -15,6 +17,7 @@ import java.util.Arrays;
 @Slf4j
 @Aspect
 @Component
+@Order(2)
 public class LogRestDetailsAspect {
 
     @Pointcut("@within(com.epam.labtaskspringcore.aspect.LogRestDetails)")

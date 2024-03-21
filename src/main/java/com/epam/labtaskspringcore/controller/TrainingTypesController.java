@@ -36,7 +36,7 @@ public class TrainingTypesController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Trainee activated successfully")
     })
-    public ResponseEntity<?> getTrainingTypes(@Valid @RequestBody UsernamePassword usernamePassword) {
+    public ResponseEntity<List<TrainingType>> getTrainingTypes(@Valid @RequestBody UsernamePassword usernamePassword) {
 
         List<TrainingType> trainingTypes = trainingTypeService.getAllTrainingTypes();
         return ResponseEntity.ok(trainingTypes);

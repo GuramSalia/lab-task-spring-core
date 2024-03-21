@@ -4,12 +4,13 @@ import com.epam.labtaskspringcore.model.Trainer;
 import com.epam.labtaskspringcore.repository.TrainerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
-@Primary
+@Profile("!dev_in_memory")
 @Repository("TRAINER_DATABASE")
 public class TrainerDAODatabaseImpl implements TrainerDAO {
 

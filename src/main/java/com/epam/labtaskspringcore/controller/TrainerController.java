@@ -36,7 +36,7 @@ public class TrainerController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved trainer")
     })
-    public ResponseEntity<?> getTrainer(@Valid @RequestBody UsernamePassword usernamePassword) {
+    public ResponseEntity<TrainerDTOWithTraineeList> getTrainer(@Valid @RequestBody UsernamePassword usernamePassword) {
 
         String username = usernamePassword.getUsername();
         Optional<Trainer> trainerOptional = Optional.ofNullable(trainerService.findByUsername(username));
@@ -55,7 +55,7 @@ public class TrainerController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Trainer updated successfully")
     })
-    public ResponseEntity<?> updateTrainer(@Valid @RequestBody TrainerUpdateRequest trainerUpdateRequest) {
+    public ResponseEntity<TrainerDTOupdated> updateTrainer(@Valid @RequestBody TrainerUpdateRequest trainerUpdateRequest) {
 
         String username = trainerUpdateRequest.getUsername();
         Optional<Trainer> trainerOptional = Optional.ofNullable(trainerService.findByUsername(username));
@@ -75,7 +75,7 @@ public class TrainerController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved trainers")
     })
-    public ResponseEntity<?> getNotAssignedTrainers(@Valid @RequestBody UsernamePassword usernamePassword) {
+    public ResponseEntity<List<TrainerDTOForTrainersList>> getNotAssignedTrainers(@Valid @RequestBody UsernamePassword usernamePassword) {
 
         String username = usernamePassword.getUsername();
         String password = usernamePassword.getPassword();
@@ -91,7 +91,7 @@ public class TrainerController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Trainer activated successfully")
     })
-    public ResponseEntity<?> activateTrainer(@Valid @RequestBody UsernamePassword usernamePassword) {
+    public ResponseEntity<Void> activateTrainer(@Valid @RequestBody UsernamePassword usernamePassword) {
         String username = usernamePassword.getUsername();
         Trainer trainer = trainerService.findByUsername(username);
         trainer.setIsActive(true);
@@ -104,7 +104,7 @@ public class TrainerController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Trainer deactivated successfully")
     })
-    public ResponseEntity<?> deactivateTrainer(@Valid @RequestBody UsernamePassword usernamePassword) {
+    public ResponseEntity<Void> deactivateTrainer(@Valid @RequestBody UsernamePassword usernamePassword) {
         String username = usernamePassword.getUsername();
         Trainer trainer = trainerService.findByUsername(username);
         trainer.setIsActive(false);

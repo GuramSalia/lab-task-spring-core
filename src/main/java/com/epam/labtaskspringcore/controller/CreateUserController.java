@@ -45,7 +45,7 @@ public class CreateUserController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Trainee Registered")
     })
-    public ResponseEntity<?> registerTrainee(@Valid @RequestBody TraineeRegistrationRequest traineeRegistrationRequest) {
+    public ResponseEntity<UsernamePassword> registerTrainee(@Valid @RequestBody TraineeRegistrationRequest traineeRegistrationRequest) {
 
         Trainee newTrainee = getTrainee(traineeRegistrationRequest);
         Trainee trainee = traineeService.create(newTrainee);
@@ -70,7 +70,7 @@ public class CreateUserController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Trainee Registered")
     })
-    public ResponseEntity<?> registerTrainer(@Valid @RequestBody TrainerRegistrationRequest trainerRegistrationRequest) {
+    public ResponseEntity<UsernamePassword> registerTrainer(@Valid @RequestBody TrainerRegistrationRequest trainerRegistrationRequest) {
 
         Trainer newTrainer = getTrainer(trainerRegistrationRequest);
         Trainer trainer = trainerService.create(newTrainer);
