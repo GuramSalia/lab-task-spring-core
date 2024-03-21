@@ -33,9 +33,11 @@ public class TrainingService {
     }
 
     @Setter
+    @Autowired
     private TrainingDAO trainingDAO;
 
     @Setter
+    @Autowired
     private TrainerDAO trainerDAO;
 
     public void setTrainingDAOFromTrainingDAOMap(String nameOfDao) {
@@ -114,8 +116,13 @@ public class TrainingService {
             Date startDate,
             Date endDate,
             String traineeUsername) {
-        return trainingDAO.getTrainingsByTrainerAndOtherFilters(
+        List<Training> trainingsByTrainer = trainingDAO.getTrainingsByTrainerAndOtherFilters(
                 trainerUsername, startDate, endDate, traineeUsername);
+        log.info("\n\n>>>> Getting trainings by trainer: " + trainingsByTrainer.toString());
+        log.info("\n\n" + trainingDAO.getClass());
+        log.info("\n\ntraining 1" + trainingDAO.getTrainings());
+        return trainingsByTrainer;
+
     }
 
     private boolean areMismatchingTrainingTypes(TrainingType type1, TrainingType type2) {

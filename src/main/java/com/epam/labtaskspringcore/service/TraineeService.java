@@ -29,6 +29,7 @@ public class TraineeService {
     private UserValidatorService userValidatorService;
     private final UsernameGenerator usernameGenerator;
     @Setter
+    @Autowired
     private TraineeDAO traineeDAO;
 
     @Autowired

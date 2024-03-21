@@ -31,10 +31,13 @@ public class TrainerService {
     @Setter
     private UserValidatorService userValidatorService;
     private final UsernameGenerator usernameGenerator;
+
     @Setter
+    @Autowired
     private TrainerDAO trainerDAO;
 
     @Setter
+    @Autowired
     private TraineeDAO traineeDAO;
 
     @Autowired

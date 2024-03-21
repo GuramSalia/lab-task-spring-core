@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Component
+@Profile("dev_in_memory")
 public class StorageInitializer {
 
     @Value("${file.path.initialData}")
@@ -27,18 +29,21 @@ public class StorageInitializer {
     private final InMemoryStorage storage;
 
     public StorageInitializer(InMemoryStorage storage) {
+        log.info("\n\nstorage in StorageInitializer : " + storage+"\n");
+        log.info("\n\ntrainees in StorageInitializer : " + storage.getTrainees().hashCode()+"\n");
         this.storage = storage;
     }
 
     @PostConstruct
     public void initialize() {
-        log.info(">>>> Storage Initialization");
+        log.info("\n\n\n>>>> Storage Initialization 1 / 3 \n\n\n");
 
         ObjectMapper om = new ObjectMapper();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         om.setDateFormat(dateFormat);
 
         try (InputStream inputStream = initialDataResource.getInputStream()) {
+            log.info("\n\n\n>>>> Storage Initialization 2 / 3\n\n\n");
             JsonDataContainer root = om.readValue(inputStream, JsonDataContainer.class);
 
             // Assuming you have appropriate getters in your InMemoryStorage class
@@ -46,6 +51,12 @@ public class StorageInitializer {
             storage.setTrainees(root.trainee.stream().collect(Collectors.toMap(Trainee::getUserId, Function.identity())));
             storage.setTrainings(root.training.stream()
                                               .collect(Collectors.toMap(Training::getTrainingId, Function.identity())));
+            log.info("\n\n\n>>>> Storage Initialization 3 / 3 trainees.size\n\n\n" + storage.getTrainees().size());
+            log.info("\n\n\n>>>> Storage Initialization 3 / 3 trainees.size\n\n\n" + storage.getTrainees().values());
+
+
+            log.info("\n\n\n>>>> Storage Initialization 3 / 3 trainers.size\n\n\n" + storage.getTrainers().size());
+            log.info("\n\n\n>>>> Storage Initialization 3 / 3 trainings.size\n\n\n" + storage.getTrainings().size());
         } catch (IOException e) {
             log.error("Error initializing InMemoryStorage", e);
         }
