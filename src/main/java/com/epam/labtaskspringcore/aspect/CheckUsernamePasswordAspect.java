@@ -13,6 +13,9 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Slf4j
 @Aspect
@@ -37,6 +40,7 @@ public class CheckUsernamePasswordAspect {
         String password = null;
 
         for (Object arg : args) {
+            log.info("\n\nParameter: {}\n", arg);
             if (arg instanceof UsernamePassword) {
                 hasUsernamePassword = true;
                 usernamePassword = (UsernamePassword) arg;
@@ -55,17 +59,31 @@ public class CheckUsernamePasswordAspect {
         }
 
         log.info("start performing authentication with 'CheckUsernamePasswordAspect'");
-        userService.performAuthentication(username, password);
+        boolean authenticated = false;
+        authenticated = userService.performAuthentication(username, password);
+
+
     }
 
-    private HttpServletRequest getRequest(Object[] args) {
-        for (Object arg : args) {
-            if (arg instanceof HttpServletRequest) {
-                return (HttpServletRequest) arg;
-            }
-        }
-        return null;
-    }
+//    private HttpServletRequest getRequest(Object[] args) {
+//        for (Object arg : args) {
+//            if (arg instanceof HttpServletRequest) {
+//                return (HttpServletRequest) arg;
+//            }
+//        }
+//        return null;
+//    }
+//
+//
+//    private Map<String, String> extractParameters(HttpServletRequest request) {
+//        Map<String, String> parameters = new LinkedHashMap<>();
+//        Enumeration<String> paramNames = request.getParameterNames();
+//        while (paramNames.hasMoreElements()) {
+//            String paramName = paramNames.nextElement();
+//            parameters.put(paramName, request.getParameter(paramName));
+//        }
+//        return parameters;
+//    }
 }
 
 

@@ -7,10 +7,13 @@ import com.epam.labtaskspringcore.model.Trainer;
 import com.epam.labtaskspringcore.api.*;
 import com.epam.labtaskspringcore.service.TraineeService;
 import com.epam.labtaskspringcore.service.TrainerService;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import lombok.Getter;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,11 +29,14 @@ public class TraineeController {
     private final TraineeService traineeService;
     private final TrainerService trainerService;
 
+
     public TraineeController(
             TraineeService traineeService,
-            TrainerService trainerService) {
+            TrainerService trainerService,
+            MeterRegistry meterRegistry) {
         this.traineeService = traineeService;
         this.trainerService = trainerService;
+
     }
 
 
