@@ -59,6 +59,8 @@ public class TrainingService {
         return trainingOptional.get();
     }
 
+    public List<Training> getTrainingList() {return trainingDAO.getTrainings();}
+
     @Transactional
     public Training create(Training training) {
 
@@ -122,7 +124,6 @@ public class TrainingService {
         log.info("\n\n" + trainingDAO.getClass());
         log.info("\n\ntraining 1" + trainingDAO.getTrainings());
         return trainingsByTrainer;
-
     }
 
     private boolean areMismatchingTrainingTypes(TrainingType type1, TrainingType type2) {

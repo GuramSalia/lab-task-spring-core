@@ -53,6 +53,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 request.getDescription(false)
         );
 
+
+        log.info("\n\n>> from error handler" + request.getParameterMap() + "\n");
         logRestDetails(ResponseEntity.badRequest().body(errorDetails));
         return ResponseEntity.badRequest().body(errorDetails);
     }
@@ -70,6 +72,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 request.getDescription(false)
         );
 
+        log.info("\n\n>> from error handler" + request.getDescription(false)+ "\n");
         ResponseEntity<ErrorDetails> body = ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorDetails);
         logRestDetails(body);
         return body;
@@ -99,7 +102,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<ErrorDetails> handleTrainingNotCreatedException(TrainingNotCreatedException ex,
-                                                                        WebRequest request) {
+                                                                          WebRequest request) {
         ErrorDetails errorDetails = new ErrorDetails(
                 correlationIDHandler.getCorrelationId(),
                 HttpStatus.INTERNAL_SERVER_ERROR,
@@ -111,8 +114,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         logRestDetails(body);
         return body;
     }
-
-
 
     @ExceptionHandler(UserNotUpdatedException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -155,7 +156,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "404", description = "Not Found")
     })
-    public ResponseEntity<ErrorDetails> handleTrainingNotFoundException(TrainingNotFoundException ex, WebRequest request) {
+    public ResponseEntity<ErrorDetails> handleTrainingNotFoundException(TrainingNotFoundException ex,
+                                                                        WebRequest request) {
         ErrorDetails errorDetails = new ErrorDetails(
                 correlationIDHandler.getCorrelationId(),
                 HttpStatus.NOT_FOUND,
