@@ -11,27 +11,26 @@ import org.springframework.stereotype.Component;
 @Component
 public class PrometheusCounter {
 
-    private Counter successfulGetTrainerHitCounter;
-    private Counter unsuccessfulGetTrainerHitCounter;
-
-    private Counter successfulGetTraineeHitCounter;
-    private Counter unsuccessfulGetTraineeHitCounter;
+    private Counter hitGetTrainerCounter;
+    private Counter notHitGetTrainerCounter;
+    private Counter hitGetTraineeCounter;
+    private Counter notHitGetTraineeCounter;
 
     public PrometheusCounter(MeterRegistry meterRegistry) {
-        this.successfulGetTrainerHitCounter = Counter
-                .builder("successful_hit_for_getTrainer_counter")
+        this.hitGetTrainerCounter = Counter
+                .builder("hit_getTrainer_counter")
                 .description("number of successful hits: trainer-get")
                 .register(meterRegistry);
-        this.unsuccessfulGetTrainerHitCounter = Counter
-                .builder("unsuccessful_hit_for_getTrainer_counter")
+        this.notHitGetTrainerCounter = Counter
+                .builder("not_hit_getTrainer_counter")
                 .description("number of unsuccessful hits: trainer-get")
                 .register(meterRegistry);
-        this.successfulGetTraineeHitCounter = Counter
-                .builder("successful_hit_for_getTrainee_counter")
+        this.hitGetTraineeCounter = Counter
+                .builder("hit_getTrainee_counter")
                 .description("number of successful hits: trainee-get")
                 .register(meterRegistry);
-        this.unsuccessfulGetTraineeHitCounter = Counter
-                .builder("unsuccessful_hit_for_getTrainee_counter")
+        this.notHitGetTraineeCounter = Counter
+                .builder("not_hit_getTrainee_counter")
                 .description("number of unsuccessful hits: trainee-get")
                 .register(meterRegistry);
     }

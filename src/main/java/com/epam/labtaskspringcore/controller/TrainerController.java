@@ -1,18 +1,16 @@
 package com.epam.labtaskspringcore.controller;
 
+import com.epam.labtaskspringcore.api.*;
 import com.epam.labtaskspringcore.aspect.CheckUsernamePassword;
 import com.epam.labtaskspringcore.aspect.LogRestDetails;
 import com.epam.labtaskspringcore.model.Trainee;
 import com.epam.labtaskspringcore.model.Trainer;
-import com.epam.labtaskspringcore.api.*;
 import com.epam.labtaskspringcore.service.TrainerService;
-import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -29,12 +27,9 @@ public class TrainerController {
 
     private final TrainerService trainerService;
 
-
     public TrainerController(TrainerService trainerService, MeterRegistry meterRegistry) {
         this.trainerService = trainerService;
-
     }
-
 
     @GetMapping("/trainer-get")
     @Operation(summary = "Get Trainer")
@@ -42,8 +37,6 @@ public class TrainerController {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved trainer")
     })
     public ResponseEntity<TrainerDTOWithTraineeList> getTrainer(@Valid @RequestBody UsernamePassword usernamePassword) {
-
-
 
         String username = usernamePassword.getUsername();
         Optional<Trainer> trainerOptional = Optional.ofNullable(trainerService.findByUsername(username));
@@ -75,7 +68,6 @@ public class TrainerController {
 
         return ResponseEntity.ok().body(trainerDTOupdated);
     }
-
 
     @GetMapping("/trainers/get-not-assigned-to-trainee")
     @Operation(summary = "Get Trainers Not Assigned to Trainee")
