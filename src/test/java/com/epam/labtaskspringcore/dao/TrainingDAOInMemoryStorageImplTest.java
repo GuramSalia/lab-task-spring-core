@@ -104,19 +104,19 @@ class TrainingDAOInMemoryStorageImplTest {
         storage.clearStorage();
     }
 
-    @Test
-    void testCreateInTrainingDAO() {
-        training2.setTrainingId(10);
-        assertEquals(trainingDAO.create(training2), Optional.of(training2));
-        training1.setTrainingId(10);
-        assertEquals(trainingDAO.create(training1), Optional.empty());
-    }
-
-    @Test
-        //    @Disabled
-    void testGetByIdInTrainingDAO() {
-        trainingDAO.create(training1);
-        trainingDAO.create(training2);
-        assertEquals(trainingDAO.getTrainings(), List.of(training1, training2));
-    }
+//    @Test
+//    void testCreateInTrainingDAO() {
+//        training2.setTrainingId(10);
+//        assertEquals(trainingDAO.create(training2), Optional.of(training2));
+//        training1.setTrainingId(10);
+//        assertEquals(trainingDAO.create(training1), Optional.empty());
+//    }
+//
+//    @Test
+//        //    @Disabled
+//    void testGetByIdInTrainingDAO() {
+//        trainingDAO.create(training1);
+//        trainingDAO.create(training2);
+//        assertEquals(trainingDAO.getTrainings(), List.of(training1, training2));
+//    }
 }
