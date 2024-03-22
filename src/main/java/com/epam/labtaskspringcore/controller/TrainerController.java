@@ -6,6 +6,7 @@ import com.epam.labtaskspringcore.aspect.LogRestDetails;
 import com.epam.labtaskspringcore.model.Trainee;
 import com.epam.labtaskspringcore.model.Trainer;
 import com.epam.labtaskspringcore.service.TrainerService;
+import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -27,8 +28,36 @@ public class TrainerController {
 
     private final TrainerService trainerService;
 
-    public TrainerController(TrainerService trainerService, MeterRegistry meterRegistry) {
+    private final Counter trainer_get_requests_success_counter;
+    private final Counter trainer_put_requests_success_counter;
+    private final Counter trainers_get_not_assigned_to_trainee_requests_success_counter;
+    private final Counter trainer_activate_patch_requests_success_counter;
+    private final Counter trainer_deactivate_patch_requests_success_counter;
+
+    public TrainerController(
+            TrainerService trainerService,
+            MeterRegistry meterRegistry) {
         this.trainerService = trainerService;
+        this.trainer_get_requests_success_counter = Counter
+                .builder("trainer_get_requests_success_counter")
+                .description("number of successful hits: GET /trainer-get")
+                .register(meterRegistry);
+        this.trainer_put_requests_success_counter = Counter
+                .builder("trainer_put_requests_success_counter")
+                .description("number of successful hits: PUT /trainer")
+                .register(meterRegistry);
+        this.trainers_get_not_assigned_to_trainee_requests_success_counter = Counter
+                .builder("trainers_get_not_assigned_to_trainee_requests_success_counter")
+                .description("number of successful hits: GET /trainers/get-not-assigned-to-trainee")
+                .register(meterRegistry);
+        this.trainer_activate_patch_requests_success_counter = Counter
+                .builder("trainer_activate_patch_requests_success_counter")
+                .description("number of successful hits: PATCH /trainer/activate")
+                .register(meterRegistry);
+        this.trainer_deactivate_patch_requests_success_counter = Counter
+                .builder("trainer_deactivate_patch_requests_success_counter")
+                .description("number of successful hits: PATCH /trainer/deactivate")
+                .register(meterRegistry);
     }
 
     @GetMapping("/trainer-get")
@@ -47,6 +76,7 @@ public class TrainerController {
         Trainer trainer = trainerOptional.get();
 
         TrainerDTOWithTraineeList trainerDTO = getTrainerDTOWithTraineeList(trainer);
+        trainer_get_requests_success_counter.increment();
         return ResponseEntity.ok().body(trainerDTO);
     }
 
@@ -65,7 +95,7 @@ public class TrainerController {
 
         Trainer trainer = trainerOptional.get();
         TrainerDTOupdated trainerDTOupdated = getTrainerDTOupdated(trainerUpdateRequest, trainer);
-
+        trainer_put_requests_success_counter.increment();
         return ResponseEntity.ok().body(trainerDTOupdated);
     }
 
@@ -81,7 +111,7 @@ public class TrainerController {
         List<Trainer> trainerList = trainerService.findUnassignedTrainersByTraineeUsername(username, password);
 
         List<TrainerDTOForTrainersList> trainerDTOs = getTrainerDTOForTrainersLists(trainerList);
-
+        trainers_get_not_assigned_to_trainee_requests_success_counter.increment();
         return ResponseEntity.ok().body(trainerDTOs);
     }
 
@@ -95,6 +125,7 @@ public class TrainerController {
         Trainer trainer = trainerService.findByUsername(username);
         trainer.setIsActive(true);
         trainerService.update(trainer);
+        trainer_activate_patch_requests_success_counter.increment();
         return ResponseEntity.status(HttpStatusCode.valueOf(204)).build();
     }
 
@@ -108,6 +139,7 @@ public class TrainerController {
         Trainer trainer = trainerService.findByUsername(username);
         trainer.setIsActive(false);
         trainerService.update(trainer);
+        trainer_deactivate_patch_requests_success_counter.increment();
         return ResponseEntity.status(HttpStatusCode.valueOf(204)).build();
     }
 

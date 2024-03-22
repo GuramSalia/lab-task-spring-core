@@ -10,6 +10,8 @@ import com.epam.labtaskspringcore.api.UsernamePassword;
 import com.epam.labtaskspringcore.service.TraineeService;
 import com.epam.labtaskspringcore.service.TrainerService;
 import com.epam.labtaskspringcore.service.TrainingTypeService;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -30,13 +32,25 @@ public class CreateUserController {
     private final TrainerService trainerService;
     private final TrainingTypeService trainingTypeService;
 
+    private final Counter create_user_trainee_post_requests_success_counter;
+    private final Counter create_user_trainer_post_requests_success_counter;
+
     public CreateUserController(
             TraineeService traineeService,
             TrainerService trainerService,
-            TrainingTypeService trainingTypeService) {
+            TrainingTypeService trainingTypeService,
+            MeterRegistry meterRegistry) {
         this.traineeService = traineeService;
         this.trainerService = trainerService;
         this.trainingTypeService = trainingTypeService;
+        this.create_user_trainee_post_requests_success_counter = Counter
+                .builder("create_user_trainee_post_requests_success_counter")
+                .description("number of successful hits: POST /trainee")
+                .register(meterRegistry);
+        this.create_user_trainer_post_requests_success_counter = Counter
+                .builder("create_user_trainer_post_requests_success_counter")
+                .description("number of successful hits: POST /trainer")
+                .register(meterRegistry);
     }
 
 
@@ -51,6 +65,7 @@ public class CreateUserController {
         Trainee trainee = traineeService.create(newTrainee);
 
         UsernamePassword usernamePassword = new UsernamePassword(trainee.getUsername(), trainee.getPassword());
+        create_user_trainee_post_requests_success_counter.increment();
         return ResponseEntity.status(HttpStatus.CREATED).body(usernamePassword);
     }
 
@@ -76,6 +91,7 @@ public class CreateUserController {
         Trainer trainer = trainerService.create(newTrainer);
 
         UsernamePassword usernamePassword = new UsernamePassword(trainer.getUsername(), trainer.getPassword());
+        create_user_trainer_post_requests_success_counter.increment();
         return ResponseEntity.status(HttpStatus.CREATED).body(usernamePassword);
     }
 

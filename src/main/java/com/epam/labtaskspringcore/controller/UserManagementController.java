@@ -5,6 +5,8 @@ import com.epam.labtaskspringcore.aspect.LogRestDetails;
 import com.epam.labtaskspringcore.api.PasswordUpdateRequest;
 import com.epam.labtaskspringcore.api.UsernamePassword;
 import com.epam.labtaskspringcore.service.UserService;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -22,10 +24,22 @@ import org.springframework.web.bind.annotation.*;
 public class UserManagementController {
 
     private final UserService userService;
+    private final Counter user_login_get_requests_success_counter;
+    private final Counter user_login_put_requests_success_counter;
 
     @Autowired
-    public UserManagementController(UserService userService) {
+    public UserManagementController(
+            UserService userService,
+            MeterRegistry meterRegistry) {
         this.userService = userService;
+        this.user_login_get_requests_success_counter = Counter
+                .builder("user_login_get_requests_success_counter")
+                .description("number of successful hits: GET /user/login")
+                .register(meterRegistry);
+        this.user_login_put_requests_success_counter= Counter
+                .builder("user_login_put_requests_success_counter")
+                .description("number of successful hits: PUT /user/login")
+                .register(meterRegistry);
     }
 
     @Operation(summary = "User Login")
@@ -34,6 +48,7 @@ public class UserManagementController {
     })
     @GetMapping("/user/login")
     public ResponseEntity<Void> login(@Valid @RequestBody UsernamePassword usernamePassword) {
+        user_login_get_requests_success_counter.increment();
         return ResponseEntity.status(HttpStatusCode.valueOf(204)).build();
     }
 
@@ -47,6 +62,7 @@ public class UserManagementController {
         String currentPassword = usernamePassword.getPassword();
         String newPassword = usernamePassword.getNewPassword();
         userService.updatePassword(username, currentPassword, newPassword);
+        user_login_put_requests_success_counter.increment();
         return ResponseEntity.status(HttpStatusCode.valueOf(204)).build();
     }
 }

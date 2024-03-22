@@ -29,6 +29,13 @@ public class TraineeController {
     private final TraineeService traineeService;
     private final TrainerService trainerService;
 
+    private final Counter trainee_get_requests_success_counter;
+    private final Counter trainee_put_requests_success_counter;
+    private final Counter trainee_delete_requests_success_counter;
+    private final Counter trainee_update_trainers_list_requests_success_counter;
+    private final Counter trainee_activate_patch_requests_success_counter;
+    private final Counter trainee_deactivate_patch_requests_success_counter;
+
 
     public TraineeController(
             TraineeService traineeService,
@@ -36,6 +43,31 @@ public class TraineeController {
             MeterRegistry meterRegistry) {
         this.traineeService = traineeService;
         this.trainerService = trainerService;
+
+        this.trainee_get_requests_success_counter= Counter
+                .builder("trainee_get_requests_success_counter")
+                .description("number of successful hits: GET /trainee-get")
+                .register(meterRegistry);
+        this.trainee_put_requests_success_counter= Counter
+                .builder("trainee_put_requests_success_counter")
+                .description("number of successful hits: PUT /trainee")
+                .register(meterRegistry);
+        this.trainee_delete_requests_success_counter= Counter
+                .builder("trainee_delete_requests_success_counter")
+                .description("number of successful hits: DELETE /trainee-delete")
+                .register(meterRegistry);
+        this.trainee_update_trainers_list_requests_success_counter= Counter
+                .builder("trainee_update_trainers_list_requests_success_counter")
+                .description("number of successful hits: PUT /trainee/update-trainers-list")
+                .register(meterRegistry);
+        this.trainee_activate_patch_requests_success_counter= Counter
+                .builder("trainee_activate_patch_requests_success_counter")
+                .description("number of successful hits: PATCH /trainee/activate")
+                .register(meterRegistry);
+        this.trainee_deactivate_patch_requests_success_counter= Counter
+                .builder("trainee_deactivate_patch_requests_success_counter")
+                .description("number of successful hits: PATCH /trainee/activate")
+                .register(meterRegistry);
 
     }
 
@@ -51,6 +83,7 @@ public class TraineeController {
         String password = usernamePassword.getPassword();
         Trainee trainee = traineeService.findByUsernameAndPassword(username, password);
         TraineeDTOWithTrainersList traineeDTO = getTraineeDTOWithTrainersList(trainee);
+        trainee_get_requests_success_counter.increment();
         return ResponseEntity.ok(traineeDTO);
     }
 
@@ -65,6 +98,7 @@ public class TraineeController {
         String password = traineeUpdateRequest.getPassword();
         Trainee trainee = traineeService.findByUsernameAndPassword(username, password);
         TraineeDTOUpdated traineeDTO = getTraineeDTOUpdated(traineeUpdateRequest, trainee);
+        trainee_put_requests_success_counter.increment();
         return ResponseEntity.ok(traineeDTO);
     }
 
@@ -79,6 +113,7 @@ public class TraineeController {
         String username = usernamePassword.getUsername();
         String password = usernamePassword.getPassword();
         traineeService.delete(username, password);
+        trainee_delete_requests_success_counter.increment();
         return ResponseEntity.status(HttpStatusCode.valueOf(204)).build();
     }
 
@@ -95,6 +130,7 @@ public class TraineeController {
         List<String> trainerUsernames = traineeUpdateTrainersListRequest.getTrainerUsernames();
         Trainee trainee = traineeService.findByUsernameAndPassword(username, password);
         List<TrainerDTOForTrainersList> trainerListDTO = getTrainerListDTO(trainerUsernames, trainee);
+        trainee_update_trainers_list_requests_success_counter.increment();
         return ResponseEntity.ok().body(trainerListDTO);
     }
 
@@ -109,6 +145,7 @@ public class TraineeController {
         Trainee trainee = traineeService.findByUsernameAndPassword(username, password);
         trainee.setIsActive(true);
         traineeService.update(trainee);
+        trainee_activate_patch_requests_success_counter.increment();
         return ResponseEntity.status(HttpStatusCode.valueOf(204)).build();
     }
 
@@ -123,6 +160,7 @@ public class TraineeController {
         Trainee trainee = traineeService.findByUsernameAndPassword(username, password);
         trainee.setIsActive(false);
         traineeService.update(trainee);
+        trainee_deactivate_patch_requests_success_counter.increment();
         return ResponseEntity.status(HttpStatusCode.valueOf(204)).build();
     }
 
