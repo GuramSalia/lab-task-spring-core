@@ -1,7 +1,5 @@
 package com.epam.labtaskspringcore.global;
 
-import com.epam.labtaskspringcore.controller.TraineeController;
-import com.epam.labtaskspringcore.controller.TrainerController;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,12 +13,12 @@ import java.util.Map;
 
 @Slf4j
 @Component
-public class LogFilter implements Filter {
+public class FilterLogAndEndpointHitCounter implements Filter {
 
     private final PrometheusCounter counter;
 
     @Autowired
-    public LogFilter(PrometheusCounter counter) {
+    public FilterLogAndEndpointHitCounter(PrometheusCounter counter) {
         this.counter = counter;
     }
 
