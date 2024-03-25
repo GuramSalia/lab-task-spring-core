@@ -1,11 +1,13 @@
 package com.epam.labtaskspringcore.controller;
 
+import com.epam.labtaskspringcore.api.*;
 import com.epam.labtaskspringcore.aspect.CheckUsernamePassword;
 import com.epam.labtaskspringcore.aspect.LogRestDetails;
 import com.epam.labtaskspringcore.model.Trainee;
 import com.epam.labtaskspringcore.model.Trainer;
-import com.epam.labtaskspringcore.api.*;
 import com.epam.labtaskspringcore.service.TrainerService;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -26,17 +28,44 @@ public class TrainerController {
 
     private final TrainerService trainerService;
 
-    public TrainerController(TrainerService trainerService) {
-        this.trainerService = trainerService;
-    }
+    private final Counter trainer_get_requests_success_counter;
+    private final Counter trainer_put_requests_success_counter;
+    private final Counter trainers_get_not_assigned_to_trainee_requests_success_counter;
+    private final Counter trainer_activate_patch_requests_success_counter;
+    private final Counter trainer_deactivate_patch_requests_success_counter;
 
+    public TrainerController(
+            TrainerService trainerService,
+            MeterRegistry meterRegistry) {
+        this.trainerService = trainerService;
+        this.trainer_get_requests_success_counter = Counter
+                .builder("trainer_get_requests_success_counter")
+                .description("number of successful hits: GET /trainer-get")
+                .register(meterRegistry);
+        this.trainer_put_requests_success_counter = Counter
+                .builder("trainer_put_requests_success_counter")
+                .description("number of successful hits: PUT /trainer")
+                .register(meterRegistry);
+        this.trainers_get_not_assigned_to_trainee_requests_success_counter = Counter
+                .builder("trainers_get_not_assigned_to_trainee_requests_success_counter")
+                .description("number of successful hits: GET /trainers/get-not-assigned-to-trainee")
+                .register(meterRegistry);
+        this.trainer_activate_patch_requests_success_counter = Counter
+                .builder("trainer_activate_patch_requests_success_counter")
+                .description("number of successful hits: PATCH /trainer/activate")
+                .register(meterRegistry);
+        this.trainer_deactivate_patch_requests_success_counter = Counter
+                .builder("trainer_deactivate_patch_requests_success_counter")
+                .description("number of successful hits: PATCH /trainer/deactivate")
+                .register(meterRegistry);
+    }
 
     @GetMapping("/trainer-get")
     @Operation(summary = "Get Trainer")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved trainer")
     })
-    public ResponseEntity<?> getTrainer(@Valid @RequestBody UsernamePassword usernamePassword) {
+    public ResponseEntity<TrainerDTOWithTraineeList> getTrainer(@Valid @RequestBody UsernamePassword usernamePassword) {
 
         String username = usernamePassword.getUsername();
         Optional<Trainer> trainerOptional = Optional.ofNullable(trainerService.findByUsername(username));
@@ -47,6 +76,7 @@ public class TrainerController {
         Trainer trainer = trainerOptional.get();
 
         TrainerDTOWithTraineeList trainerDTO = getTrainerDTOWithTraineeList(trainer);
+        trainer_get_requests_success_counter.increment();
         return ResponseEntity.ok().body(trainerDTO);
     }
 
@@ -55,7 +85,7 @@ public class TrainerController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Trainer updated successfully")
     })
-    public ResponseEntity<?> updateTrainer(@Valid @RequestBody TrainerUpdateRequest trainerUpdateRequest) {
+    public ResponseEntity<TrainerDTOupdated> updateTrainer(@Valid @RequestBody TrainerUpdateRequest trainerUpdateRequest) {
 
         String username = trainerUpdateRequest.getUsername();
         Optional<Trainer> trainerOptional = Optional.ofNullable(trainerService.findByUsername(username));
@@ -65,24 +95,23 @@ public class TrainerController {
 
         Trainer trainer = trainerOptional.get();
         TrainerDTOupdated trainerDTOupdated = getTrainerDTOupdated(trainerUpdateRequest, trainer);
-
+        trainer_put_requests_success_counter.increment();
         return ResponseEntity.ok().body(trainerDTOupdated);
     }
-
 
     @GetMapping("/trainers/get-not-assigned-to-trainee")
     @Operation(summary = "Get Trainers Not Assigned to Trainee")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved trainers")
     })
-    public ResponseEntity<?> getNotAssignedTrainers(@Valid @RequestBody UsernamePassword usernamePassword) {
+    public ResponseEntity<List<TrainerDTOForTrainersList>> getNotAssignedTrainers(@Valid @RequestBody UsernamePassword usernamePassword) {
 
         String username = usernamePassword.getUsername();
         String password = usernamePassword.getPassword();
         List<Trainer> trainerList = trainerService.findUnassignedTrainersByTraineeUsername(username, password);
 
         List<TrainerDTOForTrainersList> trainerDTOs = getTrainerDTOForTrainersLists(trainerList);
-
+        trainers_get_not_assigned_to_trainee_requests_success_counter.increment();
         return ResponseEntity.ok().body(trainerDTOs);
     }
 
@@ -91,11 +120,12 @@ public class TrainerController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Trainer activated successfully")
     })
-    public ResponseEntity<?> activateTrainer(@Valid @RequestBody UsernamePassword usernamePassword) {
+    public ResponseEntity<Void> activateTrainer(@Valid @RequestBody UsernamePassword usernamePassword) {
         String username = usernamePassword.getUsername();
         Trainer trainer = trainerService.findByUsername(username);
         trainer.setIsActive(true);
         trainerService.update(trainer);
+        trainer_activate_patch_requests_success_counter.increment();
         return ResponseEntity.status(HttpStatusCode.valueOf(204)).build();
     }
 
@@ -104,11 +134,12 @@ public class TrainerController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Trainer deactivated successfully")
     })
-    public ResponseEntity<?> deactivateTrainer(@Valid @RequestBody UsernamePassword usernamePassword) {
+    public ResponseEntity<Void> deactivateTrainer(@Valid @RequestBody UsernamePassword usernamePassword) {
         String username = usernamePassword.getUsername();
         Trainer trainer = trainerService.findByUsername(username);
         trainer.setIsActive(false);
         trainerService.update(trainer);
+        trainer_deactivate_patch_requests_success_counter.increment();
         return ResponseEntity.status(HttpStatusCode.valueOf(204)).build();
     }
 

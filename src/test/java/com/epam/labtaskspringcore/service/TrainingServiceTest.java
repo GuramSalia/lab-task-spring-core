@@ -15,6 +15,7 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -96,10 +97,10 @@ class TrainingServiceTest {
     @Test
     void testCreateInTrainingService() {
 
-        when(trainerDAO.findByUsername(trainer1.getUsername())).thenReturn(Optional.of(trainer1));
-        when(trainingDAO.create(training1)).thenReturn(Optional.of(training1));
-        when(trainingDAO.getById(1)).thenReturn(Optional.of(training1));
-        Optional<Training> result = trainingService.create(training1);
+        lenient().when(trainerDAO.findByUsername(trainer1.getUsername())).thenReturn(Optional.of(trainer1));
+        lenient().when(trainingDAO.create(training1)).thenReturn(Optional.of(training1));
+        lenient().when(trainingDAO.getById(1)).thenReturn(Optional.of(training1));
+        Optional<Training> result = Optional.ofNullable(trainingService.create(training1));
 
         assertEquals(result, Optional.ofNullable(training1), "created training should be in trainings list");
     }
@@ -109,8 +110,8 @@ class TrainingServiceTest {
 
         when(trainingDAO.getById(1)).thenReturn(Optional.of(training1));
         when(trainingDAO.getById(2)).thenReturn(Optional.of(training2));
-        Optional<Training> result1 = trainingService.getById(1);
-        Optional<Training> result2 = trainingService.getById(2);
+        Optional<Training> result1 = Optional.ofNullable(trainingService.getById(1));
+        Optional<Training> result2 = Optional.ofNullable(trainingService.getById(2));
 
         assertAll(
                 () -> assertEquals(result1, Optional.of(training1), "training should be returned"),

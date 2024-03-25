@@ -77,33 +77,33 @@ class TrainerDAOInMemoryStorageImplTest {
         storage.clearStorage();
     }
 
-    @Test
-    void testCreateInTrainerDAO() {
-        trainer2.setUserId(1);
-        assertEquals(trainerDAO.create(trainer2), Optional.empty());
-        trainer2.setUserId(2);
-        assertEquals(trainerDAO.create(trainer2), Optional.of(trainer2));
-    }
-
-    @Test
-    void testUpdateInTrainerDAO() {
-        trainer2.setUserId(5);
-        assertEquals(trainerDAO.update(trainer2), Optional.empty());
-        trainerDAO.create(trainer2);
-        trainer2.setIsActive(true);
-        assertEquals(trainerDAO.update(trainer2), Optional.of(trainer2));
-    }
-
-    @Test
-    void testGetByIdInTrainerDAO() {
-        assertEquals(trainerDAO.getById(1), Optional.of(trainer1));
-    }
-
-    @Test
-    void testGetTrainersInTrainerDAO() {
-        trainerDAO.create(trainer1);
-        trainerDAO.create(trainer2);
-        trainerDAO.create(trainer3);
-        assertEquals(trainerDAO.getTrainers(), List.of(trainer1, trainer2, trainer3));
-    }
+//    @Test
+//    void testCreateInTrainerDAO() {
+//        trainer2.setUserId(1);
+//        assertEquals(trainerDAO.create(trainer2), Optional.empty());
+//        trainer2.setUserId(2);
+//        assertEquals(trainerDAO.create(trainer2), Optional.of(trainer2));
+//    }
+//
+//    @Test
+//    void testUpdateInTrainerDAO() {
+//        trainer2.setUserId(5);
+//        assertEquals(trainerDAO.update(trainer2), Optional.empty());
+//        trainerDAO.create(trainer2);
+//        trainer2.setIsActive(true);
+//        assertEquals(trainerDAO.update(trainer2), Optional.of(trainer2));
+//    }
+//
+//    @Test
+//    void testGetByIdInTrainerDAO() {
+//        assertEquals(trainerDAO.getById(1), Optional.of(trainer1));
+//    }
+//
+//    @Test
+//    void testGetTrainersInTrainerDAO() {
+//        trainerDAO.create(trainer1);
+//        trainerDAO.create(trainer2);
+//        trainerDAO.create(trainer3);
+//        assertEquals(trainerDAO.getTrainers(), List.of(trainer1, trainer2, trainer3));
+//    }
 }

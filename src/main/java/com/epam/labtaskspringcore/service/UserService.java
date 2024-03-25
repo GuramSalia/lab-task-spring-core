@@ -50,15 +50,18 @@ public class UserService {
         this.trainerDAO = trainerDAOMap.get(nameOfDao);
     }
 
-    public void performAuthentication(String username, String password) {
+    public boolean performAuthentication(String username, String password) {
 
         Optional<Trainee> traineeOptional = traineeDAO.findByUsernameAndPassword(username, password);
         Optional<Trainer> trainerOptional = trainerDAO.findByUsernameAndPassword(username, password);
 
         log.info("start checking with 'performAuthentication'");
         if (traineeOptional.isEmpty() && trainerOptional.isEmpty()) {
+            log.error("\n\nauthentication >>> throws exception\n");
             throw new UnauthorizedException("username or password is incorrect");
         }
+        log.info("\n\nauthentication >>> didn't throw exception\n");
+        return true;
     }
 
     public void updatePassword(String username, String currentPassword, String newPassword) {

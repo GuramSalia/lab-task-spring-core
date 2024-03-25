@@ -7,10 +7,13 @@ import com.epam.labtaskspringcore.model.Trainer;
 import com.epam.labtaskspringcore.api.*;
 import com.epam.labtaskspringcore.service.TraineeService;
 import com.epam.labtaskspringcore.service.TrainerService;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import lombok.Getter;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,11 +29,46 @@ public class TraineeController {
     private final TraineeService traineeService;
     private final TrainerService trainerService;
 
+    private final Counter trainee_get_requests_success_counter;
+    private final Counter trainee_put_requests_success_counter;
+    private final Counter trainee_delete_requests_success_counter;
+    private final Counter trainee_update_trainers_list_requests_success_counter;
+    private final Counter trainee_activate_patch_requests_success_counter;
+    private final Counter trainee_deactivate_patch_requests_success_counter;
+
+
     public TraineeController(
             TraineeService traineeService,
-            TrainerService trainerService) {
+            TrainerService trainerService,
+            MeterRegistry meterRegistry) {
         this.traineeService = traineeService;
         this.trainerService = trainerService;
+
+        this.trainee_get_requests_success_counter= Counter
+                .builder("trainee_get_requests_success_counter")
+                .description("number of successful hits: GET /trainee-get")
+                .register(meterRegistry);
+        this.trainee_put_requests_success_counter= Counter
+                .builder("trainee_put_requests_success_counter")
+                .description("number of successful hits: PUT /trainee")
+                .register(meterRegistry);
+        this.trainee_delete_requests_success_counter= Counter
+                .builder("trainee_delete_requests_success_counter")
+                .description("number of successful hits: DELETE /trainee-delete")
+                .register(meterRegistry);
+        this.trainee_update_trainers_list_requests_success_counter= Counter
+                .builder("trainee_update_trainers_list_requests_success_counter")
+                .description("number of successful hits: PUT /trainee/update-trainers-list")
+                .register(meterRegistry);
+        this.trainee_activate_patch_requests_success_counter= Counter
+                .builder("trainee_activate_patch_requests_success_counter")
+                .description("number of successful hits: PATCH /trainee/activate")
+                .register(meterRegistry);
+        this.trainee_deactivate_patch_requests_success_counter= Counter
+                .builder("trainee_deactivate_patch_requests_success_counter")
+                .description("number of successful hits: PATCH /trainee/activate")
+                .register(meterRegistry);
+
     }
 
 
@@ -40,11 +78,12 @@ public class TraineeController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Trainee retrieved successfully")
     })
-    public ResponseEntity<?> getTrainee(@Valid @RequestBody UsernamePassword usernamePassword) {
+    public ResponseEntity<TraineeDTOWithTrainersList> getTrainee(@Valid @RequestBody UsernamePassword usernamePassword) {
         String username = usernamePassword.getUsername();
         String password = usernamePassword.getPassword();
         Trainee trainee = traineeService.findByUsernameAndPassword(username, password);
         TraineeDTOWithTrainersList traineeDTO = getTraineeDTOWithTrainersList(trainee);
+        trainee_get_requests_success_counter.increment();
         return ResponseEntity.ok(traineeDTO);
     }
 
@@ -54,11 +93,12 @@ public class TraineeController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Trainee updated successfully")
     })
-    public ResponseEntity<?> updateTrainee(@Valid @RequestBody TraineeUpdateRequest traineeUpdateRequest) {
+    public ResponseEntity<TraineeDTOUpdated> updateTrainee(@Valid @RequestBody TraineeUpdateRequest traineeUpdateRequest) {
         String username = traineeUpdateRequest.getUsername();
         String password = traineeUpdateRequest.getPassword();
         Trainee trainee = traineeService.findByUsernameAndPassword(username, password);
         TraineeDTOUpdated traineeDTO = getTraineeDTOUpdated(traineeUpdateRequest, trainee);
+        trainee_put_requests_success_counter.increment();
         return ResponseEntity.ok(traineeDTO);
     }
 
@@ -69,10 +109,11 @@ public class TraineeController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Trainee deleted successfully")
     })
-    public ResponseEntity<?> deleteTrainee(@Valid @RequestBody UsernamePassword usernamePassword) {
+    public ResponseEntity<Void> deleteTrainee(@Valid @RequestBody UsernamePassword usernamePassword) {
         String username = usernamePassword.getUsername();
         String password = usernamePassword.getPassword();
         traineeService.delete(username, password);
+        trainee_delete_requests_success_counter.increment();
         return ResponseEntity.status(HttpStatusCode.valueOf(204)).build();
     }
 
@@ -81,7 +122,7 @@ public class TraineeController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Trainers list updated successfully")
     })
-    public ResponseEntity<?> updateTrainersList(
+    public ResponseEntity<List<TrainerDTOForTrainersList>> updateTrainersList(
             @Valid @RequestBody TraineeUpdateTrainersListRequest traineeUpdateTrainersListRequest) {
 
         String username = traineeUpdateTrainersListRequest.getUsername();
@@ -89,6 +130,7 @@ public class TraineeController {
         List<String> trainerUsernames = traineeUpdateTrainersListRequest.getTrainerUsernames();
         Trainee trainee = traineeService.findByUsernameAndPassword(username, password);
         List<TrainerDTOForTrainersList> trainerListDTO = getTrainerListDTO(trainerUsernames, trainee);
+        trainee_update_trainers_list_requests_success_counter.increment();
         return ResponseEntity.ok().body(trainerListDTO);
     }
 
@@ -97,12 +139,13 @@ public class TraineeController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Trainee activated successfully")
     })
-    public ResponseEntity<?> activateTrainee(@Valid @RequestBody UsernamePassword usernamePassword) {
+    public ResponseEntity<Void> activateTrainee(@Valid @RequestBody UsernamePassword usernamePassword) {
         String username = usernamePassword.getUsername();
         String password = usernamePassword.getPassword();
         Trainee trainee = traineeService.findByUsernameAndPassword(username, password);
         trainee.setIsActive(true);
         traineeService.update(trainee);
+        trainee_activate_patch_requests_success_counter.increment();
         return ResponseEntity.status(HttpStatusCode.valueOf(204)).build();
     }
 
@@ -111,12 +154,13 @@ public class TraineeController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Trainee deactivated successfully")
     })
-    public ResponseEntity<?> deactivateTrainee(@Valid @RequestBody UsernamePassword usernamePassword) {
+    public ResponseEntity<Void> deactivateTrainee(@Valid @RequestBody UsernamePassword usernamePassword) {
         String username = usernamePassword.getUsername();
         String password = usernamePassword.getPassword();
         Trainee trainee = traineeService.findByUsernameAndPassword(username, password);
         trainee.setIsActive(false);
         traineeService.update(trainee);
+        trainee_deactivate_patch_requests_success_counter.increment();
         return ResponseEntity.status(HttpStatusCode.valueOf(204)).build();
     }
 

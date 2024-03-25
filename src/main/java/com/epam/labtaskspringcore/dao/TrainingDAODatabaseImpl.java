@@ -4,6 +4,7 @@ import com.epam.labtaskspringcore.model.Training;
 import com.epam.labtaskspringcore.repository.TrainingRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
@@ -13,7 +14,7 @@ import java.util.Optional;
 
 @Slf4j
 @Repository("TRAINING_DATABASE")
-@Primary
+@Profile("!dev_in_memory")
 public class TrainingDAODatabaseImpl implements TrainingDAO {
 
     TrainingRepository trainingRepository;

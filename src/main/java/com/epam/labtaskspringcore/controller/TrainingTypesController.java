@@ -5,6 +5,8 @@ import com.epam.labtaskspringcore.aspect.LogRestDetails;
 import com.epam.labtaskspringcore.model.TrainingType;
 import com.epam.labtaskspringcore.api.UsernamePassword;
 import com.epam.labtaskspringcore.service.TrainingTypeService;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -25,10 +27,18 @@ public class TrainingTypesController {
 
     private final TrainingTypeService trainingTypeService;
 
+    private final Counter training_types_get_requests_success_counter;
+
     @Autowired
-    public TrainingTypesController(TrainingTypeService trainingTypeService) {
+    public TrainingTypesController(
+            TrainingTypeService trainingTypeService,
+            MeterRegistry meterRegistry) {
         this.trainingTypeService =
                 trainingTypeService;
+        this.training_types_get_requests_success_counter = Counter
+                .builder("training_types_get_requests_success_counter")
+                .description("number of successful hits: GET /training-types")
+                .register(meterRegistry);
     }
 
     @GetMapping("/training-types")
@@ -36,9 +46,9 @@ public class TrainingTypesController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Trainee activated successfully")
     })
-    public ResponseEntity<?> getTrainingTypes(@Valid @RequestBody UsernamePassword usernamePassword) {
-
+    public ResponseEntity<List<TrainingType>> getTrainingTypes(@Valid @RequestBody UsernamePassword usernamePassword) {
         List<TrainingType> trainingTypes = trainingTypeService.getAllTrainingTypes();
+        training_types_get_requests_success_counter.increment();
         return ResponseEntity.ok(trainingTypes);
     }
 }

@@ -13,6 +13,8 @@ import com.epam.labtaskspringcore.api.TrainingsByTrainerRequest;
 import com.epam.labtaskspringcore.service.TraineeService;
 import com.epam.labtaskspringcore.service.TrainerService;
 import com.epam.labtaskspringcore.service.TrainingService;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -38,14 +40,32 @@ public class TrainingController {
     private final TraineeService traineeService;
     private final TrainerService trainerService;
 
+    private final Counter training_post_requests_success_counter;
+    private final Counter trainings_of_trainee_get_requests_success_counter;
+    private final Counter trainings_of_trainer_get_requests_success_counter;
+
     @Autowired
     public TrainingController(
             TrainingService trainingService,
             TraineeService traineeService,
-            TrainerService trainerService) {
+            TrainerService trainerService,
+            MeterRegistry meterRegistry) {
         this.trainingService = trainingService;
         this.traineeService = traineeService;
         this.trainerService = trainerService;
+
+        this.training_post_requests_success_counter = Counter
+                .builder("training_post_requests_success_counter")
+                .description("number of successful hits: POST /training")
+                .register(meterRegistry);
+        this.trainings_of_trainee_get_requests_success_counter = Counter
+                .builder("trainings_of_trainee_get_requests_success_counter")
+                .description("number of successful hits: GET /trainings/of-trainee")
+                .register(meterRegistry);
+        this.trainings_of_trainer_get_requests_success_counter = Counter
+                .builder("trainings_of_trainer_get_requests_success_counter")
+                .description("number of successful hits: GET /trainings/of-trainer")
+                .register(meterRegistry);
     }
 
     @PostMapping("/training")
@@ -55,12 +75,11 @@ public class TrainingController {
     })
     public ResponseEntity<?> registerTraining(
             @Valid @RequestBody TrainingRegistrationRequest trainingRegistrationRequest) {
-
         Training training = getTraining(trainingRegistrationRequest);
         Training createdTraining = trainingService.create(training);
+        training_post_requests_success_counter.increment();
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
-
 
     @GetMapping("/trainings/of-trainee")
     @Operation(summary = "Get Trainings by Trainee and optionally by period from, period to, trainer name, training " +
@@ -68,27 +87,24 @@ public class TrainingController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved trainings")
     })
-    public ResponseEntity<?> getTrainingsByTraineeAndOtherFilters(
+    public ResponseEntity<List<TrainingDTO>> getTrainingsByTraineeAndOtherFilters(
             @Valid @RequestBody TrainingsByTraineeRequest trainingsByTraineeRequest) {
-
         List<Training> trainings = getTrainingsByTrainee(trainingsByTraineeRequest);
         List<TrainingDTO> trainingDTOs = trainings.stream().map(TrainingDTO::new).toList();
-
+        trainings_of_trainee_get_requests_success_counter.increment();
         return ResponseEntity.ok().body(trainingDTOs);
     }
-
 
     @GetMapping("/trainings/of-trainer")
     @Operation(summary = "Get Trainings by Trainer and optionally by period from, period to, trainee name")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved trainings")
     })
-    public ResponseEntity<?> getTrainingsByTrainerAndOtherFilters(
+    public ResponseEntity<List<TrainingDTO>> getTrainingsByTrainerAndOtherFilters(
             @Valid @RequestBody TrainingsByTrainerRequest trainingsByTrainerRequest) {
-
         List<Training> trainings = getTrainingsByTrainer(trainingsByTrainerRequest);
         List<TrainingDTO> trainingDTOs = trainings.stream().map(TrainingDTO::new).toList();
-
+        trainings_of_trainer_get_requests_success_counter.increment();
         return ResponseEntity.ok().body(trainingDTOs);
     }
 

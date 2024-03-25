@@ -1,7 +1,7 @@
 package com.epam.labtaskspringcore.global;
 
 import com.epam.labtaskspringcore.exception.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import io.micrometer.core.instrument.Counter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,12 +28,14 @@ import java.util.List;
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     private final CorrelationIDHandler correlationIDHandler;
-    private final ObjectMapper objectMapper;
+    private final EndpointFailCounter endpointFailCounter;
 
     @Autowired
-    public GlobalExceptionHandler(CorrelationIDHandler correlationIDHandler, ObjectMapper objectMapper) {
+    public GlobalExceptionHandler(
+            CorrelationIDHandler correlationIDHandler,
+            EndpointFailCounter endpointFailCounter) {
         this.correlationIDHandler = correlationIDHandler;
-        this.objectMapper = objectMapper;
+        this.endpointFailCounter = endpointFailCounter;
     }
 
     @Override
@@ -53,7 +55,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 request.getDescription(false)
         );
 
+        log.info("\n\n>> from error handler" + request.getParameterMap() + "\n");
         logRestDetails(ResponseEntity.badRequest().body(errorDetails));
+        incrementCounter();
         return ResponseEntity.badRequest().body(errorDetails);
     }
 
@@ -62,7 +66,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "401", description = "Unauthorized")
     })
-    public ResponseEntity<ErrorDetails> handleUnauthorizedException(UnauthorizedException ex, WebRequest request) {
+    public ResponseEntity<ErrorDetails> handleUnauthorizedException(
+            UnauthorizedException ex,
+            WebRequest request) {
         ErrorDetails errorDetails = new ErrorDetails(
                 correlationIDHandler.getCorrelationId(),
                 HttpStatus.UNAUTHORIZED,
@@ -70,8 +76,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 request.getDescription(false)
         );
 
+        log.info("\n\n>> from error handler" + request.getDescription(false) + "\n");
         ResponseEntity<ErrorDetails> body = ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorDetails);
         logRestDetails(body);
+        incrementCounter();
         return body;
     }
 
@@ -90,6 +98,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         ResponseEntity<ErrorDetails> body = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorDetails);
         logRestDetails(body);
+        incrementCounter();
         return body;
     }
 
@@ -99,7 +108,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<ErrorDetails> handleTrainingNotCreatedException(TrainingNotCreatedException ex,
-                                                                        WebRequest request) {
+                                                                          WebRequest request) {
         ErrorDetails errorDetails = new ErrorDetails(
                 correlationIDHandler.getCorrelationId(),
                 HttpStatus.INTERNAL_SERVER_ERROR,
@@ -109,10 +118,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         ResponseEntity<ErrorDetails> body = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorDetails);
         logRestDetails(body);
+        incrementCounter();
         return body;
     }
-
-
 
     @ExceptionHandler(UserNotUpdatedException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -129,6 +137,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         ResponseEntity<ErrorDetails> body = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorDetails);
         logRestDetails(body);
+        incrementCounter();
         return body;
     }
 
@@ -147,6 +156,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         ResponseEntity<ErrorDetails> body = ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorDetails);
         logRestDetails(body);
+        incrementCounter();
         return body;
     }
 
@@ -155,7 +165,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "404", description = "Not Found")
     })
-    public ResponseEntity<ErrorDetails> handleTrainingNotFoundException(TrainingNotFoundException ex, WebRequest request) {
+    public ResponseEntity<ErrorDetails> handleTrainingNotFoundException(TrainingNotFoundException ex,
+                                                                        WebRequest request) {
         ErrorDetails errorDetails = new ErrorDetails(
                 correlationIDHandler.getCorrelationId(),
                 HttpStatus.NOT_FOUND,
@@ -165,6 +176,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         ResponseEntity<ErrorDetails> body = ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorDetails);
         logRestDetails(body);
+        incrementCounter();
         return body;
     }
 
@@ -183,6 +195,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         ResponseEntity<ErrorDetails> body = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorDetails);
         logRestDetails(body);
+        incrementCounter();
         return body;
     }
 
@@ -199,6 +212,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         );
         ResponseEntity<ErrorDetails> body = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorDetails);
         logRestDetails(body);
+        incrementCounter();
         return body;
     }
 
@@ -214,18 +228,25 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return errorMessage.toString();
     }
 
+    private void incrementCounter() {
+        ServletRequestAttributes attributes =
+                (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        HttpServletRequest httpRequest = attributes.getRequest();
+        String uri = httpRequest.getRequestURI();
+        String method = httpRequest.getMethod();
+        log.info("\n\n>> from incrementCounter >> GlobalExceptionHandler >> uri:" + uri + "\n");
+        log.info("\n\n>> from incrementCounter >> GlobalExceptionHandler >> method:" + method + "\n");
+        Counter counter = endpointFailCounter.getCounterByMethodAndUri(method, uri);
+        counter.increment();
+    }
+
     //logging for task 17.2 when there are errors
     private void logRestDetails(ResponseEntity<ErrorDetails> responseEntity) {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (attributes != null) {
             HttpServletRequest request = attributes.getRequest();
-
-            // Logging request details
-            //            log.info("\n\n-\tREST endpoint: {}\n", request.getReq());
             log.info("\n\n-\tREST URI: {}\n", request.getRequestURI());
             log.info("\n\n-\tRequest method: {}\n", request.getMethod());
-
-            //Logging request body: it can be read once and when it comes to handler it can no longer be read.
 
             // Logging request parameters
             log.info("\n\n-\tRequest parameters:");
@@ -235,10 +256,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
             // Logging response details
             if (responseEntity != null) {
-
                 log.info("\n\n-\tResponse Code: {}\n", responseEntity.getStatusCode().value());
                 log.info("\n\n-\tResponse Body: {}\n", responseEntity.getBody());
-
                 if (responseEntity.getBody() != null) {
                     log.info("\n\n-\tMessage: {}\n", responseEntity.getBody().getMessage());
                 }
