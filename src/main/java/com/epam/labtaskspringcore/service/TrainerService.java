@@ -75,6 +75,8 @@ public class TrainerService {
     @Transactional
     public Trainer create(Trainer trainer) {
         trainer.setIsBlocked(false);
+        trainer.setFailedLoginAttempts(0);
+        trainer.setBlockStartTime(null);
         trainer.setUsername(usernameGenerator.generateUsername(trainer));
         if (trainer.getPassword() == null) {
             trainer.setPassword(RandomPasswordGenerator.generateRandomPassword());

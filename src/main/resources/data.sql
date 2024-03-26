@@ -1,9 +1,9 @@
 -- Insert Trainers
-INSERT INTO GYM_USERS (FIRST_NAME, LAST_NAME, USERNAME, PASSWORD, IS_ACTIVE) VALUES
-('Tim', 'Smith', 'Tim.Smith', '123', TRUE),
-('Sam', 'Jones', 'Sam.Jones', '123', TRUE),
-('John', 'Doe', 'John.Doe', '123', TRUE),
-('Jane', 'Smith', 'Jane.Smith', '123', TRUE);
+INSERT INTO GYM_USERS (FIRST_NAME, LAST_NAME, USERNAME, PASSWORD, IS_ACTIVE, FAILED_LOGIN_ATTEMPTS, BLOCK_STATUS, BLOCK_START_TIME) VALUES
+('Tim', 'Smith', 'Tim.Smith', '123', TRUE, 0, FALSE, NULL),
+('Sam', 'Jones', 'Sam.Jones', '123', TRUE, 0, FALSE, NULL),
+('John', 'Doe', 'John.Doe', '123', TRUE, 0, FALSE, NULL),
+('Jane', 'Smith', 'Jane.Smith', '123', TRUE, 0, FALSE, NULL);
 
 INSERT INTO TRAINEES (DATE_OF_BIRTH, ADDRESS, USER_ID) VALUES
 (DATE '2000-02-21', 'address of TRAINEE 1', 3),

@@ -57,6 +57,8 @@ public class TraineeService {
         log.info(">>>> training service create()");
 
         trainee.setIsBlocked(false);
+        trainee.setFailedLoginAttempts(0);
+        trainee.setBlockStartTime(null);
         trainee.setUsername(usernameGenerator.generateUsername(trainee));
         if (trainee.getPassword() == null) {
             trainee.setPassword(RandomPasswordGenerator.generateRandomPassword());
