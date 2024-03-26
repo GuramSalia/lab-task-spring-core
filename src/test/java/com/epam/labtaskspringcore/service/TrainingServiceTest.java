@@ -44,9 +44,9 @@ class TrainingServiceTest {
         trainingDAOMap.put("TRAINING_DATABASE", trainingDAO);
         trainerDAOMap.put("TRAINER_DATABASE", trainerDAO);
 
-        trainingService = new TrainingService(trainingDAOMap, trainerDAOMap);
-        trainingService.setTrainingDAO(trainingDAO);
-        trainingService.setTrainerDAO(trainerDAO);
+        trainingService = new TrainingService(trainingDAO, trainerDAO);
+//        trainingService.setTrainingDAO(trainingDAO);
+//        trainingService.setTrainerDAO(trainerDAO);
 
         yoga = new TrainingType();
         cardio = new TrainingType();

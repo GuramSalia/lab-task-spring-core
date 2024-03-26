@@ -24,42 +24,25 @@ import java.util.Optional;
 @Slf4j
 @Service
 public class TrainerService {
-    private final Map<String, TrainerDAO> trainerDAOMap;
-    private final Map<String, TraineeDAO> traineeDAOMap;
-    @Setter
-    private Authentication authentication;
-    @Setter
-    private UserValidatorService userValidatorService;
+
+    private final Authentication authentication;
+    private final UserValidatorService userValidatorService;
     private final UsernameGenerator usernameGenerator;
-
-    @Setter
-    @Autowired
-    private TrainerDAO trainerDAO;
-
-    @Setter
-    @Autowired
-    private TraineeDAO traineeDAO;
+    private final TrainerDAO trainerDAO;
+    private final TraineeDAO traineeDAO;
 
     @Autowired
     public TrainerService(
-            Map<String, TrainerDAO> trainerDAOMap,
-            Map<String, TraineeDAO> traineeDAOMap,
+            TrainerDAO trainerDAO,
+            TraineeDAO traineeDAO,
             Authentication authentication,
             UserValidatorService userValidatorService,
             UsernameGenerator usernameGenerator) {
-        this.trainerDAOMap = trainerDAOMap;
-        this.traineeDAOMap = traineeDAOMap;
+        this.trainerDAO = trainerDAO;
+        this.traineeDAO = traineeDAO;
         this.authentication = authentication;
         this.userValidatorService = userValidatorService;
         this.usernameGenerator = usernameGenerator;
-    }
-
-    public void setTrainerDAOFromTrainerDAOMap(String nameOfDao) {
-        this.trainerDAO = trainerDAOMap.get(nameOfDao);
-    }
-
-    public void setTraineeDAOFromTraineeDAOMap(String nameOfDao) {
-        this.traineeDAO = traineeDAOMap.get(nameOfDao);
     }
 
     public Trainer getById(int id, String username, String password) {
@@ -91,6 +74,7 @@ public class TrainerService {
 
     @Transactional
     public Trainer create(Trainer trainer) {
+        trainer.setIsBlocked(false);
         trainer.setUsername(usernameGenerator.generateUsername(trainer));
         if (trainer.getPassword() == null) {
             trainer.setPassword(RandomPasswordGenerator.generateRandomPassword());
@@ -239,14 +223,4 @@ public class TrainerService {
 
         return trainers;
     }
-
-//    public Trainer findByUsernameAndPassword(String username, String password) {
-//
-//        Optional<Trainer> trainerOptional = trainerDAO.findByUsernameAndPassword(username, password);
-//        if (trainerOptional.isEmpty()) {
-//            throw new UnauthorizedException("wrong username or password");
-//        }
-//
-//        return trainerOptional.get();
-//    }
 }

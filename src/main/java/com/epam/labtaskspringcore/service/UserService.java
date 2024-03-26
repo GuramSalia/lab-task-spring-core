@@ -3,13 +3,16 @@ package com.epam.labtaskspringcore.service;
 import com.epam.labtaskspringcore.dao.TraineeDAO;
 import com.epam.labtaskspringcore.dao.TrainerDAO;
 import com.epam.labtaskspringcore.exception.UnauthorizedException;
+import com.epam.labtaskspringcore.exception.UserBlockedException;
 import com.epam.labtaskspringcore.model.Trainee;
 import com.epam.labtaskspringcore.model.Trainer;
+import com.epam.labtaskspringcore.model.User;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 
@@ -17,51 +20,91 @@ import java.util.Optional;
 @Service
 public class UserService {
 
-    private final Map<String, TraineeDAO> traineeDAOMap;
-    private final Map<String, TrainerDAO> trainerDAOMap;
+    private static final int MAX_FAILED_ATTEMPTS = 2;
+    private static final int BLOCK_DURATION_MINUTES = 1;
+
     private final TraineeService traineeService;
     private final TrainerService trainerService;
-
-    @Setter
-    @Autowired
-    private TraineeDAO traineeDAO;
-
-    @Setter
-    @Autowired
-    private TrainerDAO trainerDAO;
+    private final TraineeDAO traineeDAO;
+    private final TrainerDAO trainerDAO;
 
     @Autowired
     public UserService(
-            Map<String, TraineeDAO> traineeDAOMap,
-            Map<String, TrainerDAO> trainerDAOMap,
             TraineeService traineeService,
-            TrainerService trainerService) {
-        this.traineeDAOMap = traineeDAOMap;
-        this.trainerDAOMap = trainerDAOMap;
+            TraineeDAO traineeDAO,
+            TrainerService trainerService,
+            TrainerDAO trainerDAO) {
         this.traineeService = traineeService;
+        this.traineeDAO = traineeDAO;
         this.trainerService = trainerService;
-    }
-
-    public void setTraineeDAOFromTraineeDAOMap(String nameOfDao) {
-        this.traineeDAO = traineeDAOMap.get(nameOfDao);
-    }
-
-    public void setTrainerDAOFromTrainerDAOMap(String nameOfDao) {
-        this.trainerDAO = trainerDAOMap.get(nameOfDao);
+        this.trainerDAO = trainerDAO;
     }
 
     public boolean performAuthentication(String username, String password) {
-
-        Optional<Trainee> traineeOptional = traineeDAO.findByUsernameAndPassword(username, password);
-        Optional<Trainer> trainerOptional = trainerDAO.findByUsernameAndPassword(username, password);
-
-        log.info("start checking with 'performAuthentication'");
+        Optional<Trainee> traineeOptional = traineeDAO.findByUsername(username);
+        Optional<Trainer> trainerOptional = trainerDAO.findByUsername(username);
         if (traineeOptional.isEmpty() && trainerOptional.isEmpty()) {
-            log.error("\n\nauthentication >>> throws exception\n");
             throw new UnauthorizedException("username or password is incorrect");
         }
-        log.info("\n\nauthentication >>> didn't throw exception\n");
-        return true;
+
+        if (traineeOptional.isPresent()) {
+            Trainee trainee = traineeOptional.get();
+            return authenticate(trainee, password);
+        }
+
+        return authenticate(trainerOptional.get(), password);
+    }
+
+    private boolean authenticate(User user, String password) {
+        log.warn("\n\n+++++++++++++++++++++++++ withing authenticate method\n");
+        boolean isBlocked = user.getIsBlocked();
+        boolean correctPasswordProvided = user.getPassword().equals(password);
+
+        if (!isBlocked && correctPasswordProvided) {
+            log.warn("\n\n++++++++++++++++++++++ not blocked, correct password provided\n");
+            return true;
+        }
+
+        if (isBlocked) {
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime blockedUntil = user.getBlockStartTime().plusMinutes(BLOCK_DURATION_MINUTES);
+
+            // blocked time not expired
+            if (now.isBefore(blockedUntil)) {
+                log.warn("\n\n++++++++++++++++++++++ isBlocked , blocked not expired\n");
+                StringBuilder sb = new StringBuilder();
+                sb.append("user is still blocked. Try again when ")
+                  .append(BLOCK_DURATION_MINUTES)
+                  .append(" minutes passed since it was last blocked");
+                throw new UserBlockedException(sb.toString());
+            }
+
+            // blocked time expired
+            user.setIsBlocked(false);
+            if (!correctPasswordProvided) {
+                log.warn("\n\n++++++++++++++++++++++ isBlocked , blocked expired, incorrect password\n");
+                user.setFailedLoginAttempts(1);
+                saveUser(user);
+                throw new UnauthorizedException("usename or password incorrect");
+            }
+
+            log.warn("\n\n++++++++++++++++++++++ isBlocked , blocked expired, correct password\n");
+            user.setBlockStartTime(null);
+            user.setFailedLoginAttempts(0);
+            saveUser(user);
+            return true;
+        }
+
+        int newFailAttempts = user.getFailedLoginAttempts() + 1;
+        user.setFailedLoginAttempts(newFailAttempts);
+        if (newFailAttempts >= MAX_FAILED_ATTEMPTS) {
+            user.setIsBlocked(true);
+            user.setBlockStartTime(LocalDateTime.now());
+            saveUser(user);
+            throw new UserBlockedException("user blocked for " + BLOCK_DURATION_MINUTES + " minutes");
+        }
+        saveUser(user);
+        throw new UnauthorizedException("username or password incorrect");
     }
 
     public void updatePassword(String username, String currentPassword, String newPassword) {
@@ -77,5 +120,14 @@ public class UserService {
                 trainee -> traineeService.updatePassword(trainee, username, currentPassword, newPassword));
         trainerOptional.ifPresent(
                 trainer -> trainerService.updatePassword(trainer, username, currentPassword, newPassword));
+    }
+
+    private void saveUser(User user) {
+        log.warn("\n\n+++++++++++++++++++ Saving user\n");
+        if (user instanceof Trainee) {
+            traineeDAO.update((Trainee) user);
+        } else if (user instanceof Trainer) {
+            trainerDAO.update((Trainer) user);
+        }
     }
 }

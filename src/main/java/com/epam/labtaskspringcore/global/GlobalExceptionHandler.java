@@ -83,6 +83,28 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return body;
     }
 
+    @ExceptionHandler(UserBlockedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "401", description = "user is blocked")
+    })
+    public ResponseEntity<ErrorDetails> handleUserBlockedException(
+            UserBlockedException ex,
+            WebRequest request) {
+        ErrorDetails errorDetails = new ErrorDetails(
+                correlationIDHandler.getCorrelationId(),
+                HttpStatus.UNAUTHORIZED,
+                ex.getMessage(),
+                request.getDescription(false)
+        );
+
+        log.info("\n\n>> from error handler" + request.getDescription(false) + "\n");
+        ResponseEntity<ErrorDetails> body = ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorDetails);
+        logRestDetails(body);
+        incrementCounter();
+        return body;
+    }
+
     @ExceptionHandler(UserNotCreatedException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ApiResponses(value = {

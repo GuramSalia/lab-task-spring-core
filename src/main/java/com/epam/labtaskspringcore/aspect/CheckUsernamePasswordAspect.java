@@ -29,8 +29,6 @@ public class CheckUsernamePasswordAspect {
         this.userService = userService;
     }
 
-    //    @Before("execution(* com.epam.labtaskspringcore.controller.UserController.login(..))")
-    //    @Before("@annotation(com.epam.labtaskspringcore.aspect.CheckUsernamePassword)")
     @Before("@within(com.epam.labtaskspringcore.aspect.CheckUsernamePassword)")
     public void checkUsernamePassword(JoinPoint joinPoint) {
         Object[] args = joinPoint.getArgs();
@@ -61,29 +59,7 @@ public class CheckUsernamePasswordAspect {
         log.info("start performing authentication with 'CheckUsernamePasswordAspect'");
         boolean authenticated = false;
         authenticated = userService.performAuthentication(username, password);
-
-
     }
-
-//    private HttpServletRequest getRequest(Object[] args) {
-//        for (Object arg : args) {
-//            if (arg instanceof HttpServletRequest) {
-//                return (HttpServletRequest) arg;
-//            }
-//        }
-//        return null;
-//    }
-//
-//
-//    private Map<String, String> extractParameters(HttpServletRequest request) {
-//        Map<String, String> parameters = new LinkedHashMap<>();
-//        Enumeration<String> paramNames = request.getParameterNames();
-//        while (paramNames.hasMoreElements()) {
-//            String paramName = paramNames.nextElement();
-//            parameters.put(paramName, request.getParameter(paramName));
-//        }
-//        return parameters;
-//    }
 }
 
 

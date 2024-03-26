@@ -54,16 +54,16 @@ class TrainingDAOInMemoryStorageImplTest {
         Map<String, TraineeDAO> traineeDAOMap = new HashMap<>();
         traineeDAOMap.put("TRAINEE_IN_MEMORY", traineeDAO);
         trainerService = new TrainerService(
-                trainerDAOMap, traineeDAOMap, authentication,
+                trainerDAO, traineeDAO, authentication,
                 userValidatorService, usernameGenerator);
-        trainerService.setTrainerDAO(trainerDAO);
+//        trainerService.setTrainerDAO(trainerDAO);
 
         // new way of creating trainingService
         Map<String, TrainingDAO> trainingDAOMap = new HashMap<>();
         trainingDAOMap.put("TRAINING_IN_MEMORY", trainingDAO);
-        trainingService = new TrainingService(trainingDAOMap, trainerDAOMap);
-        trainingService.setTrainingDAO(trainingDAO);
-        trainingService.setTrainerDAO(trainerDAO);
+        trainingService = new TrainingService(trainingDAO, trainerDAO);
+//        trainingService.setTrainingDAO(trainingDAO);
+//        trainingService.setTrainerDAO(trainerDAO);
 
         TrainingType YOGA = new TrainingType();
         YOGA.setTrainingType(TrainingType.TrainingTypeEnum.YOGA);

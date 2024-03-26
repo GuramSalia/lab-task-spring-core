@@ -21,31 +21,16 @@ import java.util.Optional;
 @Slf4j
 @Service
 public class TrainingService {
-    private final Map<String, TrainingDAO> trainingDAOMap;
-    private final Map<String, TrainerDAO> trainerDAOMap;
+
+    private TrainingDAO trainingDAO;
+    private TrainerDAO trainerDAO;
 
     @Autowired
     public TrainingService(
-            Map<String, TrainingDAO> trainingDAOMap,
-            Map<String, TrainerDAO> trainerDAOMap) {
-        this.trainingDAOMap = trainingDAOMap;
-        this.trainerDAOMap = trainerDAOMap;
-    }
-
-    @Setter
-    @Autowired
-    private TrainingDAO trainingDAO;
-
-    @Setter
-    @Autowired
-    private TrainerDAO trainerDAO;
-
-    public void setTrainingDAOFromTrainingDAOMap(String nameOfDao) {
-        this.trainingDAO = trainingDAOMap.get(nameOfDao);
-    }
-
-    public void setTrainerDAOFromTrainerDAOMap(String nameOfDao) {
-        this.trainerDAO = trainerDAOMap.get(nameOfDao);
+            TrainingDAO trainingDAO,
+            TrainerDAO trainerDAO) {
+        this.trainingDAO = trainingDAO;
+        this.trainerDAO = trainerDAO;
     }
 
     public Training getById(int id) {
@@ -80,9 +65,6 @@ public class TrainingService {
         }
 
         trainerSpecialization = optionalTrainer.get().getSpecialization();
-
-        // Is no longer the requirement since TASK3-REST, have to create training with just a trainer.
-        // maybe we should give the training the same trainer Training Type?
 
         if (areMismatchingTrainingTypes(trainingType, trainerSpecialization)) {
             log.error("cannot create training, because the trainer has a different specialization");

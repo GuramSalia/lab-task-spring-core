@@ -22,31 +22,22 @@ import java.util.Set;
 @Service
 public class TraineeService {
 
-    private final Map<String, TraineeDAO> traineeDAOMap;
-    @Setter
-    private Authentication authentication;
-    @Setter
-    private UserValidatorService userValidatorService;
+    private final Authentication authentication;
+    private final UserValidatorService userValidatorService;
     private final UsernameGenerator usernameGenerator;
-    @Setter
-    @Autowired
-    private TraineeDAO traineeDAO;
+    private final TraineeDAO traineeDAO;
 
     @Autowired
     public TraineeService(
-            Map<String, TraineeDAO> traineeDAOMap,
+            TraineeDAO traineeDAO,
             Authentication authentication,
             UserValidatorService userValidatorService,
             UsernameGenerator usernameGenerator) {
-        this.traineeDAOMap = traineeDAOMap;
+        this.traineeDAO = traineeDAO;
         this.authentication = authentication;
         this.userValidatorService = userValidatorService;
         this.usernameGenerator = usernameGenerator;
         log.info(">>>> TraineeService initialized");
-    }
-
-    public void setTraineeDAOFromTraineeDAOMap(String nameOfDao) {
-        this.traineeDAO = traineeDAOMap.get(nameOfDao);
     }
 
     public Trainee getById(int id, String username, String password) {
@@ -65,6 +56,7 @@ public class TraineeService {
     public Trainee create(Trainee trainee) {
         log.info(">>>> training service create()");
 
+        trainee.setIsBlocked(false);
         trainee.setUsername(usernameGenerator.generateUsername(trainee));
         if (trainee.getPassword() == null) {
             trainee.setPassword(RandomPasswordGenerator.generateRandomPassword());
@@ -121,8 +113,7 @@ public class TraineeService {
 
     // InMemory implementation doesn't require 3 arguments
     public Trainee update(Trainee trainee) {
-        //changed due to new requirement: 7. Username cannot be changed
-        //        trainee.setUsername(usernameGenerator.generateUsername(trainee));
+
         Optional<Trainee> traineeOptional = traineeDAO.update(trainee);
         if (traineeOptional.isEmpty()) {
             throw new UserNotUpdatedException("error updating trainee");
@@ -152,20 +143,7 @@ public class TraineeService {
         return trainee;
     }
 
-//    public Trainee getByUsernameAndPassword(String username, String password) {
-//
-//        if (!authentication.isAuthenticated(traineeDAO, username, password)) {
-//            throw new UnauthorizedException("no trainee with such username or password");
-//        }
-//
-//        Optional<Trainee> traineeOptional = traineeDAO.findByUsername(username);
-//        if (traineeOptional.isEmpty()) {
-//            throw new UserNotFoundException("no such trainee");
-//        }
-//
-//        log.info(">>>> Getting trainee using getByUsername: : " + username);
-//        return traineeOptional.get();
-//    }
+
 
     public Trainee findByUsername(String username) {
 

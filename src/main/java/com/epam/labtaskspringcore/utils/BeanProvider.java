@@ -8,34 +8,35 @@ import com.epam.labtaskspringcore.service.TraineeService;
 import com.epam.labtaskspringcore.service.TrainerService;
 import com.epam.labtaskspringcore.service.TrainingService;
 import com.epam.labtaskspringcore.service.TrainingTypeService;
+import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 
+@Component
+@Getter
 public class BeanProvider {
+    private final TraineeService traineeService;
+    private final TrainerService trainerService;
+    private final TrainingService trainingService;
+    private final TrainingTypeService trainingTypeService;
+
+    @Autowired
+    public BeanProvider(
+            TraineeService traineeService,
+            TrainerService trainerService,
+            TrainingService trainingService,
+            TrainingTypeService trainingTypeService) {
+        this.traineeService = traineeService;
+        this.trainerService = trainerService;
+        this.trainingService = trainingService;
+        this.trainingTypeService = trainingTypeService;
+    }
 
     private static final ApplicationContext context = ApplicationContextProvider.getContext();
 
-    public static InMemoryStorage getInMemoryStorage() {
+    public InMemoryStorage getInMemoryStorage() {
         return context.getBean(InMemoryStorage.class);
-    }
-
-    public static TraineeService getTraineeService(String daoImplementationName) {
-        TraineeService traineeService = context.getBean(TraineeService.class);
-        traineeService.setTraineeDAOFromTraineeDAOMap(daoImplementationName);
-        return traineeService;
-    }
-
-    public static TrainerService getTrainerService(String daoImplNameForTrainer, String daoImplNameForTrainee) {
-        TrainerService trainerService = context.getBean(TrainerService.class);
-        trainerService.setTrainerDAOFromTrainerDAOMap(daoImplNameForTrainer);
-        trainerService.setTraineeDAOFromTraineeDAOMap(daoImplNameForTrainee);
-        return trainerService;
-    }
-
-    public static TrainingService getTrainingService(String daoImplNameForTraining, String daoImplNameForTrainer) {
-        TrainingService trainingService = context.getBean(TrainingService.class);
-        trainingService.setTrainingDAOFromTrainingDAOMap(daoImplNameForTraining);
-        trainingService.setTrainerDAOFromTrainerDAOMap(daoImplNameForTrainer);
-        return trainingService;
     }
 
     public static TrainingTypeService getTrainingTypeService() {
