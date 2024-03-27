@@ -255,6 +255,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         HttpServletRequest httpRequest = attributes.getRequest();
         String uri = httpRequest.getRequestURI();
+
+        if (uri.equals("/")) {
+            return;
+        }
+
         String method = httpRequest.getMethod();
         log.info("\n\n>> from incrementCounter >> GlobalExceptionHandler >> uri:" + uri + "\n");
         log.info("\n\n>> from incrementCounter >> GlobalExceptionHandler >> method:" + method + "\n");

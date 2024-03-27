@@ -36,7 +36,7 @@ public class UserManagementController {
                 .builder("user_login_get_requests_success_counter")
                 .description("number of successful hits: GET /user/login")
                 .register(meterRegistry);
-        this.user_login_put_requests_success_counter= Counter
+        this.user_login_put_requests_success_counter = Counter
                 .builder("user_login_put_requests_success_counter")
                 .description("number of successful hits: PUT /user/login")
                 .register(meterRegistry);

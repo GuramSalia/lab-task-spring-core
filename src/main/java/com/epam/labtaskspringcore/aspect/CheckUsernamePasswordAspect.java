@@ -57,8 +57,9 @@ public class CheckUsernamePasswordAspect {
         }
 
         log.info("start performing authentication with 'CheckUsernamePasswordAspect'");
-        boolean authenticated = false;
-        authenticated = userService.performAuthentication(username, password);
+//        boolean authenticated = false;
+//        authenticated = userService.performAuthentication(username, password);
+        userService.performAuthentication(username, password);
     }
 }
 

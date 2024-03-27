@@ -7,6 +7,7 @@ import com.epam.labtaskspringcore.exception.UserBlockedException;
 import com.epam.labtaskspringcore.model.Trainee;
 import com.epam.labtaskspringcore.model.Trainer;
 import com.epam.labtaskspringcore.model.User;
+import com.epam.labtaskspringcore.utils.Role;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -42,7 +43,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public boolean performAuthentication(String username, String password) {
+    public Role performAuthentication(String username, String password) {
         Optional<Trainee> traineeOptional = traineeDAO.findByUsername(username);
         Optional<Trainer> trainerOptional = trainerDAO.findByUsername(username);
         if (traineeOptional.isEmpty() && trainerOptional.isEmpty()) {
@@ -51,10 +52,12 @@ public class UserService {
 
         if (traineeOptional.isPresent()) {
             Trainee trainee = traineeOptional.get();
-            return authenticate(trainee, password);
+            authenticate(trainee, password);
+            return Role.TRAINEE;
         }
 
-        return authenticate(trainerOptional.get(), password);
+        authenticate(trainerOptional.get(), password);
+        return Role.TRAINER;
     }
 
     private boolean authenticate(User user, String password) {
