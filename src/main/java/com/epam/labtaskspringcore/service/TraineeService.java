@@ -1,5 +1,6 @@
 package com.epam.labtaskspringcore.service;
 
+import com.epam.labtaskspringcore.api.UsernamePassword;
 import com.epam.labtaskspringcore.dao.TraineeDAO;
 import com.epam.labtaskspringcore.exception.*;
 import com.epam.labtaskspringcore.model.Trainee;
@@ -11,6 +12,7 @@ import jakarta.transaction.Transactional;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,17 +28,20 @@ public class TraineeService {
     private final UserValidatorService userValidatorService;
     private final UsernameGenerator usernameGenerator;
     private final TraineeDAO traineeDAO;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public TraineeService(
             TraineeDAO traineeDAO,
             Authentication authentication,
             UserValidatorService userValidatorService,
-            UsernameGenerator usernameGenerator) {
+            UsernameGenerator usernameGenerator,
+            PasswordEncoder passwordEncoder) {
         this.traineeDAO = traineeDAO;
         this.authentication = authentication;
         this.userValidatorService = userValidatorService;
         this.usernameGenerator = usernameGenerator;
+        this.passwordEncoder = passwordEncoder;
         log.info(">>>> TraineeService initialized");
     }
 
@@ -53,16 +58,18 @@ public class TraineeService {
     }
 
     @Transactional
-    public Trainee create(Trainee trainee) {
+    public UsernamePassword create(Trainee trainee) {
         log.info(">>>> training service create()");
 
         trainee.setIsBlocked(false);
         trainee.setFailedLoginAttempts(0);
         trainee.setBlockStartTime(null);
         trainee.setUsername(usernameGenerator.generateUsername(trainee));
-        if (trainee.getPassword() == null) {
-            trainee.setPassword(RandomPasswordGenerator.generateRandomPassword());
-        }
+
+        String generateRandomPassword = RandomPasswordGenerator.generateRandomPassword();
+        UsernamePassword usernamePassword = new UsernamePassword(trainee.getUsername(), generateRandomPassword);
+        trainee.setPassword(passwordEncoder.encode(generateRandomPassword));
+
         log.info(">>>> Creating trainee with username: " + trainee.getUsername());
 
         if (userValidatorService.isInvalidUser(trainee)) {
@@ -74,23 +81,14 @@ public class TraineeService {
         if (traineeOptional.isEmpty()) {
             throw new UserNotCreatedException("error creating trainee");
         }
-        return traineeOptional.get();
+
+        return usernamePassword;
     }
 
     // InMemory implementation doesn't require 3 arguments
     public boolean delete(Trainee trainee) {
         log.info(">>>> Deleting trainee with username: " + trainee.getUsername());
-        try {
-            boolean deleted = traineeDAO.delete(trainee);
-            if (!deleted) {
-                throw new UserNotDeletedException("Error occurred while deleting user: " + trainee.getUsername());
-            }
-        } catch (Exception e) {
-            throw new UserNotDeletedException("Error occurred while deleting user: " + trainee.getUsername() + ", " +
-                                                      "exception:  " + e.getMessage());
-        }
-
-        return true;
+        return traineeDAO.delete(trainee);
     }
 
     @Transactional
@@ -100,21 +98,16 @@ public class TraineeService {
             throw new UnauthorizedException("no trainee with such username or password");
         }
         Trainee trainee = findByUsername(username);
-        log.info(">>>> Deleting trainee with username: " + username);
-        try {
-            boolean deleted = traineeDAO.delete(trainee);
-            if (!deleted) {
-                throw new UserNotDeletedException("Error occurred while deleting user: " + username);
-            }
-        } catch (Exception e) {
-            throw new UserNotDeletedException("Error occurred while deleting user: " + username + ", exception:  " + e.getMessage());
-        }
-
-        return true;
+        return traineeDAO.delete(trainee);
     }
 
     // InMemory implementation doesn't require 3 arguments
     public Trainee update(Trainee trainee) {
+
+        if (userValidatorService.isInvalidUser(trainee)) {
+            log.info("invalid user");
+            throw new IllegalStateException("invalid user");
+        }
 
         Optional<Trainee> traineeOptional = traineeDAO.update(trainee);
         if (traineeOptional.isEmpty()) {
@@ -135,17 +128,12 @@ public class TraineeService {
             throw new IllegalStateException("invalid user");
         }
 
-        //changed due to new requirement: 7. Username cannot be changed
-        //            trainee.setUsername(usernameGenerator.generateUsername(trainee));
-        log.info(">>>> Updating trainee with username: " + trainee.getUsername());
         Optional<Trainee> traineeOptional = traineeDAO.update(trainee);
         if (traineeOptional.isEmpty()) {
             throw new UserNotUpdatedException("error updating trainee");
         }
-        return trainee;
+        return traineeOptional.get();
     }
-
-
 
     public Trainee findByUsername(String username) {
 
@@ -159,6 +147,7 @@ public class TraineeService {
         return traineeOptional.get();
     }
 
+    // Is this not redundant, because we only encoded password in db?
     public Trainee findByUsernameAndPassword(String username, String password) {
         Optional<Trainee> traineeOptional = traineeDAO.findByUsernameAndPassword(username, password);
         if (traineeOptional.isEmpty()) {
@@ -180,7 +169,7 @@ public class TraineeService {
             throw new IllegalStateException("invalid user");
         }
 
-        trainee.setPassword(newPassword);
+        trainee.setPassword(passwordEncoder.encode(newPassword));
         return traineeDAO.update(trainee);
     }
 
@@ -251,6 +240,4 @@ public class TraineeService {
         }
         return optionalTrainee.get();
     }
-
-
 }

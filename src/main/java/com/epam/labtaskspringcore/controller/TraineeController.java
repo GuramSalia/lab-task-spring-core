@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +26,7 @@ import java.util.Set;
 @CheckUsernamePassword
 @LogRestDetails
 @RestController
+@Slf4j
 public class TraineeController {
     private final TraineeService traineeService;
     private final TrainerService trainerService;
@@ -80,8 +82,8 @@ public class TraineeController {
     })
     public ResponseEntity<TraineeDTOWithTrainersList> getTrainee(@Valid @RequestBody UsernamePassword usernamePassword) {
         String username = usernamePassword.getUsername();
-        String password = usernamePassword.getPassword();
-        Trainee trainee = traineeService.findByUsernameAndPassword(username, password);
+        Trainee trainee = traineeService.findByUsername(username);
+        log.info("\n\n--------------------------\n" + trainee);
         TraineeDTOWithTrainersList traineeDTO = getTraineeDTOWithTrainersList(trainee);
         trainee_get_requests_success_counter.increment();
         return ResponseEntity.ok(traineeDTO);
@@ -95,8 +97,7 @@ public class TraineeController {
     })
     public ResponseEntity<TraineeDTOUpdated> updateTrainee(@Valid @RequestBody TraineeUpdateRequest traineeUpdateRequest) {
         String username = traineeUpdateRequest.getUsername();
-        String password = traineeUpdateRequest.getPassword();
-        Trainee trainee = traineeService.findByUsernameAndPassword(username, password);
+        Trainee trainee = traineeService.findByUsername(username);
         TraineeDTOUpdated traineeDTO = getTraineeDTOUpdated(traineeUpdateRequest, trainee);
         trainee_put_requests_success_counter.increment();
         return ResponseEntity.ok(traineeDTO);
@@ -126,9 +127,8 @@ public class TraineeController {
             @Valid @RequestBody TraineeUpdateTrainersListRequest traineeUpdateTrainersListRequest) {
 
         String username = traineeUpdateTrainersListRequest.getUsername();
-        String password = traineeUpdateTrainersListRequest.getPassword();
         List<String> trainerUsernames = traineeUpdateTrainersListRequest.getTrainerUsernames();
-        Trainee trainee = traineeService.findByUsernameAndPassword(username, password);
+        Trainee trainee = traineeService.findByUsername(username);
         List<TrainerDTOForTrainersList> trainerListDTO = getTrainerListDTO(trainerUsernames, trainee);
         trainee_update_trainers_list_requests_success_counter.increment();
         return ResponseEntity.ok().body(trainerListDTO);
@@ -141,8 +141,7 @@ public class TraineeController {
     })
     public ResponseEntity<Void> activateTrainee(@Valid @RequestBody UsernamePassword usernamePassword) {
         String username = usernamePassword.getUsername();
-        String password = usernamePassword.getPassword();
-        Trainee trainee = traineeService.findByUsernameAndPassword(username, password);
+        Trainee trainee = traineeService.findByUsername(username);
         trainee.setIsActive(true);
         traineeService.update(trainee);
         trainee_activate_patch_requests_success_counter.increment();
@@ -156,8 +155,7 @@ public class TraineeController {
     })
     public ResponseEntity<Void> deactivateTrainee(@Valid @RequestBody UsernamePassword usernamePassword) {
         String username = usernamePassword.getUsername();
-        String password = usernamePassword.getPassword();
-        Trainee trainee = traineeService.findByUsernameAndPassword(username, password);
+        Trainee trainee = traineeService.findByUsername(username);
         trainee.setIsActive(false);
         traineeService.update(trainee);
         trainee_deactivate_patch_requests_success_counter.increment();

@@ -1,5 +1,6 @@
 package com.epam.labtaskspringcore.service;
 
+import com.epam.labtaskspringcore.api.UsernamePassword;
 import com.epam.labtaskspringcore.dao.TraineeDAO;
 import com.epam.labtaskspringcore.dao.TrainerDAO;
 import com.epam.labtaskspringcore.exception.UnauthorizedException;
@@ -14,6 +15,7 @@ import jakarta.transaction.Transactional;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -30,6 +32,7 @@ public class TrainerService {
     private final UsernameGenerator usernameGenerator;
     private final TrainerDAO trainerDAO;
     private final TraineeDAO traineeDAO;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public TrainerService(
@@ -37,12 +40,14 @@ public class TrainerService {
             TraineeDAO traineeDAO,
             Authentication authentication,
             UserValidatorService userValidatorService,
-            UsernameGenerator usernameGenerator) {
+            UsernameGenerator usernameGenerator,
+            PasswordEncoder passwordEncoder) {
         this.trainerDAO = trainerDAO;
         this.traineeDAO = traineeDAO;
         this.authentication = authentication;
         this.userValidatorService = userValidatorService;
         this.usernameGenerator = usernameGenerator;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Trainer getById(int id, String username, String password) {
@@ -73,14 +78,16 @@ public class TrainerService {
     }
 
     @Transactional
-    public Trainer create(Trainer trainer) {
+    public UsernamePassword create(Trainer trainer) {
         trainer.setIsBlocked(false);
         trainer.setFailedLoginAttempts(0);
         trainer.setBlockStartTime(null);
         trainer.setUsername(usernameGenerator.generateUsername(trainer));
-        if (trainer.getPassword() == null) {
-            trainer.setPassword(RandomPasswordGenerator.generateRandomPassword());
-        }
+
+        String generateRandomPassword = RandomPasswordGenerator.generateRandomPassword();
+        UsernamePassword usernamePassword = new UsernamePassword(trainer.getUsername(), generateRandomPassword);
+        trainer.setPassword(passwordEncoder.encode(generateRandomPassword));
+
         log.info(">>>> Creating trainer with username: " + trainer.getUsername());
         if (userValidatorService.isInvalidUser(trainer)) {
             log.error("invalid customer");
@@ -90,7 +97,7 @@ public class TrainerService {
         if (trainerOptional.isEmpty()) {
             throw new UserNotCreatedException("no such trainer");
         }
-        return trainerOptional.get();
+        return usernamePassword;
     }
 
     // InMemory implementation doesn't require 3 arguments
@@ -127,6 +134,7 @@ public class TrainerService {
         return trainerOptional.get();
     }
 
+    // Is this not redundant, because we only encoded password in db?
     public Trainer findByUsernameAndPassword(String username, String password) {
 
         if (!authentication.isAuthenticated(trainerDAO, username, password)) {
@@ -169,7 +177,7 @@ public class TrainerService {
             throw new IllegalStateException("invalid user");
         }
 
-        trainer.setPassword(newPassword);
+        trainer.setPassword(passwordEncoder.encode(newPassword));
 
         return update(trainer);
     }

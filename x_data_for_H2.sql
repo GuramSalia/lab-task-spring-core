@@ -1,9 +1,9 @@
 -- Insert Trainers
 INSERT INTO GYM_USERS (FIRST_NAME, LAST_NAME, USERNAME, PASSWORD, IS_ACTIVE, FAILED_LOGIN_ATTEMPTS, BLOCK_STATUS, BLOCK_START_TIME) VALUES
-('Tim', 'Smith', 'Tim.Smith', '$2a$10$A1s2lroG4kwrn/vU3OqWV.tcrYhZ3BVD0N1m8mfdZVMAQalmOlw4S', TRUE, 0, FALSE, NULL),
-('Sam', 'Jones', 'Sam.Jones', '$2a$10$A1s2lroG4kwrn/vU3OqWV.tcrYhZ3BVD0N1m8mfdZVMAQalmOlw4S', TRUE, 0, FALSE, NULL),
-('John', 'Doe', 'John.Doe', '$2a$10$A1s2lroG4kwrn/vU3OqWV.tcrYhZ3BVD0N1m8mfdZVMAQalmOlw4S', TRUE, 0, FALSE, NULL),
-('Jane', 'Smith', 'Jane.Smith', '$2a$10$A1s2lroG4kwrn/vU3OqWV.tcrYhZ3BVD0N1m8mfdZVMAQalmOlw4S', TRUE, 0, FALSE, NULL);
+('Tim', 'Smith', 'Tim.Smith', '123', TRUE, 0, FALSE, NULL),
+('Sam', 'Jones', 'Sam.Jones', '123', TRUE, 0, FALSE, NULL),
+('John', 'Doe', 'John.Doe', '$2a$12$8HTsQpa2IebN9eAu2p/YPu2y3Tm4fkNx7sMY0N4EpB3me2/yGgkFm', TRUE, 0, FALSE, NULL),
+('Jane', 'Smith', 'Jane.Smith', '123', TRUE, 0, FALSE, NULL);
 
 INSERT INTO TRAINEES (DATE_OF_BIRTH, ADDRESS, USER_ID) VALUES
 (DATE '2000-02-21', 'address of TRAINEE 1', 3),

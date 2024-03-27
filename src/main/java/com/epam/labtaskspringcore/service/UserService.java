@@ -7,13 +7,12 @@ import com.epam.labtaskspringcore.exception.UserBlockedException;
 import com.epam.labtaskspringcore.model.Trainee;
 import com.epam.labtaskspringcore.model.Trainer;
 import com.epam.labtaskspringcore.model.User;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -27,17 +26,20 @@ public class UserService {
     private final TrainerService trainerService;
     private final TraineeDAO traineeDAO;
     private final TrainerDAO trainerDAO;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public UserService(
             TraineeService traineeService,
             TraineeDAO traineeDAO,
             TrainerService trainerService,
-            TrainerDAO trainerDAO) {
+            TrainerDAO trainerDAO,
+            PasswordEncoder passwordEncoder) {
         this.traineeService = traineeService;
         this.traineeDAO = traineeDAO;
         this.trainerService = trainerService;
         this.trainerDAO = trainerDAO;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public boolean performAuthentication(String username, String password) {
@@ -56,12 +58,16 @@ public class UserService {
     }
 
     private boolean authenticate(User user, String password) {
-        log.warn("\n\n+++++++++++++++++++++++++ withing authenticate method\n");
+        log.info("\n\n+++++++++++++++++++++++++ withing authenticate method\n");
         boolean isBlocked = user.getIsBlocked();
-        boolean correctPasswordProvided = user.getPassword().equals(password);
+        boolean correctPasswordProvided = passwordEncoder.matches(password, user.getPassword());
 
         if (!isBlocked && correctPasswordProvided) {
-            log.warn("\n\n++++++++++++++++++++++ not blocked, correct password provided\n");
+            log.info("\n\n++++++++++++++++++++++ not blocked, correct password provided\n");
+            if (user.getFailedLoginAttempts() > 0) {
+                user.setFailedLoginAttempts(0);
+                saveUser(user);
+            }
             return true;
         }
 
@@ -71,7 +77,7 @@ public class UserService {
 
             // blocked time not expired
             if (now.isBefore(blockedUntil)) {
-                log.warn("\n\n++++++++++++++++++++++ isBlocked , blocked not expired\n");
+                log.info("\n\n++++++++++++++++++++++ isBlocked , blocked not expired\n");
                 StringBuilder sb = new StringBuilder();
                 sb.append("user is still blocked. Try again when ")
                   .append(BLOCK_DURATION_MINUTES)
@@ -82,13 +88,13 @@ public class UserService {
             // blocked time expired
             user.setIsBlocked(false);
             if (!correctPasswordProvided) {
-                log.warn("\n\n++++++++++++++++++++++ isBlocked , blocked expired, incorrect password\n");
+                log.info("\n\n++++++++++++++++++++++ isBlocked , blocked expired, incorrect password\n");
                 user.setFailedLoginAttempts(1);
                 saveUser(user);
                 throw new UnauthorizedException("usename or password incorrect");
             }
 
-            log.warn("\n\n++++++++++++++++++++++ isBlocked , blocked expired, correct password\n");
+            log.info("\n\n++++++++++++++++++++++ isBlocked , blocked expired, correct password\n");
             user.setBlockStartTime(null);
             user.setFailedLoginAttempts(0);
             saveUser(user);
@@ -109,8 +115,8 @@ public class UserService {
 
     public void updatePassword(String username, String currentPassword, String newPassword) {
 
-        Optional<Trainee> traineeOptional = traineeDAO.findByUsernameAndPassword(username, currentPassword);
-        Optional<Trainer> trainerOptional = trainerDAO.findByUsernameAndPassword(username, currentPassword);
+        Optional<Trainee> traineeOptional = traineeDAO.findByUsername(username);
+        Optional<Trainer> trainerOptional = trainerDAO.findByUsername(username);
 
         if (traineeOptional.isEmpty() && trainerOptional.isEmpty()) {
             throw new UnauthorizedException("username or password is invalid");

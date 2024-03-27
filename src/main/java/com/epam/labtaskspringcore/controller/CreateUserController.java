@@ -62,9 +62,9 @@ public class CreateUserController {
     public ResponseEntity<UsernamePassword> registerTrainee(@Valid @RequestBody TraineeRegistrationRequest traineeRegistrationRequest) {
 
         Trainee newTrainee = getTrainee(traineeRegistrationRequest);
-        Trainee trainee = traineeService.create(newTrainee);
+        UsernamePassword usernamePassword = traineeService.create(newTrainee);
 
-        UsernamePassword usernamePassword = new UsernamePassword(trainee.getUsername(), trainee.getPassword());
+//        UsernamePassword usernamePassword = new UsernamePassword(trainee.getUsername(), trainee.getPassword());
         create_user_trainee_post_requests_success_counter.increment();
         return ResponseEntity.status(HttpStatus.CREATED).body(usernamePassword);
     }
@@ -86,11 +86,8 @@ public class CreateUserController {
             @ApiResponse(responseCode = "201", description = "Trainee Registered")
     })
     public ResponseEntity<UsernamePassword> registerTrainer(@Valid @RequestBody TrainerRegistrationRequest trainerRegistrationRequest) {
-
         Trainer newTrainer = getTrainer(trainerRegistrationRequest);
-        Trainer trainer = trainerService.create(newTrainer);
-
-        UsernamePassword usernamePassword = new UsernamePassword(trainer.getUsername(), trainer.getPassword());
+        UsernamePassword usernamePassword = trainerService.create(newTrainer);
         create_user_trainer_post_requests_success_counter.increment();
         return ResponseEntity.status(HttpStatus.CREATED).body(usernamePassword);
     }

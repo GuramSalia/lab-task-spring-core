@@ -12,6 +12,7 @@ import com.epam.labtaskspringcore.utils.UsernameGenerator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.HashMap;
 import java.util.List;
@@ -45,7 +46,7 @@ class TrainingDAOInMemoryStorageImplTest {
         trainerDAO = new TrainerDAOInMemoryStorageImpl(storage);
         trainingDAO = new TrainingDAOInMemoryStorageImpl(storage);
         usernameGenerator = new UsernameGenerator(trainerDAO, traineeDAO);
-        authentication = new Authentication();
+        authentication = new Authentication(new BCryptPasswordEncoder());
         userValidatorService = new UserValidatorService();
 
         // new way of creating trainerService

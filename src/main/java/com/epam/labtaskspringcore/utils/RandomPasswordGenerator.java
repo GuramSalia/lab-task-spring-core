@@ -17,6 +17,9 @@ public class RandomPasswordGenerator {
             sb.append(characters.charAt(randomIndex));
         }
         log.info(">>>> Generating random password");
-        return sb.toString();
+
+        String testPassword = "123";
+        return testPassword;
+//        return sb.toString();
     }
 }

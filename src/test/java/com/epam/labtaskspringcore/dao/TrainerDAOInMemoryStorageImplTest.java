@@ -11,6 +11,7 @@ import com.epam.labtaskspringcore.utils.UsernameGenerator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.HashMap;
 import java.util.List;
@@ -39,21 +40,21 @@ class TrainerDAOInMemoryStorageImplTest {
         traineeDAO = new TraineeDAOInMemoryStorageImpl(storage);
         trainerDAO = new TrainerDAOInMemoryStorageImpl(storage);
         usernameGenerator = new UsernameGenerator(trainerDAO, traineeDAO);
-        authentication = new Authentication();
+        authentication = new Authentication(new BCryptPasswordEncoder());
         userValidatorService = new UserValidatorService();
 
         // new way of creating traineeService
         Map<String, TraineeDAO> traineeDAOMap = new HashMap<>();
         traineeDAOMap.put("IN_MEMORY", traineeDAO);
-        traineeService = new TraineeService(traineeDAOMap, authentication, userValidatorService, usernameGenerator);
-        traineeService.setTraineeDAO(traineeDAO);
+        traineeService = new TraineeService(traineeDAO, authentication, userValidatorService, usernameGenerator, new BCryptPasswordEncoder());
+//        traineeService.setTraineeDAO(traineeDAO);
 
         // new way of creating trainerService
         Map<String, TrainerDAO> trainerDAOMap = new HashMap<>();
         trainerDAOMap.put("TRAINER_IN_MEMORY", trainerDAO);
-        trainerService = new TrainerService(trainerDAOMap, traineeDAOMap, authentication, userValidatorService,
+        trainerService = new TrainerService(trainerDAO, traineeDAO, authentication, userValidatorService,
                                             usernameGenerator);
-        trainerService.setTrainerDAO(trainerDAO);
+//        trainerService.setTrainerDAO(trainerDAO);
 
         TrainingType YOGA = new TrainingType();
         YOGA.setTrainingType(TrainingType.TrainingTypeEnum.YOGA);

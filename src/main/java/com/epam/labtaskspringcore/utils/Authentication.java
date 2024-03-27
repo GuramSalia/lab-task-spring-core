@@ -4,6 +4,8 @@ import com.epam.labtaskspringcore.model.Trainee;
 import com.epam.labtaskspringcore.model.User;
 import jakarta.persistence.Entity;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -12,21 +14,23 @@ import java.util.Optional;
 @Slf4j
 public class Authentication {
 
+    private final PasswordEncoder passwordEncoder;
+
+    @Autowired
+    public Authentication(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
+
     public <T extends ImplementsFindByUsernameAndPassword, U extends User> boolean isAuthenticated(
-            T t, String username, String password
-                                                                                                  ) {
+            T t, String username, String password) {
         U userInDb;
-        try {
-            Optional<U> uOptional = t.findByUsernameAndPassword(username, password);
-            if (uOptional.isEmpty()) {
-                log.error("wrong username or password");
-                return false;
-            }
-            userInDb = uOptional.get();
-        } catch (Exception e) {
-            log.error("something went wrong", e);
+        Optional<U> uOptional = t.findByUsername(username);
+        if (uOptional.isEmpty()) {
+            log.error("wrong username or password");
             return false;
         }
-        return userInDb.getPassword().equals(password);
+
+        userInDb = uOptional.get();
+        return passwordEncoder.matches(password, userInDb.getPassword());
     }
 }

@@ -68,13 +68,7 @@ public class TrainerController {
     public ResponseEntity<TrainerDTOWithTraineeList> getTrainer(@Valid @RequestBody UsernamePassword usernamePassword) {
 
         String username = usernamePassword.getUsername();
-        Optional<Trainer> trainerOptional = Optional.ofNullable(trainerService.findByUsername(username));
-
-        if (trainerOptional.isEmpty()) {
-            throw new IllegalArgumentException("no trainer found");
-        }
-        Trainer trainer = trainerOptional.get();
-
+        Trainer trainer = trainerService.findByUsername(username);
         TrainerDTOWithTraineeList trainerDTO = getTrainerDTOWithTraineeList(trainer);
         trainer_get_requests_success_counter.increment();
         return ResponseEntity.ok().body(trainerDTO);
@@ -88,12 +82,7 @@ public class TrainerController {
     public ResponseEntity<TrainerDTOupdated> updateTrainer(@Valid @RequestBody TrainerUpdateRequest trainerUpdateRequest) {
 
         String username = trainerUpdateRequest.getUsername();
-        Optional<Trainer> trainerOptional = Optional.ofNullable(trainerService.findByUsername(username));
-        if (trainerOptional.isEmpty()) {
-            throw new IllegalArgumentException("no trainer found");
-        }
-
-        Trainer trainer = trainerOptional.get();
+        Trainer trainer = trainerService.findByUsername(username);
         TrainerDTOupdated trainerDTOupdated = getTrainerDTOupdated(trainerUpdateRequest, trainer);
         trainer_put_requests_success_counter.increment();
         return ResponseEntity.ok().body(trainerDTOupdated);
@@ -109,7 +98,6 @@ public class TrainerController {
         String username = usernamePassword.getUsername();
         String password = usernamePassword.getPassword();
         List<Trainer> trainerList = trainerService.findUnassignedTrainersByTraineeUsername(username, password);
-
         List<TrainerDTOForTrainersList> trainerDTOs = getTrainerDTOForTrainersLists(trainerList);
         trainers_get_not_assigned_to_trainee_requests_success_counter.increment();
         return ResponseEntity.ok().body(trainerDTOs);
@@ -179,12 +167,7 @@ public class TrainerController {
         trainer.setLastName(trainerUpdateRequest.getLastName());
         trainer.setSpecialization(trainerUpdateRequest.getSpecialization());
         trainer.setIsActive(trainerUpdateRequest.getIsActive());
-
-        Optional<Trainer> updatedTrainerOptional = Optional.ofNullable(trainerService.update(trainer));
-        if (updatedTrainerOptional.isEmpty()) {
-            throw new IllegalArgumentException("no trainer updated");
-        }
-        Trainer updatedTrainer = updatedTrainerOptional.get();
+        Trainer updatedTrainer = trainerService.update(trainer);
         TrainerDTOupdated trainerDTOupdated = new TrainerDTOupdated();
         trainerDTOupdated.setUsername(updatedTrainer.getUsername());
         trainerDTOupdated.setFirstName(updatedTrainer.getFirstName());
